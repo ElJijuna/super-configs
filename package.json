@@ -1,6 +1,6 @@
 {
   "name": "super-configs",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "type": "module",
   "description": "Centralized ESLint, Prettier, TypeScript and test configs (Jest, Vitest, Bun) for JS/TS projects",
   "main": "dist/index.js",
@@ -19,7 +19,7 @@
   "files": [
     "dist",
     "README.md",
-    "LICENSE",
+    "LICENSE"
   ],
   "keywords": [
     "eslint",
