@@ -1,0 +1,52 @@
+{
+  "name": "super-configs",
+  "version": "0.0.1",
+  "type": "module",
+  "description": "Centralized ESLint, Prettier, TypeScript and test configs (Jest, Vitest, Bun) for JS/TS projects",
+  "main": "dist/index.js",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "default": "./dist/index.js"
+    }
+  },
+  "scripts": {
+    "build": "bunx tsc -p tsconfig.json",
+    "lint": "eslint . --ext .ts,.js",
+    "format": "prettier --write .",
+    "test": "bun test"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE",
+  ],
+  "keywords": [
+    "eslint",
+    "prettier",
+    "tsconfig",
+    "jest",
+    "vitest",
+    "bun",
+    "configs"
+  ],
+  "author": "El Jijuna",
+  "license": "MIT",
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^8.45.0",
+    "@typescript-eslint/parser": "^8.45.0",
+    "eslint": "^9.0.0",
+    "eslint-config-prettier": "^9.0.0",
+    "eslint-plugin-prettier": "^5.0.0",
+    "eslint-plugin-react": "^7.34.0",
+    "eslint-plugin-react-hooks": "^5.0.0",
+    "prettier": "^3.0.0",
+    "ts-jest": "^29.1.2",
+    "typescript": "^5.6.0",
+    "vitest": "^2.0.0"
+  },
+  "dependencies": {
+    "@types/eslint": "^9.6.1",
+    "lightningcss": "^1.30.2"
+  }
+}

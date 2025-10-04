@@ -1,0 +1,12 @@
+{
+  "extends": "./base.json",
+  "compilerOptions": {
+    "moduleResolution": "node",
+    "outDir": "dist",
+    "resolveJsonModule": true,
+    "declaration": true,
+    "module": "ES2022",
+    "target": "ES2022"
+  },
+  "include": ["*/.ts", "*/.json"]
+}
