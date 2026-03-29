@@ -1,34 +1,24 @@
-# EditorConfig is awesome: https://EditorConfig.org
-
 # top-most EditorConfig file
 root = true
 
+# Default settings for all files
 [*]
-# Indentation settings
+charset = utf-8
+end_of_line = lf
+insert_final_newline = true
 indent_style = space
 indent_size = 2
-
-# End-of-line settings
-end_of_line = lf
-
-# Character set
-charset = utf-8
-
-# Trim trailing whitespace on save
 trim_trailing_whitespace = true
 
-# Add a final newline at the end of files
-insert_final_newline = true
+# Match JavaScript and TypeScript files
+[*.{js,jsx,ts,tsx}]
+quote_type = single
 
-# Maximum line length (optional, adjust as needed)
-# max_line_length = 80
+# JSON & Markdown files (don't trim whitespace)
+[*.{json,md}]
+trim_trailing_whitespace = false
 
-[*.md]
-# Markdown files often use a different indentation style
-indent_style = space
-indent_size = 4
-
-[{package.json,.prettierrc,tsconfig.json}]
-# JSON files might be formatted differently by tools
+# YAML files (used for CI/CD or configs)
+[*.yml]
 indent_style = space
 indent_size = 2

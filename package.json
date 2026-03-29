@@ -1,52 +1,96 @@
 {
   "name": "super-configs",
-  "version": "0.1.0",
+  "version": "1.0.0",
+  "description": "All configs to projects - ESLint and Prettier configurations for JavaScript, TypeScript, and React projects",
+  "main": "./lib/index.js",
+  "module": "./lib/index.js",
+  "types": "./lib/index.d.ts",
   "type": "module",
-  "description": "Centralized ESLint, Prettier, TypeScript and test configs (Jest, Vitest, Bun) for JS/TS projects",
-  "main": "dist/index.js",
   "exports": {
     ".": {
-      "import": "./dist/index.js",
-      "default": "./dist/index.js"
+      "types": "./lib/index.d.ts",
+      "import": "./lib/index.js"
+    },
+    "./eslint/js": {
+      "types": "./lib/eslint/js/index.d.ts",
+      "import": "./lib/eslint/js/index.js"
+    },
+    "./eslint/ts": {
+      "types": "./lib/eslint/ts/index.d.ts",
+      "import": "./lib/eslint/ts/index.js"
+    },
+    "./eslint/react/jsx": {
+      "types": "./lib/eslint/react/jsx/index.d.ts",
+      "import": "./lib/eslint/react/jsx/index.js"
+    },
+    "./eslint/react/tsx": {
+      "types": "./lib/eslint/react/tsx/index.d.ts",
+      "import": "./lib/eslint/react/tsx/index.js"
+    },
+    "./prettier": {
+      "types": "./lib/prettier/index.d.ts",
+      "import": "./lib/prettier/index.js"
     }
   },
-  "scripts": {
-    "build": "bunx tsc -p tsconfig.json",
-    "lint": "eslint . --ext .ts,.js",
-    "format": "prettier --write .",
-    "test": "bun test"
-  },
   "files": [
-    "dist",
+    "lib",
     "README.md",
-    "LICENSE"
+    "CHANGELOG.md"
   ],
+  "scripts": {
+    "build": "tsc",
+    "test": "npm run test",
+    "lint": "eslint \"src/**/*.{js,ts,jsx,tsx}\"",
+    "lint:fix": "eslint \"src/**/*.{js,ts,jsx,tsx}\" --fix",
+    "format": "prettier --write \"src/**/*.{js,ts,jsx,tsx,json,css,md}\"",
+    "prepublishOnly": "npm run build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ElJijuna/super-configs.git"
+  },
   "keywords": [
+    "config",
     "eslint",
     "prettier",
-    "tsconfig",
-    "jest",
-    "vitest",
-    "bun",
-    "configs"
+    "typescript",
+    "react",
+    "eslint-config",
+    "prettier-config"
   ],
-  "author": "El Jijuna",
+  "author": "Ivan <pilmee@gmail.com>",
   "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ElJijuna/super-configs/issues"
+  },
+  "homepage": "https://github.com/ElJijuna/super-configs#readme",
+  "peerDependencies": {
+    "eslint": ">=9.0.0",
+    "prettier": ">=3.0.0",
+    "typescript": ">=5.0.0"
+  },
+  "peerDependenciesMeta": {
+    "typescript": {
+      "optional": true
+    }
+  },
   "devDependencies": {
+    "@babel/eslint-parser": "^7.28.4",
+    "@eslint/js": "^9.37.0",
     "@typescript-eslint/eslint-plugin": "^8.45.0",
     "@typescript-eslint/parser": "^8.45.0",
-    "eslint": "^9.0.0",
-    "eslint-config-prettier": "^9.0.0",
-    "eslint-plugin-prettier": "^5.0.0",
-    "eslint-plugin-react": "^7.34.0",
-    "eslint-plugin-react-hooks": "^5.0.0",
-    "prettier": "^3.0.0",
-    "ts-jest": "^29.1.2",
-    "typescript": "^5.6.0",
-    "vitest": "^2.0.0"
-  },
-  "dependencies": {
-    "@types/eslint": "^9.6.1",
-    "lightningcss": "^1.30.2"
+    "eslint": "^9.37.0",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-import-resolver-typescript": "^4.4.4",
+    "eslint-plugin-import": "^2.32.0",
+    "eslint-plugin-jsx-a11y": "^6.10.2",
+    "eslint-plugin-prettier": "^5.5.4",
+    "eslint-plugin-react": "^7.37.5",
+    "eslint-plugin-react-hooks": "^6.1.1",
+    "globals": "^16.4.0",
+    "jiti": "^2.6.1",
+    "prettier": "^3.6.2",
+    "typescript": "^5.0.0",
+    "typescript-eslint": "^8.45.0"
   }
 }

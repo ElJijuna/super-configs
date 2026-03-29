@@ -1,71 +1,154 @@
-# 🍤 super-configs
+# super-configs
 
-Configuracion centralizada para ESLint, Prettier, TypeScript y configuraciones de test (Jest, Vitest, Bun) para JS/TS projects.
+Shared ESLint and Prettier configurations for JavaScript, TypeScript, and React projects.
 
-## 📋 Contenido
-- Configuraciôn para ESLint (JS, React, TS, TS+React) en `eslint/`
-- Configuraciôn para Prettier en `prettier/`
-- Configuraciôn para TSConfig presets en `tsconfig/`
-- Configuraciôn para tests (pruebas unitarias) `test/`
-- `index.ts` exporta toda la configuraciôn
+## Installation
 
-## 📦 Instalaciôn
 ```bash
-bun add -d super-configs
-# or npm
-npm i -D super-configs
+npm install super-configs --save-dev
+# or
+pnpm add super-configs -D
+# or
+yarn add super-configs -D
+# or
+bun add super-configs -D
 ```
 
-## 🚀 Uso y Ejemplos
+### Peer Dependencies
+
+This package requires the following peer dependencies:
+
+```bash
+npm install eslint prettier typescript --save-dev
+```
+
+## Usage
 
 ### ESLint
-Create `.eslintrc.cjs` with:
-```js
-// JS + React + TS examples:
-export { default } from "super-configs/dist/eslint/ts-react.js";
+
+#### JavaScript
+
+```javascript
+// eslint.config.js
+import eslintJs from 'super-configs/eslint/js';
+
+export default [
+  ...eslintJs,
+];
 ```
 
-Or for JS React:
-```js
-export { default } from "super-configs/dist/eslint/react.js";
+#### TypeScript
+
+```javascript
+// eslint.config.js
+import eslintTs from 'super-configs/eslint/ts';
+
+export default [
+  ...eslintTs,
+];
+```
+
+#### React JSX
+
+```javascript
+// eslint.config.js
+import eslintReactJsx from 'super-configs/eslint/react/jsx';
+
+export default [
+  ...eslintReactJsx,
+];
+```
+
+#### React TSX
+
+```javascript
+// eslint.config.js
+import eslintReactTsx from 'super-configs/eslint/react/tsx';
+
+export default [
+  ...eslintReactTsx,
+];
 ```
 
 ### Prettier
-Add `.prettierrc`:
-```json
-"super-configs/prettier"
+
+```javascript
+// prettier.config.js
+import prettierConfig from 'super-configs/prettier';
+
+export default prettierConfig;
 ```
 
-### TypeScript
-`tsconfig.json`
-```json
-{
-  "extends": "super-configs/tsconfig/react.json"
-}
+Or extend the configuration:
+
+```javascript
+// prettier.config.js
+import prettierConfig from 'super-configs/prettier';
+
+export default {
+  ...prettierConfig,
+  // your overrides here
+  printWidth: 120,
+};
 ```
 
-### Jest
-```js
-import config from "super-configs/test/jest.config.js";
-export default config;
-```
+## Available Configurations
 
-## Build & Publish (with Bun)
+| Export | Description |
+| ------ | ----------- |
+| `super-configs/eslint/js` | ESLint configuration for JavaScript |
+| `super-configs/eslint/ts` | ESLint configuration for TypeScript |
+| `super-configs/eslint/react/jsx` | ESLint configuration for React with JSX |
+| `super-configs/eslint/react/tsx` | ESLint configuration for React with TSX |
+| `super-configs/prettier` | Prettier configuration |
+
+## Included Rules
+
+### Code Style
+
+- **Single quotes** - Enforces single quotes for strings (`quotes`)
+- **Curly braces** - Requires curly braces for all control statements (`curly`)
+
+### ESLint Plugins
+
+- `@eslint/js` - ESLint recommended rules
+- `typescript-eslint` - TypeScript support
+- `eslint-plugin-react` - React rules
+- `eslint-plugin-react-hooks` - React Hooks rules
+- `eslint-plugin-jsx-a11y` - JSX accessibility
+- `eslint-plugin-import` - Import ordering and validation
+- `eslint-plugin-prettier` - Prettier integration
+
+### Prettier Configuration
+
+- Semi-colons enabled
+- Single quotes
+- Print width: 100 characters
+- Tab width: 2 spaces
+- Trailing commas: ES5
+- Bracket spacing: true
+- Arrow parens: avoid
+
+## Development
+
 ```bash
-bun run build
-bun publish
+# Install dependencies
+npm install
+
+# Build the project
+npm run build
+
+# Lint
+npm run lint
+
+# Format code
+npm run format
 ```
 
----
+## Changelog
 
-## 🤝 Contribución
-¡Las contribuciones son bienvenidas! Si encuentras un bug o tienes una sugerencia, por favor, abre un issue o un pull request.
+See [CHANGELOG.md](./CHANGELOG.md) for details.
 
----
+## License
 
-### 📜 Licencia
-Este proyecto está bajo la Licencia MIT. Para más detalles, consulta el archivo LICENSE.
-
----
-### 👨‍💻 Autor
-Ivan - @ElJijuna
+MIT © Ivan
