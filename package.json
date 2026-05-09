@@ -58,7 +58,7 @@
     "eslint-config",
     "prettier-config"
   ],
-  "author": "Ivan <pilmee@gmail.com>",
+  "author": "pilmee <pilmee@gmail.com> (https://github.com/ElJijuna)",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/ElJijuna/super-configs/issues"
