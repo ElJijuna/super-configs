@@ -1,3 +1,9 @@
+## [1.5.0](https://github.com/ElJijuna/super-configs/compare/v1.4.0...v1.5.0) (2026-06-01)
+
+### Features
+
+* change to double quotes jsx templates ([d60352f](https://github.com/ElJijuna/super-configs/commit/d60352ff74be2b88fe5d1945276a2d55ee1f983a))
+
 ## [1.4.0](https://github.com/ElJijuna/super-configs/compare/v1.3.0...v1.4.0) (2026-06-01)
 
 ### Features
