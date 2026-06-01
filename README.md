@@ -76,6 +76,21 @@ export default [
 ];
 ```
 
+#### Jest
+
+Use this alongside the JavaScript, TypeScript, or React presets when your project has Jest tests.
+
+```javascript
+// eslint.config.js
+import eslintTs from 'super-configs/eslint/ts';
+import eslintJest from 'super-configs/eslint/jest';
+
+export default [
+  ...eslintTs,
+  ...eslintJest,
+];
+```
+
 Common TypeScript library setup:
 
 ```javascript
@@ -174,6 +189,7 @@ export default {
 | ------ | ----------- |
 | `super-configs/eslint/js` | ESLint configuration for JavaScript |
 | `super-configs/eslint/ts` | ESLint configuration for TypeScript |
+| `super-configs/eslint/jest` | ESLint overrides for Jest test files |
 | `super-configs/eslint/react/jsx` | ESLint configuration for React with JSX |
 | `super-configs/eslint/react/tsx` | ESLint configuration for React with TSX |
 | `super-configs/biome` | Biome configuration for formatting, linting, and import organization |
@@ -228,49 +244,6 @@ npm run format
 # Run all checks
 npm run check
 ```
-
-## Releases
-
-Releases are automated with semantic-release from commits merged into `main`.
-
-Examples:
-
-```bash
-git commit -m "feat: add React TSX lint preset"
-```
-
-Creates a minor release, for example `1.2.0`.
-
-```bash
-git commit -m "fix: correct Biome shared config export"
-```
-
-Creates a patch release, for example `1.2.1`.
-
-```bash
-git commit -m "docs: add third-party setup examples"
-```
-
-Does not publish a new npm version.
-
-```bash
-git commit -m "feat!: require ESLint 10"
-```
-
-Creates a major release, for example `2.0.0`.
-
-Breaking changes can also be declared in the commit body:
-
-```text
-feat: update default TypeScript rules
-
-BREAKING CHANGE: Type-aware linting is no longer enabled by default.
-```
-
-Required GitHub secrets:
-
-- `NPM_TOKEN` for npm publishing.
-- `GITHUB_TOKEN` is provided by GitHub Actions.
 
 ## Changelog
 

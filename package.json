@@ -19,6 +19,10 @@
       "types": "./lib/eslint/ts/index.d.ts",
       "import": "./lib/eslint/ts/index.js"
     },
+    "./eslint/jest": {
+      "types": "./lib/eslint/jest/index.d.ts",
+      "import": "./lib/eslint/jest/index.js"
+    },
     "./eslint/react/jsx": {
       "types": "./lib/eslint/react/jsx/index.d.ts",
       "import": "./lib/eslint/react/jsx/index.js"
