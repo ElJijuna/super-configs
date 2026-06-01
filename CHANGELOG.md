@@ -1,3 +1,17 @@
+## [1.1.0](https://github.com/ElJijuna/super-configs/compare/v1.0.0...v1.1.0) (2026-06-01)
+
+### Features
+
+* add common jest config ([851124b](https://github.com/ElJijuna/super-configs/commit/851124b0dbe7ad1e9bc30b05043e977e5ff5d5f9))
+* enforce multiline brace style ([644ad79](https://github.com/ElJijuna/super-configs/commit/644ad798cd77dfb72998122dad2b9dfba1c5a2fe))
+* require blank lines after const declarations ([9bee0c4](https://github.com/ElJijuna/super-configs/commit/9bee0c4fd3d6e0d070941a7e0b2a502e336f132d))
+* require blank lines before return statements ([df3f72e](https://github.com/ElJijuna/super-configs/commit/df3f72e2666f24d423fdb3bdb86d351844fc24f5))
+* require blank lines before try blocks ([a171186](https://github.com/ElJijuna/super-configs/commit/a171186df9e7b861686f1deab42f26ef752cab4a))
+
+### Bug Fixes
+
+* solve lint errors ([db0130c](https://github.com/ElJijuna/super-configs/commit/db0130c2de655e09711ddd4c3ba39a40c257f22e))
+
 ## 1.0.0 (2026-06-01)
 
 ### Features
