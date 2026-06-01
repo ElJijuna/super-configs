@@ -1,3 +1,9 @@
+## [1.2.0](https://github.com/ElJijuna/super-configs/compare/v1.1.1...v1.2.0) (2026-06-01)
+
+### Features
+
+* add to use prefer-double in html and react templates ([2b111cb](https://github.com/ElJijuna/super-configs/commit/2b111cb2e847310dcf7f4073bd90ac245800a51d))
+
 ## [1.1.1](https://github.com/ElJijuna/super-configs/compare/v1.1.0...v1.1.1) (2026-06-01)
 
 ### Bug Fixes

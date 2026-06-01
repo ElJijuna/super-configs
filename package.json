@@ -1,6 +1,6 @@
 {
   "name": "super-configs",
-  "version": "1.1.1",
+  "version": "1.2.0",
   "description": "Shared ESLint, Biome, and legacy Prettier configurations for JavaScript, TypeScript, and React projects",
   "main": "./lib/index.js",
   "module": "./lib/index.js",
