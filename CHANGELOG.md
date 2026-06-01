@@ -1,3 +1,9 @@
+## [1.1.1](https://github.com/ElJijuna/super-configs/compare/v1.1.0...v1.1.1) (2026-06-01)
+
+### Bug Fixes
+
+* error in indentation ([e6f0a8f](https://github.com/ElJijuna/super-configs/commit/e6f0a8faaa5af44ea9381729412971b44c662637))
+
 ## [1.1.0](https://github.com/ElJijuna/super-configs/compare/v1.0.0...v1.1.0) (2026-06-01)
 
 ### Features
