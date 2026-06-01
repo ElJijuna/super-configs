@@ -18,6 +18,8 @@ const eslintJsConfig: Linter.Config[] = [
       'no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
       curly: ['error', 'all'],
       eqeqeq: ['error', 'always'],
+      quotes: ['error', 'single', { avoidEscape: true }],
+      semi: ['error', 'always'],
     },
   },
 ];

@@ -117,6 +117,8 @@ export default {
 
 - **Curly braces** - Requires curly braces for all control statements (`curly`)
 - **Strict equality** - Requires `===` and `!==` (`eqeqeq`)
+- **Single quotes** - Requires single quotes in JavaScript, TypeScript, and JSX
+- **Semicolons** - Requires statements to end with semicolons
 - **Unused variables** - Warns on unused variables, ignoring args prefixed with `_`
 
 ### ESLint Plugins
@@ -132,6 +134,7 @@ export default {
 
 - Semi-colons enabled
 - Single quotes
+- Single quotes in JSX attributes
 - Print width: 100 characters
 - Tab width: 2 spaces
 - Trailing commas: all

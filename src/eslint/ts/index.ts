@@ -21,6 +21,8 @@ const eslintTsConfig: Linter.Config[] = [
       '@typescript-eslint/explicit-function-return-type': 'off',
       curly: ['error', 'all'],
       eqeqeq: ['error', 'always'],
+      quotes: ['error', 'single', { avoidEscape: true }],
+      semi: ['error', 'always'],
     },
   },
 ];
