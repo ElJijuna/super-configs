@@ -1,3 +1,9 @@
+## [1.4.0](https://github.com/ElJijuna/super-configs/compare/v1.3.0...v1.4.0) (2026-06-01)
+
+### Features
+
+* enforce no newlines between import groups in react configs ([cc46ab9](https://github.com/ElJijuna/super-configs/commit/cc46ab9b41d02c0d20a6f4263054816dbaf658c7))
+
 ## [1.3.0](https://github.com/ElJijuna/super-configs/compare/v1.2.0...v1.3.0) (2026-06-01)
 
 ### Features
