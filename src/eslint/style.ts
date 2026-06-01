@@ -24,5 +24,10 @@ export const blockSpacingRules: Linter.RulesRecord = {
       prev: '*',
       next: 'return',
     },
+    {
+      blankLine: 'always',
+      prev: ['const', 'let', 'var'],
+      next: 'try',
+    },
   ],
 };
