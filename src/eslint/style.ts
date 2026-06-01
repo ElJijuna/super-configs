@@ -1,6 +1,7 @@
 import type { Linter } from 'eslint';
 
 export const blockSpacingRules: Linter.RulesRecord = {
+  '@stylistic/brace-style': ['error', 'stroustrup', { allowSingleLine: false }],
   '@stylistic/padding-line-between-statements': [
     'error',
     {
