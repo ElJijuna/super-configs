@@ -1,10 +1,12 @@
 import js from '@eslint/js';
+import stylistic from '@stylistic/eslint-plugin';
 import type { Linter } from 'eslint';
 import importPlugin from 'eslint-plugin-import';
 import jsxAccessibility from 'eslint-plugin-jsx-a11y';
 import react from 'eslint-plugin-react';
 import reactHooks from 'eslint-plugin-react-hooks';
 import globals from 'globals';
+import { blockSpacingRules } from '../../style.js';
 
 const eslintReactJsxConfig: Linter.Config[] = [
   js.configs.recommended,
@@ -24,12 +26,14 @@ const eslintReactJsxConfig: Linter.Config[] = [
       },
     },
     plugins: {
+      '@stylistic': stylistic,
       react,
       'react-hooks': reactHooks,
       'jsx-a11y': jsxAccessibility,
       import: importPlugin,
     },
     rules: {
+      ...blockSpacingRules,
       'react/prop-types': 'off',
       'react/react-in-jsx-scope': 'off',
       'no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],

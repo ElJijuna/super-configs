@@ -30,6 +30,28 @@ npm install @biomejs/biome --save-dev
 
 ## Usage
 
+### Recommended Project Setup
+
+Install the shared config and the peer tools used by your project:
+
+```bash
+npm install super-configs eslint typescript @biomejs/biome --save-dev
+```
+
+Add scripts to your `package.json`:
+
+```json
+{
+  "scripts": {
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "format": "biome check --write .",
+    "format:check": "biome check .",
+    "check": "npm run lint && npm run format:check"
+  }
+}
+```
+
 ### ESLint
 
 #### JavaScript
@@ -54,6 +76,20 @@ export default [
 ];
 ```
 
+Common TypeScript library setup:
+
+```javascript
+// eslint.config.js
+import eslintTs from 'super-configs/eslint/ts';
+
+export default [
+  {
+    ignores: ['dist/**', 'coverage/**', 'node_modules/**'],
+  },
+  ...eslintTs,
+];
+```
+
 #### React JSX
 
 ```javascript
@@ -74,6 +110,38 @@ import eslintReactTsx from 'super-configs/eslint/react/tsx';
 export default [
   ...eslintReactTsx,
 ];
+```
+
+Common React + TypeScript setup:
+
+```javascript
+// eslint.config.js
+import eslintReactTsx from 'super-configs/eslint/react/tsx';
+
+export default [
+  {
+    ignores: ['dist/**', 'coverage/**', 'storybook-static/**', 'node_modules/**'],
+  },
+  ...eslintReactTsx,
+];
+```
+
+### Biome
+
+```json
+{
+  "$schema": "https://biomejs.dev/schemas/2.4.16/schema.json",
+  "extends": ["super-configs/biome"]
+}
+```
+
+If your Biome version cannot resolve package exports, use the direct path:
+
+```json
+{
+  "$schema": "https://biomejs.dev/schemas/2.4.16/schema.json",
+  "extends": ["./node_modules/super-configs/biome.json"]
+}
 ```
 
 ### Prettier
@@ -119,6 +187,7 @@ export default {
 - **Strict equality** - Requires `===` and `!==` (`eqeqeq`)
 - **Single quotes** - Requires single quotes in JavaScript, TypeScript, and JSX
 - **Semicolons** - Requires statements to end with semicolons
+- **Block spacing** - Requires a blank line after `if`, `for`, `while`, `do`, `switch`, and `try` statements
 - **Unused variables** - Warns on unused variables, ignoring args prefixed with `_`
 
 ### ESLint Plugins
@@ -159,6 +228,49 @@ npm run format
 # Run all checks
 npm run check
 ```
+
+## Releases
+
+Releases are automated with semantic-release from commits merged into `main`.
+
+Examples:
+
+```bash
+git commit -m "feat: add React TSX lint preset"
+```
+
+Creates a minor release, for example `1.2.0`.
+
+```bash
+git commit -m "fix: correct Biome shared config export"
+```
+
+Creates a patch release, for example `1.2.1`.
+
+```bash
+git commit -m "docs: add third-party setup examples"
+```
+
+Does not publish a new npm version.
+
+```bash
+git commit -m "feat!: require ESLint 10"
+```
+
+Creates a major release, for example `2.0.0`.
+
+Breaking changes can also be declared in the commit body:
+
+```text
+feat: update default TypeScript rules
+
+BREAKING CHANGE: Type-aware linting is no longer enabled by default.
+```
+
+Required GitHub secrets:
+
+- `NPM_TOKEN` for npm publishing.
+- `GITHUB_TOKEN` is provided by GitHub Actions.
 
 ## Changelog
 

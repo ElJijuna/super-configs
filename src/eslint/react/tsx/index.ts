@@ -1,4 +1,5 @@
 import js from '@eslint/js';
+import stylistic from '@stylistic/eslint-plugin';
 import type { Linter } from 'eslint';
 import importPlugin from 'eslint-plugin-import';
 import jsxAccessibility from 'eslint-plugin-jsx-a11y';
@@ -6,6 +7,7 @@ import react from 'eslint-plugin-react';
 import reactHooks from 'eslint-plugin-react-hooks';
 import globals from 'globals';
 import tseslint from 'typescript-eslint';
+import { blockSpacingRules } from '../../style.js';
 
 const eslintReactTsxConfig: Linter.Config[] = [
   js.configs.recommended,
@@ -27,6 +29,7 @@ const eslintReactTsxConfig: Linter.Config[] = [
       },
     },
     plugins: {
+      '@stylistic': stylistic,
       react,
       'react-hooks': reactHooks,
       '@typescript-eslint': tseslint.plugin,
@@ -34,6 +37,7 @@ const eslintReactTsxConfig: Linter.Config[] = [
       import: importPlugin,
     },
     rules: {
+      ...blockSpacingRules,
       'react/react-in-jsx-scope': 'off',
       'react/prop-types': 'off',
       '@typescript-eslint/explicit-module-boundary-types': 'off',
