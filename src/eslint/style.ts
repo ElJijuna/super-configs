@@ -8,5 +8,15 @@ export const blockSpacingRules: Linter.RulesRecord = {
       prev: ['if', 'for', 'while', 'do', 'switch', 'try'],
       next: '*',
     },
+    {
+      blankLine: 'always',
+      prev: 'const',
+      next: '*',
+    },
+    {
+      blankLine: 'any',
+      prev: 'const',
+      next: 'const',
+    },
   ],
 };
