@@ -1,3 +1,9 @@
+## [1.3.0](https://github.com/ElJijuna/super-configs/compare/v1.2.0...v1.3.0) (2026-06-01)
+
+### Features
+
+* enforce double jsx-quotes and direct React type imports ([96aafdd](https://github.com/ElJijuna/super-configs/commit/96aafdd25bc90908f4aa08e9c5ba5878b3b327e1))
+
 ## [1.2.0](https://github.com/ElJijuna/super-configs/compare/v1.1.1...v1.2.0) (2026-06-01)
 
 ### Features
