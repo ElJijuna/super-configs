@@ -1,6 +1,6 @@
 # super-configs
 
-Shared ESLint and Prettier configurations for JavaScript, TypeScript, and React projects.
+Shared ESLint, Biome, and legacy Prettier configurations for JavaScript, TypeScript, and React projects.
 
 ## Installation
 
@@ -19,7 +19,13 @@ bun add super-configs -D
 This package requires the following peer dependencies:
 
 ```bash
-npm install eslint prettier typescript --save-dev
+npm install eslint typescript --save-dev
+```
+
+Biome and Prettier are optional peers. Use Biome for new projects:
+
+```bash
+npm install @biomejs/biome --save-dev
 ```
 
 ## Usage
@@ -72,6 +78,8 @@ export default [
 
 ### Prettier
 
+Prefer Biome for new projects. The Prettier export remains available for existing projects that still consume it.
+
 ```javascript
 // prettier.config.js
 import prettierConfig from 'super-configs/prettier';
@@ -100,14 +108,16 @@ export default {
 | `super-configs/eslint/ts` | ESLint configuration for TypeScript |
 | `super-configs/eslint/react/jsx` | ESLint configuration for React with JSX |
 | `super-configs/eslint/react/tsx` | ESLint configuration for React with TSX |
+| `super-configs/biome` | Biome configuration for formatting, linting, and import organization |
 | `super-configs/prettier` | Prettier configuration |
 
 ## Included Rules
 
-### Code Style
+### Code Quality
 
-- **Single quotes** - Enforces single quotes for strings (`quotes`)
 - **Curly braces** - Requires curly braces for all control statements (`curly`)
+- **Strict equality** - Requires `===` and `!==` (`eqeqeq`)
+- **Unused variables** - Warns on unused variables, ignoring args prefixed with `_`
 
 ### ESLint Plugins
 
@@ -117,17 +127,16 @@ export default {
 - `eslint-plugin-react-hooks` - React Hooks rules
 - `eslint-plugin-jsx-a11y` - JSX accessibility
 - `eslint-plugin-import` - Import ordering and validation
-- `eslint-plugin-prettier` - Prettier integration
 
-### Prettier Configuration
+### Biome Configuration
 
 - Semi-colons enabled
 - Single quotes
 - Print width: 100 characters
 - Tab width: 2 spaces
-- Trailing commas: ES5
-- Bracket spacing: true
-- Arrow parens: avoid
+- Trailing commas: all
+- Arrow parens: always
+- Import organization enabled
 
 ## Development
 
@@ -143,6 +152,9 @@ npm run lint
 
 # Format code
 npm run format
+
+# Run all checks
+npm run check
 ```
 
 ## Changelog

@@ -1,8 +1,7 @@
 import js from '@eslint/js';
-import tseslint from 'typescript-eslint';
-import prettier from 'eslint-plugin-prettier';
-import globals from 'globals';
 import type { Linter } from 'eslint';
+import globals from 'globals';
+import tseslint from 'typescript-eslint';
 
 const eslintTsConfig: Linter.Config[] = [
   js.configs.recommended,
@@ -16,19 +15,12 @@ const eslintTsConfig: Linter.Config[] = [
         ...globals.node,
         ...globals.es2021,
       },
-      parserOptions: {
-        project: true,
-      },
-    },
-    plugins: {
-      prettier,
     },
     rules: {
-      'prettier/prettier': 'error',
       '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
       '@typescript-eslint/explicit-function-return-type': 'off',
-      '@typescript-eslint/quotes': ['error', 'single', { avoidEscape: true }],
       curly: ['error', 'all'],
+      eqeqeq: ['error', 'always'],
     },
   },
 ];

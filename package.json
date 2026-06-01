@@ -1,7 +1,7 @@
 {
   "name": "super-configs",
   "version": "1.0.0",
-  "description": "All configs to projects - ESLint and Prettier configurations for JavaScript, TypeScript, and React projects",
+  "description": "Shared ESLint, Biome, and legacy Prettier configurations for JavaScript, TypeScript, and React projects",
   "main": "./lib/index.js",
   "module": "./lib/index.js",
   "types": "./lib/index.d.ts",
@@ -27,6 +27,7 @@
       "types": "./lib/eslint/react/tsx/index.d.ts",
       "import": "./lib/eslint/react/tsx/index.js"
     },
+    "./biome": "./biome.json",
     "./prettier": {
       "types": "./lib/prettier/index.d.ts",
       "import": "./lib/prettier/index.js"
@@ -34,15 +35,21 @@
   },
   "files": [
     "lib",
+    "biome.json",
     "README.md",
     "CHANGELOG.md"
   ],
   "scripts": {
+    "clean": "node -e \"require('node:fs').rmSync('lib', { recursive: true, force: true })\"",
+    "prebuild": "npm run clean",
     "build": "tsc",
-    "test": "npm run test",
-    "lint": "eslint \"src/**/*.{js,ts,jsx,tsx}\"",
-    "lint:fix": "eslint \"src/**/*.{js,ts,jsx,tsx}\" --fix",
-    "format": "prettier --write \"src/**/*.{js,ts,jsx,tsx,json,css,md}\"",
+    "check": "npm run lint && npm run biome:check && npm run build",
+    "test": "npm run check",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "biome:check": "biome check .",
+    "format": "biome format --write .",
+    "format:check": "biome format .",
     "prepublishOnly": "npm run build"
   },
   "repository": {
@@ -52,11 +59,13 @@
   "keywords": [
     "config",
     "eslint",
+    "biome",
     "prettier",
     "typescript",
     "react",
     "eslint-config",
-    "prettier-config"
+    "prettier-config",
+    "biome-config"
   ],
   "author": "pilmee <pilmee@gmail.com> (https://github.com/ElJijuna)",
   "license": "MIT",
@@ -65,32 +74,36 @@
   },
   "homepage": "https://github.com/ElJijuna/super-configs#readme",
   "peerDependencies": {
+    "@biomejs/biome": ">=2.0.0",
     "eslint": ">=9.0.0",
     "prettier": ">=3.0.0",
     "typescript": ">=5.0.0"
   },
   "peerDependenciesMeta": {
+    "@biomejs/biome": {
+      "optional": true
+    },
+    "prettier": {
+      "optional": true
+    },
     "typescript": {
       "optional": true
     }
   },
-  "devDependencies": {
-    "@babel/eslint-parser": "^7.28.4",
+  "dependencies": {
     "@eslint/js": "^9.37.0",
-    "@typescript-eslint/eslint-plugin": "^8.45.0",
-    "@typescript-eslint/parser": "^8.45.0",
-    "eslint": "^9.37.0",
-    "eslint-config-prettier": "^10.1.8",
-    "eslint-import-resolver-typescript": "^4.4.4",
     "eslint-plugin-import": "^2.32.0",
     "eslint-plugin-jsx-a11y": "^6.10.2",
-    "eslint-plugin-prettier": "^5.5.4",
     "eslint-plugin-react": "^7.37.5",
     "eslint-plugin-react-hooks": "^6.1.1",
     "globals": "^16.4.0",
+    "typescript-eslint": "^8.45.0"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^2.4.16",
+    "eslint": "^9.37.0",
     "jiti": "^2.6.1",
     "prettier": "^3.6.2",
-    "typescript": "^5.0.0",
-    "typescript-eslint": "^8.45.0"
+    "typescript": "^5.0.0"
   }
 }

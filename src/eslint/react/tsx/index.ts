@@ -1,12 +1,11 @@
 import js from '@eslint/js';
-import tseslint from 'typescript-eslint';
+import type { Linter } from 'eslint';
+import importPlugin from 'eslint-plugin-import';
+import jsxAccessibility from 'eslint-plugin-jsx-a11y';
 import react from 'eslint-plugin-react';
 import reactHooks from 'eslint-plugin-react-hooks';
-import jsxAccessibility from 'eslint-plugin-jsx-a11y';
-import importPlugin from 'eslint-plugin-import';
-import prettier from 'eslint-plugin-prettier';
 import globals from 'globals';
-import type { Linter } from 'eslint';
+import tseslint from 'typescript-eslint';
 
 const eslintReactTsxConfig: Linter.Config[] = [
   js.configs.recommended,
@@ -25,7 +24,6 @@ const eslintReactTsxConfig: Linter.Config[] = [
         ecmaFeatures: {
           jsx: true,
         },
-        project: true,
       },
     },
     plugins: {
@@ -34,18 +32,16 @@ const eslintReactTsxConfig: Linter.Config[] = [
       '@typescript-eslint': tseslint.plugin,
       'jsx-a11y': jsxAccessibility,
       import: importPlugin,
-      prettier,
     },
     rules: {
-      'prettier/prettier': 'error',
       'react/react-in-jsx-scope': 'off',
       'react/prop-types': 'off',
       '@typescript-eslint/explicit-module-boundary-types': 'off',
       '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
       'react-hooks/rules-of-hooks': 'error',
       'react-hooks/exhaustive-deps': 'warn',
-      '@typescript-eslint/quotes': ['error', 'single', { avoidEscape: true }],
       curly: ['error', 'all'],
+      eqeqeq: ['error', 'always'],
       'import/order': [
         'warn',
         {

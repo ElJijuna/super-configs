@@ -1,14 +1,14 @@
 import type { Config } from 'prettier';
 
 const prettierConfig: Config = {
-    semi: true,
-    singleQuote: true,
-    printWidth: 100,
-    tabWidth: 2,
-    trailingComma: 'es5',
-    bracketSpacing: true,
-    arrowParens: 'avoid',
-    endOfLine: 'auto',
+  semi: true,
+  singleQuote: true,
+  printWidth: 100,
+  tabWidth: 2,
+  trailingComma: 'all',
+  bracketSpacing: true,
+  arrowParens: 'always',
+  endOfLine: 'lf',
 };
 
 export default prettierConfig;
