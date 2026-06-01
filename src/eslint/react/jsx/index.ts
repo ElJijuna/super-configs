@@ -42,6 +42,13 @@ const eslintReactJsxConfig: Linter.Config[] = [
       curly: ['error', 'all'],
       eqeqeq: ['error', 'always'],
       'jsx-quotes': ['error', 'prefer-double'],
+      'no-restricted-syntax': [
+        'error',
+        {
+          selector: 'TSQualifiedName[left.name="React"]',
+          message: 'Import the type directly instead of using React.X',
+        },
+      ],
       quotes: ['error', 'single', { avoidEscape: true }],
       semi: ['error', 'always'],
       'import/order': [
