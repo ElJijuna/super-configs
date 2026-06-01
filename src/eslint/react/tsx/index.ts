@@ -46,7 +46,7 @@ const eslintReactTsxConfig: Linter.Config[] = [
       'react-hooks/exhaustive-deps': 'warn',
       curly: ['error', 'all'],
       eqeqeq: ['error', 'always'],
-      'jsx-quotes': ['error', 'prefer-single'],
+      'jsx-quotes': ['error', 'prefer-double'],
       quotes: ['error', 'single', { avoidEscape: true }],
       semi: ['error', 'always'],
       'import/order': [
