@@ -1,3 +1,9 @@
+## [1.6.0](https://github.com/ElJijuna/super-configs/compare/v1.5.0...v1.6.0) (2026-06-04)
+
+### Features
+
+* add function component definition rule for arrow functions in eslint configs ([3126774](https://github.com/ElJijuna/super-configs/commit/312677489d382e3b4a3e31c4f490a92ee0861ee9))
+
 ## [1.5.0](https://github.com/ElJijuna/super-configs/compare/v1.4.0...v1.5.0) (2026-06-01)
 
 ### Features
