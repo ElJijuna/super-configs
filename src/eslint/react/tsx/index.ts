@@ -40,6 +40,13 @@ const eslintReactTsxConfig: Linter.Config[] = [
       ...blockSpacingRules,
       'react/react-in-jsx-scope': 'off',
       'react/prop-types': 'off',
+      'react/function-component-definition': [
+        'error',
+        {
+          namedComponents: 'arrow-function',
+          unnamedComponents: 'arrow-function',
+        },
+      ],
       '@typescript-eslint/explicit-module-boundary-types': 'off',
       '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
       'react-hooks/rules-of-hooks': 'error',

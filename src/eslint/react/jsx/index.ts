@@ -36,6 +36,13 @@ const eslintReactJsxConfig: Linter.Config[] = [
       ...blockSpacingRules,
       'react/prop-types': 'off',
       'react/react-in-jsx-scope': 'off',
+      'react/function-component-definition': [
+        'error',
+        {
+          namedComponents: 'arrow-function',
+          unnamedComponents: 'arrow-function',
+        },
+      ],
       'no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
       'react-hooks/rules-of-hooks': 'error',
       'react-hooks/exhaustive-deps': 'warn',
