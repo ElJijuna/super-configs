@@ -1,13 +1,10 @@
 import js from '@eslint/js';
-import stylistic from '@stylistic/eslint-plugin';
 import type { Linter } from 'eslint';
-import importPlugin from 'eslint-plugin-import';
 import jsxAccessibility from 'eslint-plugin-jsx-a11y';
 import react from 'eslint-plugin-react';
 import reactHooks from 'eslint-plugin-react-hooks';
 import globals from 'globals';
 import tseslint from 'typescript-eslint';
-import { blockSpacingRules } from '../../style.js';
 
 const eslintReactTsxConfig: Linter.Config[] = [
   js.configs.recommended,
@@ -29,15 +26,12 @@ const eslintReactTsxConfig: Linter.Config[] = [
       },
     },
     plugins: {
-      '@stylistic': stylistic,
       react,
       'react-hooks': reactHooks,
       '@typescript-eslint': tseslint.plugin,
       'jsx-a11y': jsxAccessibility,
-      import: importPlugin,
     },
     rules: {
-      ...blockSpacingRules,
       'react/react-in-jsx-scope': 'off',
       'react/prop-types': 'off',
       'react/function-component-definition': [
@@ -53,7 +47,6 @@ const eslintReactTsxConfig: Linter.Config[] = [
       'react-hooks/exhaustive-deps': 'warn',
       curly: ['error', 'all'],
       eqeqeq: ['error', 'always'],
-      'jsx-quotes': ['error', 'prefer-double'],
       '@typescript-eslint/consistent-type-imports': [
         'error',
         { prefer: 'type-imports', fixStyle: 'separate-type-imports' },
@@ -80,27 +73,6 @@ const eslintReactTsxConfig: Linter.Config[] = [
           selector:
             'CallExpression[callee.object.name="React"][callee.property.name="createElement"]',
           message: 'Import createElement directly instead of using React.createElement.',
-        },
-      ],
-      quotes: ['error', 'single', { avoidEscape: true }],
-      semi: ['error', 'always'],
-      'import/order': [
-        'warn',
-        {
-          groups: ['builtin', 'external', 'internal', 'parent', 'sibling', 'index'],
-          pathGroups: [
-            {
-              pattern: 'react',
-              group: 'external',
-              position: 'before',
-            },
-          ],
-          pathGroupsExcludedImportTypes: ['react'],
-          'newlines-between': 'never',
-          alphabetize: {
-            order: 'asc',
-            caseInsensitive: true,
-          },
         },
       ],
     },

@@ -201,10 +201,9 @@ export default {
 
 - **Curly braces** - Requires curly braces for all control statements (`curly`)
 - **Strict equality** - Requires `===` and `!==` (`eqeqeq`)
-- **Single quotes** - Requires single quotes in JavaScript, TypeScript, and JSX
-- **Semicolons** - Requires statements to end with semicolons
-- **Block spacing** - Requires a blank line after `if`, `for`, `while`, `do`, `switch`, and `try` statements
 - **Unused variables** - Warns on unused variables, ignoring args prefixed with `_`
+
+Formatting and import organization are handled by Biome, not ESLint.
 
 ### ESLint Plugins
 
@@ -213,13 +212,12 @@ export default {
 - `eslint-plugin-react` - React rules
 - `eslint-plugin-react-hooks` - React Hooks rules
 - `eslint-plugin-jsx-a11y` - JSX accessibility
-- `eslint-plugin-import` - Import ordering and validation
 
 ### Biome Configuration
 
-- Semi-colons enabled
+- Semicolons enabled
 - Single quotes
-- Single quotes in JSX attributes
+- Double quotes in JSX attributes
 - Print width: 100 characters
 - Tab width: 2 spaces
 - Trailing commas: all
