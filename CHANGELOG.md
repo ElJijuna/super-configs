@@ -1,3 +1,9 @@
+## [1.7.0](https://github.com/ElJijuna/super-configs/compare/v1.6.0...v1.7.0) (2026-06-06)
+
+### Features
+
+* add no-restricted-imports rule to enforce direct React API imports ([5732302](https://github.com/ElJijuna/super-configs/commit/573230262f84636df5417140aaa66ce1af909877))
+
 ## [1.6.0](https://github.com/ElJijuna/super-configs/compare/v1.5.0...v1.6.0) (2026-06-04)
 
 ### Features
