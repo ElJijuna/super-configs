@@ -58,11 +58,28 @@ const eslintReactTsxConfig: Linter.Config[] = [
         'error',
         { prefer: 'type-imports', fixStyle: 'separate-type-imports' },
       ],
+      'no-restricted-imports': [
+        'error',
+        {
+          paths: [
+            {
+              name: 'react',
+              importNames: ['default'],
+              message: 'Import React APIs directly instead of using the default React namespace.',
+            },
+          ],
+        },
+      ],
       'no-restricted-syntax': [
         'error',
         {
           selector: 'TSQualifiedName[left.name="React"]',
           message: 'Import the type directly instead of using React.X',
+        },
+        {
+          selector:
+            'CallExpression[callee.object.name="React"][callee.property.name="createElement"]',
+          message: 'Import createElement directly instead of using React.createElement.',
         },
       ],
       quotes: ['error', 'single', { avoidEscape: true }],
