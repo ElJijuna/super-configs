@@ -13,8 +13,9 @@
 [![Biome](https://img.shields.io/badge/format-Biome-60A5FA)](https://biomejs.dev/)
 [![Prettier](https://img.shields.io/badge/legacy-Prettier-F7B93E?logo=prettier&logoColor=black)](https://prettier.io/)
 [![Markdownlint](https://img.shields.io/badge/lint-Markdown-000000?logo=markdown&logoColor=white)](https://github.com/DavidAnson/markdownlint)
+[![TypeDoc](https://img.shields.io/badge/docs-TypeDoc-9600ff)](https://typedoc.org/)
 
-Shared ESLint, Biome, Markdownlint, and legacy Prettier configurations for JavaScript, TypeScript, React, and Markdown projects.
+Shared ESLint, Biome, Markdownlint, TypeDoc, and legacy Prettier configurations for JavaScript, TypeScript, React, and Markdown projects.
 
 ## Installation
 
@@ -36,7 +37,7 @@ This package requires the following peer dependencies:
 npm install eslint typescript --save-dev
 ```
 
-Biome, Markdownlint, and Prettier are optional peers. Use Biome for new projects:
+Biome, Markdownlint, TypeDoc, and Prettier are optional peers. Use Biome for new projects:
 
 ```bash
 npm install @biomejs/biome --save-dev
@@ -46,6 +47,12 @@ Use Markdownlint for Markdown projects:
 
 ```bash
 npm install markdownlint --save-dev
+```
+
+Use TypeDoc for TypeScript API documentation:
+
+```bash
+npm install typedoc --save-dev
 ```
 
 ## Usage
@@ -208,6 +215,31 @@ Copy the shared template into a project root:
 cp node_modules/super-configs/.editorconfig .editorconfig
 ```
 
+### TypeDoc
+
+Extend the shared TypeDoc config:
+
+```json
+{
+  "$schema": "https://typedoc.org/schema.json",
+  "extends": "./node_modules/super-configs/typedoc.json",
+  "entryPoints": ["src/index.ts"],
+  "out": "docs",
+  "readme": "README.md",
+  "exclude": ["**/*.test.ts", "**/*.spec.ts", "**/test/**"]
+}
+```
+
+Add a docs script:
+
+```json
+{
+  "scripts": {
+    "docs": "typedoc --options typedoc.json"
+  }
+}
+```
+
 ### Prettier
 
 Prefer Biome for new projects. The Prettier export remains available for existing projects that still consume it.
@@ -244,6 +276,7 @@ export default {
 | `super-configs/biome` | Biome configuration for formatting, linting, and import organization |
 | `node_modules/super-configs/.editorconfig` | EditorConfig template for common project files |
 | `super-configs/markdownlint` | Markdownlint configuration for Markdown docs |
+| `super-configs/typedoc` | TypeDoc configuration for TypeScript API docs |
 | `super-configs/prettier` | Prettier configuration |
 
 ## Included Rules
