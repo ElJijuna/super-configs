@@ -1,3 +1,14 @@
+## [1.10.0](https://github.com/ElJijuna/super-configs/compare/v1.9.0...v1.10.0) (2026-06-07)
+
+### Features
+
+* enhance testing by adding export validation script and update check command in package.json ([64dbaba](https://github.com/ElJijuna/super-configs/commit/64dbaba7096a606a04c89d1cfa628109baccd656))
+
+### Bug Fixes
+
+* add missing newline at end of package.json ([4196a5e](https://github.com/ElJijuna/super-configs/commit/4196a5e6d3348630d8468c037e5de4b98ac11d60))
+* remove pack check from check script in package.json ([fc5d448](https://github.com/ElJijuna/super-configs/commit/fc5d448cc228f01c567391c1ae55ea7b28ea77d4))
+
 ## [1.9.0](https://github.com/ElJijuna/super-configs/compare/v1.8.0...v1.9.0) (2026-06-07)
 
 ### Features
