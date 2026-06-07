@@ -78,6 +78,16 @@ npm install typedoc --save-dev
 
 ## Usage
 
+### Root Export
+
+Prefer subpath imports for config files. The root export is available when you want to import multiple JavaScript configs from one place:
+
+```javascript
+import { eslintTs, prettierConfig } from 'super-configs';
+
+export { eslintTs, prettierConfig };
+```
+
 ### Recommended Project Setup
 
 Install the shared config and the peer tools used by your project:
