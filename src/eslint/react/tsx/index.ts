@@ -1,7 +1,5 @@
 import js from '@eslint/js';
 import type { Linter } from 'eslint';
-import jsxAccessibility from 'eslint-plugin-jsx-a11y';
-import react from 'eslint-plugin-react';
 import reactHooks from 'eslint-plugin-react-hooks';
 import globals from 'globals';
 import tseslint from 'typescript-eslint';
@@ -27,21 +25,10 @@ const eslintReactTsxConfig: Linter.Config[] = [
       },
     },
     plugins: {
-      react,
       'react-hooks': reactHooks,
       '@typescript-eslint': tseslint.plugin,
-      'jsx-a11y': jsxAccessibility,
     },
     rules: {
-      'react/react-in-jsx-scope': 'off',
-      'react/prop-types': 'off',
-      'react/function-component-definition': [
-        'error',
-        {
-          namedComponents: 'arrow-function',
-          unnamedComponents: 'arrow-function',
-        },
-      ],
       '@typescript-eslint/explicit-module-boundary-types': 'off',
       '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
       'react-hooks/rules-of-hooks': 'error',
@@ -72,16 +59,23 @@ const eslintReactTsxConfig: Linter.Config[] = [
           message: 'Import the type directly instead of using React.X',
         },
         {
+          selector: 'FunctionDeclaration[id.name=/^[A-Z]/]',
+          message: 'Use an arrow function for React components.',
+        },
+        {
+          selector: 'VariableDeclarator[id.name=/^[A-Z]/][init.type="FunctionExpression"]',
+          message: 'Use an arrow function for React components.',
+        },
+        {
+          selector: 'ExportDefaultDeclaration[declaration.type="FunctionDeclaration"]',
+          message: 'Use an arrow function for React components.',
+        },
+        {
           selector:
             'CallExpression[callee.object.name="React"][callee.property.name="createElement"]',
           message: 'Import createElement directly instead of using React.createElement.',
         },
       ],
-    },
-    settings: {
-      react: {
-        version: 'detect',
-      },
     },
   },
 ];
