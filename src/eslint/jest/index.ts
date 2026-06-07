@@ -16,6 +16,7 @@ const eslintJestConfig: Linter.Config[] = [
     },
     rules: {
       '@typescript-eslint/no-namespace': 'off',
+      curly: ['error', 'all'],
     },
   },
 ];

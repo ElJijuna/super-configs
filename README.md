@@ -1,5 +1,18 @@
 # super-configs
 
+[![npm version](https://img.shields.io/npm/v/super-configs.svg)](https://www.npmjs.com/package/super-configs)
+[![npm downloads](https://img.shields.io/npm/dm/super-configs.svg)](https://www.npmjs.com/package/super-configs)
+[![license](https://img.shields.io/npm/l/super-configs.svg)](./LICENSE)
+[![CI](https://github.com/ElJijuna/super-configs/actions/workflows/ci.yml/badge.svg)](https://github.com/ElJijuna/super-configs/actions/workflows/ci.yml)
+[![Release](https://github.com/ElJijuna/super-configs/actions/workflows/publish.yml/badge.svg)](https://github.com/ElJijuna/super-configs/actions/workflows/publish.yml)
+[![semantic-release](https://img.shields.io/badge/release-semantic--release-e10079?logo=semantic-release&logoColor=white)](https://semantic-release.gitbook.io/semantic-release/)
+[![Web Audit Report](https://github.com/ElJijuna/super-configs/actions/workflows/web-audit-report.yml/badge.svg)](https://github.com/ElJijuna/super-configs/actions/workflows/web-audit-report.yml)
+[![Node.js](https://img.shields.io/badge/node-%3E%3D22-339933?logo=node.js&logoColor=white)](https://nodejs.org/)
+[![TypeScript](https://img.shields.io/badge/types-TypeScript-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![ESLint](https://img.shields.io/badge/lint-ESLint-4B32C3?logo=eslint&logoColor=white)](https://eslint.org/)
+[![Biome](https://img.shields.io/badge/format-Biome-60A5FA)](https://biomejs.dev/)
+[![Prettier](https://img.shields.io/badge/legacy-Prettier-F7B93E?logo=prettier&logoColor=black)](https://prettier.io/)
+
 Shared ESLint, Biome, and legacy Prettier configurations for JavaScript, TypeScript, and React projects.
 
 ## Installation
@@ -203,6 +216,42 @@ export default {
 - **Strict equality** - Requires `===` and `!==` (`eqeqeq`)
 - **Unused variables** - Warns on unused variables, ignoring args prefixed with `_`
 
+Examples:
+
+```javascript
+// Invalid
+if (isReady) start();
+
+// Valid
+if (isReady) {
+  start();
+}
+```
+
+```javascript
+// Invalid
+if (count == '1') {
+  start();
+}
+
+// Valid
+if (count === 1) {
+  start();
+}
+```
+
+```javascript
+// Warns: `event` is unused
+function handleClick(event) {
+  save();
+}
+
+// Valid: ignored args can start with `_`
+function handleClick(_event) {
+  save();
+}
+```
+
 Formatting and import organization are handled by Biome, not ESLint.
 
 ### ESLint Plugins
@@ -223,6 +272,29 @@ Formatting and import organization are handled by Biome, not ESLint.
 - Trailing commas: all
 - Arrow parens: always
 - Import organization enabled
+- Block statements required for control flow (`useBlockStatements`)
+
+Examples:
+
+```javascript
+// Invalid
+while (isRunning) tick();
+
+// Valid
+while (isRunning) {
+  tick();
+}
+```
+
+```javascript
+// Invalid
+const label = "ready"
+const items = [one, two]
+
+// Formatted
+const label = 'ready';
+const items = [one, two];
+```
 
 ## Development
 
