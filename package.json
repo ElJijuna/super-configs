@@ -1,7 +1,7 @@
 {
   "name": "super-configs",
   "version": "1.8.0",
-  "description": "Shared ESLint, Biome, Markdownlint, TypeDoc, and legacy Prettier configurations for JavaScript, TypeScript, React, and Markdown projects",
+  "description": "Shared ESLint, Biome, Jest, Markdownlint, TypeDoc, and legacy Prettier configurations for JavaScript, TypeScript, React, and Markdown projects",
   "main": "./lib/index.js",
   "module": "./lib/index.js",
   "types": "./lib/index.d.ts",
@@ -32,6 +32,7 @@
       "import": "./lib/eslint/react/tsx/index.js"
     },
     "./biome": "./biome.json",
+    "./jest": "./jest.config.js",
     "./markdownlint": "./markdownlint.json",
     "./typedoc": "./typedoc.json",
     "./prettier": {
@@ -43,6 +44,7 @@
     "lib",
     "biome.json",
     ".editorconfig",
+    "jest.config.js",
     "markdownlint.json",
     "typedoc.json",
     "README.md",
@@ -72,6 +74,7 @@
     "biome",
     "prettier",
     "editorconfig",
+    "jest",
     "markdownlint",
     "typedoc",
     "typescript",
@@ -80,6 +83,7 @@
     "prettier-config",
     "editorconfig-template",
     "biome-config",
+    "jest-config",
     "markdownlint-config",
     "typedoc-config"
   ],
@@ -95,13 +99,18 @@
   "peerDependencies": {
     "@biomejs/biome": ">=2.0.0",
     "eslint": ">=9.0.0",
+    "jest": ">=29.0.0",
     "prettier": ">=3.0.0",
     "markdownlint": ">=0.37.0",
+    "ts-jest": ">=29.0.0",
     "typedoc": ">=0.28.0",
     "typescript": ">=5.0.0"
   },
   "peerDependenciesMeta": {
     "@biomejs/biome": {
+      "optional": true
+    },
+    "jest": {
       "optional": true
     },
     "prettier": {
@@ -111,6 +120,9 @@
       "optional": true
     },
     "typedoc": {
+      "optional": true
+    },
+    "ts-jest": {
       "optional": true
     },
     "typescript": {

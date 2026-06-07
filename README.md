@@ -11,11 +11,12 @@
 [![TypeScript](https://img.shields.io/badge/types-TypeScript-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 [![ESLint](https://img.shields.io/badge/lint-ESLint-4B32C3?logo=eslint&logoColor=white)](https://eslint.org/)
 [![Biome](https://img.shields.io/badge/format-Biome-60A5FA)](https://biomejs.dev/)
+[![Jest](https://img.shields.io/badge/test-Jest-C21325?logo=jest&logoColor=white)](https://jestjs.io/)
 [![Prettier](https://img.shields.io/badge/legacy-Prettier-F7B93E?logo=prettier&logoColor=black)](https://prettier.io/)
 [![Markdownlint](https://img.shields.io/badge/lint-Markdown-000000?logo=markdown&logoColor=white)](https://github.com/DavidAnson/markdownlint)
 [![TypeDoc](https://img.shields.io/badge/docs-TypeDoc-9600ff)](https://typedoc.org/)
 
-Shared ESLint, Biome, Markdownlint, TypeDoc, and legacy Prettier configurations for JavaScript, TypeScript, React, and Markdown projects.
+Shared ESLint, Biome, Jest, Markdownlint, TypeDoc, and legacy Prettier configurations for JavaScript, TypeScript, React, and Markdown projects.
 
 ## Installation
 
@@ -37,7 +38,7 @@ This package requires the following peer dependencies:
 npm install eslint typescript --save-dev
 ```
 
-Biome, Markdownlint, TypeDoc, and Prettier are optional peers. Use Biome for new projects:
+Biome, Jest, Markdownlint, TypeDoc, and Prettier are optional peers. Use Biome for new projects:
 
 ```bash
 npm install @biomejs/biome --save-dev
@@ -47,6 +48,12 @@ Use Markdownlint for Markdown projects:
 
 ```bash
 npm install markdownlint --save-dev
+```
+
+Use Jest for TypeScript test projects:
+
+```bash
+npm install jest ts-jest --save-dev
 ```
 
 Use TypeDoc for TypeScript API documentation:
@@ -215,6 +222,29 @@ Copy the shared template into a project root:
 cp node_modules/super-configs/.editorconfig .editorconfig
 ```
 
+### Jest
+
+Use the shared Jest config:
+
+```javascript
+// jest.config.js
+import jestConfig from 'super-configs/jest';
+
+export default jestConfig;
+```
+
+Or extend it:
+
+```javascript
+// jest.config.js
+import jestConfig from 'super-configs/jest';
+
+export default {
+  ...jestConfig,
+  testMatch: ['**/*.test.ts'],
+};
+```
+
 ### TypeDoc
 
 Extend the shared TypeDoc config:
@@ -275,6 +305,7 @@ export default {
 | `super-configs/eslint/react/tsx` | ESLint configuration for React with TSX |
 | `super-configs/biome` | Biome configuration for formatting, linting, and import organization |
 | `node_modules/super-configs/.editorconfig` | EditorConfig template for common project files |
+| `super-configs/jest` | Jest configuration for TypeScript test projects |
 | `super-configs/markdownlint` | Markdownlint configuration for Markdown docs |
 | `super-configs/typedoc` | TypeDoc configuration for TypeScript API docs |
 | `super-configs/prettier` | Prettier configuration |
