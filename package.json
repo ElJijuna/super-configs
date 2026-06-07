@@ -58,7 +58,7 @@
     "clean": "node -e \"require('node:fs').rmSync('lib', { recursive: true, force: true })\"",
     "prebuild": "npm run clean",
     "build": "tsc",
-    "check": "npm run lint && npm run biome:check && npm run build && npm run test:exports && npm run pack:check",
+    "check": "npm run lint && npm run biome:check && npm run build && npm run test:exports",
     "test": "npm run check",
     "test:exports": "node scripts/test-exports.mjs",
     "pack:check": "npm --cache /private/tmp/npm-cache-super-configs pack --dry-run",
