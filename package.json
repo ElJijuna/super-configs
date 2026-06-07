@@ -41,6 +41,7 @@
   "files": [
     "lib",
     "biome.json",
+    ".editorconfig",
     "markdownlint.json",
     "README.md",
     "CHANGELOG.md"
@@ -68,11 +69,13 @@
     "eslint",
     "biome",
     "prettier",
+    "editorconfig",
     "markdownlint",
     "typescript",
     "react",
     "eslint-config",
     "prettier-config",
+    "editorconfig-template",
     "biome-config",
     "markdownlint-config"
   ],

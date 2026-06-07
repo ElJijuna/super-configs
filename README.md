@@ -200,6 +200,14 @@ Or add a `.markdownlint.json` file for editors and CLI wrappers:
 }
 ```
 
+### EditorConfig
+
+Copy the shared template into a project root:
+
+```bash
+cp node_modules/super-configs/.editorconfig .editorconfig
+```
+
 ### Prettier
 
 Prefer Biome for new projects. The Prettier export remains available for existing projects that still consume it.
@@ -234,6 +242,7 @@ export default {
 | `super-configs/eslint/react/jsx` | ESLint configuration for React with JSX |
 | `super-configs/eslint/react/tsx` | ESLint configuration for React with TSX |
 | `super-configs/biome` | Biome configuration for formatting, linting, and import organization |
+| `node_modules/super-configs/.editorconfig` | EditorConfig template for common project files |
 | `super-configs/markdownlint` | Markdownlint configuration for Markdown docs |
 | `super-configs/prettier` | Prettier configuration |
 
