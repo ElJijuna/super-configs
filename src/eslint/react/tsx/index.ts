@@ -5,6 +5,7 @@ import react from 'eslint-plugin-react';
 import reactHooks from 'eslint-plugin-react-hooks';
 import globals from 'globals';
 import tseslint from 'typescript-eslint';
+import { preferProcessEnvDestructuringRestriction } from '../../process-env.js';
 
 const eslintReactTsxConfig: Linter.Config[] = [
   js.configs.recommended,
@@ -65,6 +66,7 @@ const eslintReactTsxConfig: Linter.Config[] = [
       ],
       'no-restricted-syntax': [
         'error',
+        preferProcessEnvDestructuringRestriction,
         {
           selector: 'TSQualifiedName[left.name="React"]',
           message: 'Import the type directly instead of using React.X',

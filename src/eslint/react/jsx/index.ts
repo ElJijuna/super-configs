@@ -4,6 +4,7 @@ import jsxAccessibility from 'eslint-plugin-jsx-a11y';
 import react from 'eslint-plugin-react';
 import reactHooks from 'eslint-plugin-react-hooks';
 import globals from 'globals';
+import { preferProcessEnvDestructuringRestriction } from '../../process-env.js';
 
 const eslintReactJsxConfig: Linter.Config[] = [
   js.configs.recommended,
@@ -56,6 +57,7 @@ const eslintReactJsxConfig: Linter.Config[] = [
       ],
       'no-restricted-syntax': [
         'error',
+        preferProcessEnvDestructuringRestriction,
         {
           selector: 'TSQualifiedName[left.name="React"]',
           message: 'Import the type directly instead of using React.X',

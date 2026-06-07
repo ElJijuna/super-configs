@@ -390,6 +390,7 @@ export default {
 - **Curly braces** - Requires curly braces for all control statements (`curly`)
 - **Strict equality** - Requires `===` and `!==` (`eqeqeq`)
 - **Unused variables** - Warns on unused variables, ignoring args prefixed with `_`
+- **Environment variables** - Prefer destructuring `process.env` over bracket notation
 
 Examples:
 
@@ -425,6 +426,14 @@ function handleClick(event) {
 function handleClick(_event) {
   save();
 }
+```
+
+```javascript
+// Invalid
+const NODE_ENV = process.env['NODE_ENV'];
+
+// Valid
+const { NODE_ENV } = process.env;
 ```
 
 Formatting and import organization are handled by Biome, not ESLint.
