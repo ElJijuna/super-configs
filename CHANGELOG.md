@@ -1,3 +1,9 @@
+## [1.12.0](https://github.com/ElJijuna/super-configs/compare/v1.11.0...v1.12.0) (2026-06-07)
+
+### Features
+
+* add ESLint rule to prefer async/await over Promise.then() and Promise.catch() ([c2bd116](https://github.com/ElJijuna/super-configs/commit/c2bd116acfcdcf9c1a454a24ed9b0a83bd9c9e01))
+
 ## [1.11.0](https://github.com/ElJijuna/super-configs/compare/v1.10.0...v1.11.0) (2026-06-07)
 
 ### Features
