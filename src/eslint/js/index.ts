@@ -1,7 +1,8 @@
 import js from '@eslint/js';
 import type { Linter } from 'eslint';
 import globals from 'globals';
-import { preferProcessEnvDestructuringRule } from '../process-env.js';
+import { preferAsyncAwaitRestrictions } from '../async-await.js';
+import { preferProcessEnvDestructuringRestriction } from '../process-env.js';
 
 const eslintJsConfig: Linter.Config[] = [
   js.configs.recommended,
@@ -19,7 +20,11 @@ const eslintJsConfig: Linter.Config[] = [
       'no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
       curly: ['error', 'all'],
       eqeqeq: ['error', 'always'],
-      'no-restricted-syntax': preferProcessEnvDestructuringRule,
+      'no-restricted-syntax': [
+        'error',
+        preferProcessEnvDestructuringRestriction,
+        ...preferAsyncAwaitRestrictions,
+      ],
     },
   },
 ];

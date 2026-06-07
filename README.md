@@ -391,6 +391,7 @@ export default {
 - **Strict equality** - Requires `===` and `!==` (`eqeqeq`)
 - **Unused variables** - Warns on unused variables, ignoring args prefixed with `_`
 - **Environment variables** - Prefer destructuring `process.env` over bracket notation
+- **Async flow** - Requires `async`/`await` instead of `.then()` and `.catch()`
 
 Examples:
 
@@ -434,6 +435,21 @@ const NODE_ENV = process.env['NODE_ENV'];
 
 // Valid
 const { NODE_ENV } = process.env;
+```
+
+```javascript
+// Invalid
+fetchUser()
+  .then((user) => saveUser(user))
+  .catch((error) => reportError(error));
+
+// Valid
+try {
+  const user = await fetchUser();
+  await saveUser(user);
+} catch (error) {
+  reportError(error);
+}
 ```
 
 Formatting and import organization are handled by Biome, not ESLint.

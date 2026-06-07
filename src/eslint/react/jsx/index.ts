@@ -4,6 +4,7 @@ import jsxAccessibility from 'eslint-plugin-jsx-a11y';
 import react from 'eslint-plugin-react';
 import reactHooks from 'eslint-plugin-react-hooks';
 import globals from 'globals';
+import { preferAsyncAwaitRestrictions } from '../../async-await.js';
 import { preferProcessEnvDestructuringRestriction } from '../../process-env.js';
 
 const eslintReactJsxConfig: Linter.Config[] = [
@@ -58,6 +59,7 @@ const eslintReactJsxConfig: Linter.Config[] = [
       'no-restricted-syntax': [
         'error',
         preferProcessEnvDestructuringRestriction,
+        ...preferAsyncAwaitRestrictions,
         {
           selector: 'TSQualifiedName[left.name="React"]',
           message: 'Import the type directly instead of using React.X',

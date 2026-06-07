@@ -2,7 +2,8 @@ import js from '@eslint/js';
 import type { Linter } from 'eslint';
 import globals from 'globals';
 import tseslint from 'typescript-eslint';
-import { preferProcessEnvDestructuringRule } from '../process-env.js';
+import { preferAsyncAwaitRestrictions } from '../async-await.js';
+import { preferProcessEnvDestructuringRestriction } from '../process-env.js';
 
 const eslintTsConfig: Linter.Config[] = [
   js.configs.recommended,
@@ -22,7 +23,11 @@ const eslintTsConfig: Linter.Config[] = [
       '@typescript-eslint/explicit-function-return-type': 'off',
       curly: ['error', 'all'],
       eqeqeq: ['error', 'always'],
-      'no-restricted-syntax': preferProcessEnvDestructuringRule,
+      'no-restricted-syntax': [
+        'error',
+        preferProcessEnvDestructuringRestriction,
+        ...preferAsyncAwaitRestrictions,
+      ],
     },
   },
 ];
