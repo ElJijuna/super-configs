@@ -1,3 +1,14 @@
+## [1.9.0](https://github.com/ElJijuna/super-configs/compare/v1.8.0...v1.9.0) (2026-06-07)
+
+### Features
+
+* add Commitlint support and update configurations in package.json, package-lock.json, README, and create commitlint.config.js ([ef3157d](https://github.com/ElJijuna/super-configs/commit/ef3157d9c3dfc28e94acb6b30da16a635ed921e0))
+* add EditorConfig template and update package.json to include it ([baaec12](https://github.com/ElJijuna/super-configs/commit/baaec12511d56ae7152f71279f956d34227df991))
+* add Jest support and update configurations in package.json, package-lock.json, README, and jest.config.js ([ce80626](https://github.com/ElJijuna/super-configs/commit/ce806263cbe255c401295b73bf45d1041ee7be13))
+* add Markdownlint support and update README, package.json, and package-lock.json ([e34e2cd](https://github.com/ElJijuna/super-configs/commit/e34e2cde019ad43c234881207cb7607ea018fe42))
+* add Stylelint support and update configurations in package.json, package-lock.json, README, and create stylelint.config.js ([d4b592b](https://github.com/ElJijuna/super-configs/commit/d4b592bdfe5eadeab41149f22ce83b818a76f334))
+* add TypeDoc support and update configurations in README, package.json, and package-lock.json ([e6851b7](https://github.com/ElJijuna/super-configs/commit/e6851b7814455f5cff353151cf6eaa00c51b8a52))
+
 ## [1.8.0](https://github.com/ElJijuna/super-configs/compare/v1.7.0...v1.8.0) (2026-06-07)
 
 ### Features
