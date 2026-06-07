@@ -1,7 +1,7 @@
 {
   "name": "super-configs",
   "version": "1.8.0",
-  "description": "Shared ESLint, Biome, Jest, Markdownlint, TypeDoc, and legacy Prettier configurations for JavaScript, TypeScript, React, and Markdown projects",
+  "description": "Shared ESLint, Biome, Jest, Markdownlint, Stylelint, TypeDoc, and legacy Prettier configurations for JavaScript, TypeScript, React, CSS, and Markdown projects",
   "main": "./lib/index.js",
   "module": "./lib/index.js",
   "types": "./lib/index.d.ts",
@@ -34,6 +34,7 @@
     "./biome": "./biome.json",
     "./jest": "./jest.config.js",
     "./markdownlint": "./markdownlint.json",
+    "./stylelint": "./stylelint.config.js",
     "./typedoc": "./typedoc.json",
     "./prettier": {
       "types": "./lib/prettier/index.d.ts",
@@ -46,6 +47,7 @@
     ".editorconfig",
     "jest.config.js",
     "markdownlint.json",
+    "stylelint.config.js",
     "typedoc.json",
     "README.md",
     "CHANGELOG.md"
@@ -76,6 +78,7 @@
     "editorconfig",
     "jest",
     "markdownlint",
+    "stylelint",
     "typedoc",
     "typescript",
     "react",
@@ -85,6 +88,7 @@
     "biome-config",
     "jest-config",
     "markdownlint-config",
+    "stylelint-config",
     "typedoc-config"
   ],
   "author": "pilmee <pilmee@gmail.com> (https://github.com/ElJijuna)",
@@ -102,6 +106,8 @@
     "jest": ">=29.0.0",
     "prettier": ">=3.0.0",
     "markdownlint": ">=0.37.0",
+    "stylelint": ">=16.0.0",
+    "stylelint-config-standard": ">=36.0.0",
     "ts-jest": ">=29.0.0",
     "typedoc": ">=0.28.0",
     "typescript": ">=5.0.0"
@@ -117,6 +123,12 @@
       "optional": true
     },
     "markdownlint": {
+      "optional": true
+    },
+    "stylelint": {
+      "optional": true
+    },
+    "stylelint-config-standard": {
       "optional": true
     },
     "typedoc": {

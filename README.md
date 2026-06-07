@@ -14,9 +14,10 @@
 [![Jest](https://img.shields.io/badge/test-Jest-C21325?logo=jest&logoColor=white)](https://jestjs.io/)
 [![Prettier](https://img.shields.io/badge/legacy-Prettier-F7B93E?logo=prettier&logoColor=black)](https://prettier.io/)
 [![Markdownlint](https://img.shields.io/badge/lint-Markdown-000000?logo=markdown&logoColor=white)](https://github.com/DavidAnson/markdownlint)
+[![Stylelint](https://img.shields.io/badge/lint-Stylelint-263238?logo=stylelint&logoColor=white)](https://stylelint.io/)
 [![TypeDoc](https://img.shields.io/badge/docs-TypeDoc-9600ff)](https://typedoc.org/)
 
-Shared ESLint, Biome, Jest, Markdownlint, TypeDoc, and legacy Prettier configurations for JavaScript, TypeScript, React, and Markdown projects.
+Shared ESLint, Biome, Jest, Markdownlint, Stylelint, TypeDoc, and legacy Prettier configurations for JavaScript, TypeScript, React, CSS, and Markdown projects.
 
 ## Installation
 
@@ -38,7 +39,7 @@ This package requires the following peer dependencies:
 npm install eslint typescript --save-dev
 ```
 
-Biome, Jest, Markdownlint, TypeDoc, and Prettier are optional peers. Use Biome for new projects:
+Biome, Jest, Markdownlint, Stylelint, TypeDoc, and Prettier are optional peers. Use Biome for new projects:
 
 ```bash
 npm install @biomejs/biome --save-dev
@@ -54,6 +55,12 @@ Use Jest for TypeScript test projects:
 
 ```bash
 npm install jest ts-jest --save-dev
+```
+
+Use Stylelint for CSS projects:
+
+```bash
+npm install stylelint stylelint-config-standard --save-dev
 ```
 
 Use TypeDoc for TypeScript API documentation:
@@ -245,6 +252,32 @@ export default {
 };
 ```
 
+### Stylelint
+
+Use the shared Stylelint config:
+
+```javascript
+// stylelint.config.js
+import stylelintConfig from 'super-configs/stylelint';
+
+export default stylelintConfig;
+```
+
+Or extend it:
+
+```javascript
+// stylelint.config.js
+import stylelintConfig from 'super-configs/stylelint';
+
+export default {
+  ...stylelintConfig,
+  rules: {
+    ...stylelintConfig.rules,
+    'selector-class-pattern': '^[a-z][a-zA-Z0-9]+$',
+  },
+};
+```
+
 ### TypeDoc
 
 Extend the shared TypeDoc config:
@@ -307,6 +340,7 @@ export default {
 | `node_modules/super-configs/.editorconfig` | EditorConfig template for common project files |
 | `super-configs/jest` | Jest configuration for TypeScript test projects |
 | `super-configs/markdownlint` | Markdownlint configuration for Markdown docs |
+| `super-configs/stylelint` | Stylelint configuration for CSS projects |
 | `super-configs/typedoc` | TypeDoc configuration for TypeScript API docs |
 | `super-configs/prettier` | Prettier configuration |
 
