@@ -1,3 +1,9 @@
+## [1.11.0](https://github.com/ElJijuna/super-configs/compare/v1.10.0...v1.11.0) (2026-06-07)
+
+### Features
+
+* add ESLint rule to prefer destructuring process.env over bracket notation ([b026296](https://github.com/ElJijuna/super-configs/commit/b0262962c1560fda30f4f22dd6892e0995ccafef))
+
 ## [1.10.0](https://github.com/ElJijuna/super-configs/compare/v1.9.0...v1.10.0) (2026-06-07)
 
 ### Features
