@@ -1,3 +1,9 @@
+## [1.8.0](https://github.com/ElJijuna/super-configs/compare/v1.7.0...v1.8.0) (2026-06-07)
+
+### Features
+
+* add additional badges to README and enforce block statements in ESLint configurations ([ee632b3](https://github.com/ElJijuna/super-configs/commit/ee632b3df377a4cc8a5217636da187ed6a97ed29))
+
 ## [1.7.0](https://github.com/ElJijuna/super-configs/compare/v1.6.0...v1.7.0) (2026-06-06)
 
 ### Features
