@@ -9,6 +9,7 @@
 [![Web Audit Report](https://github.com/ElJijuna/super-configs/actions/workflows/web-audit-report.yml/badge.svg)](https://github.com/ElJijuna/super-configs/actions/workflows/web-audit-report.yml)
 [![Node.js](https://img.shields.io/badge/node-%3E%3D22-339933?logo=node.js&logoColor=white)](https://nodejs.org/)
 [![TypeScript](https://img.shields.io/badge/types-TypeScript-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![Commitlint](https://img.shields.io/badge/lint-Commitlint-000000)](https://commitlint.js.org/)
 [![ESLint](https://img.shields.io/badge/lint-ESLint-4B32C3?logo=eslint&logoColor=white)](https://eslint.org/)
 [![Biome](https://img.shields.io/badge/format-Biome-60A5FA)](https://biomejs.dev/)
 [![Jest](https://img.shields.io/badge/test-Jest-C21325?logo=jest&logoColor=white)](https://jestjs.io/)
@@ -17,7 +18,7 @@
 [![Stylelint](https://img.shields.io/badge/lint-Stylelint-263238?logo=stylelint&logoColor=white)](https://stylelint.io/)
 [![TypeDoc](https://img.shields.io/badge/docs-TypeDoc-9600ff)](https://typedoc.org/)
 
-Shared ESLint, Biome, Jest, Markdownlint, Stylelint, TypeDoc, and legacy Prettier configurations for JavaScript, TypeScript, React, CSS, and Markdown projects.
+Shared ESLint, Biome, Commitlint, Jest, Markdownlint, Stylelint, TypeDoc, and legacy Prettier configurations for JavaScript, TypeScript, React, CSS, and Markdown projects.
 
 ## Installation
 
@@ -39,7 +40,7 @@ This package requires the following peer dependencies:
 npm install eslint typescript --save-dev
 ```
 
-Biome, Jest, Markdownlint, Stylelint, TypeDoc, and Prettier are optional peers. Use Biome for new projects:
+Biome, Commitlint, Jest, Markdownlint, Stylelint, TypeDoc, and Prettier are optional peers. Use Biome for new projects:
 
 ```bash
 npm install @biomejs/biome --save-dev
@@ -49,6 +50,12 @@ Use Markdownlint for Markdown projects:
 
 ```bash
 npm install markdownlint --save-dev
+```
+
+Use Commitlint for Conventional Commits:
+
+```bash
+npm install @commitlint/cli @commitlint/config-conventional --save-dev
 ```
 
 Use Jest for TypeScript test projects:
@@ -200,6 +207,27 @@ If your Biome version cannot resolve package exports, use the direct path:
 }
 ```
 
+### Commitlint
+
+Use the shared Commitlint config:
+
+```javascript
+// commitlint.config.js
+import commitlintConfig from 'super-configs/commitlint';
+
+export default commitlintConfig;
+```
+
+Add a commit message check script:
+
+```json
+{
+  "scripts": {
+    "commitlint": "commitlint --from HEAD~1 --to HEAD --verbose"
+  }
+}
+```
+
 ### Markdownlint
 
 Point Markdownlint-compatible tools at the shared JSON config:
@@ -337,6 +365,7 @@ export default {
 | `super-configs/eslint/react/jsx` | ESLint configuration for React with JSX |
 | `super-configs/eslint/react/tsx` | ESLint configuration for React with TSX |
 | `super-configs/biome` | Biome configuration for formatting, linting, and import organization |
+| `super-configs/commitlint` | Commitlint configuration for Conventional Commits |
 | `node_modules/super-configs/.editorconfig` | EditorConfig template for common project files |
 | `super-configs/jest` | Jest configuration for TypeScript test projects |
 | `super-configs/markdownlint` | Markdownlint configuration for Markdown docs |
