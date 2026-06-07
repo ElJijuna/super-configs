@@ -12,8 +12,9 @@
 [![ESLint](https://img.shields.io/badge/lint-ESLint-4B32C3?logo=eslint&logoColor=white)](https://eslint.org/)
 [![Biome](https://img.shields.io/badge/format-Biome-60A5FA)](https://biomejs.dev/)
 [![Prettier](https://img.shields.io/badge/legacy-Prettier-F7B93E?logo=prettier&logoColor=black)](https://prettier.io/)
+[![Markdownlint](https://img.shields.io/badge/lint-Markdown-000000?logo=markdown&logoColor=white)](https://github.com/DavidAnson/markdownlint)
 
-Shared ESLint, Biome, and legacy Prettier configurations for JavaScript, TypeScript, and React projects.
+Shared ESLint, Biome, Markdownlint, and legacy Prettier configurations for JavaScript, TypeScript, React, and Markdown projects.
 
 ## Installation
 
@@ -35,10 +36,16 @@ This package requires the following peer dependencies:
 npm install eslint typescript --save-dev
 ```
 
-Biome and Prettier are optional peers. Use Biome for new projects:
+Biome, Markdownlint, and Prettier are optional peers. Use Biome for new projects:
 
 ```bash
 npm install @biomejs/biome --save-dev
+```
+
+Use Markdownlint for Markdown projects:
+
+```bash
+npm install markdownlint --save-dev
 ```
 
 ## Usage
@@ -172,6 +179,27 @@ If your Biome version cannot resolve package exports, use the direct path:
 }
 ```
 
+### Markdownlint
+
+Point Markdownlint-compatible tools at the shared JSON config:
+
+```javascript
+import { lint, readConfig } from 'markdownlint/sync';
+
+const config = readConfig('./node_modules/super-configs/markdownlint.json');
+const results = lint({ files: ['README.md'], config });
+
+console.dir(results, { colors: true, depth: null });
+```
+
+Or add a `.markdownlint.json` file for editors and CLI wrappers:
+
+```json
+{
+  "extends": "./node_modules/super-configs/markdownlint.json"
+}
+```
+
 ### Prettier
 
 Prefer Biome for new projects. The Prettier export remains available for existing projects that still consume it.
@@ -206,6 +234,7 @@ export default {
 | `super-configs/eslint/react/jsx` | ESLint configuration for React with JSX |
 | `super-configs/eslint/react/tsx` | ESLint configuration for React with TSX |
 | `super-configs/biome` | Biome configuration for formatting, linting, and import organization |
+| `super-configs/markdownlint` | Markdownlint configuration for Markdown docs |
 | `super-configs/prettier` | Prettier configuration |
 
 ## Included Rules

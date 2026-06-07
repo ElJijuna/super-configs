@@ -1,7 +1,7 @@
 {
   "name": "super-configs",
   "version": "1.8.0",
-  "description": "Shared ESLint, Biome, and legacy Prettier configurations for JavaScript, TypeScript, and React projects",
+  "description": "Shared ESLint, Biome, Markdownlint, and legacy Prettier configurations for JavaScript, TypeScript, React, and Markdown projects",
   "main": "./lib/index.js",
   "module": "./lib/index.js",
   "types": "./lib/index.d.ts",
@@ -32,6 +32,7 @@
       "import": "./lib/eslint/react/tsx/index.js"
     },
     "./biome": "./biome.json",
+    "./markdownlint": "./markdownlint.json",
     "./prettier": {
       "types": "./lib/prettier/index.d.ts",
       "import": "./lib/prettier/index.js"
@@ -40,6 +41,7 @@
   "files": [
     "lib",
     "biome.json",
+    "markdownlint.json",
     "README.md",
     "CHANGELOG.md"
   ],
@@ -66,11 +68,13 @@
     "eslint",
     "biome",
     "prettier",
+    "markdownlint",
     "typescript",
     "react",
     "eslint-config",
     "prettier-config",
-    "biome-config"
+    "biome-config",
+    "markdownlint-config"
   ],
   "author": "pilmee <pilmee@gmail.com> (https://github.com/ElJijuna)",
   "license": "MIT",
@@ -85,6 +89,7 @@
     "@biomejs/biome": ">=2.0.0",
     "eslint": ">=9.0.0",
     "prettier": ">=3.0.0",
+    "markdownlint": ">=0.37.0",
     "typescript": ">=5.0.0"
   },
   "peerDependenciesMeta": {
@@ -92,6 +97,9 @@
       "optional": true
     },
     "prettier": {
+      "optional": true
+    },
+    "markdownlint": {
       "optional": true
     },
     "typescript": {
