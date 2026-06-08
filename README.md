@@ -1,5 +1,9 @@
 # super-configs
 
+<p align="center">
+  <img src="https://raw.githubusercontent.com/ElJijuna/super-configs/main/public/assets/super-configs.png" alt="super-configs logo" width="160" />
+</p>
+
 [![npm version](https://img.shields.io/npm/v/super-configs.svg)](https://www.npmjs.com/package/super-configs)
 [![npm downloads](https://img.shields.io/npm/dm/super-configs.svg)](https://www.npmjs.com/package/super-configs)
 [![license](https://img.shields.io/npm/l/super-configs.svg)](./LICENSE)
