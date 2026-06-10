@@ -394,6 +394,7 @@ export default {
 - **Curly braces** - Requires curly braces for all control statements (`curly`)
 - **Strict equality** - Requires `===` and `!==` (`eqeqeq`)
 - **Unused variables** - Warns on unused variables, ignoring args prefixed with `_`
+- **Destructuring** - Prefer destructuring object properties and array items before using them
 - **Environment variables** - Prefer destructuring `process.env` over bracket notation
 - **Async flow** - Requires `async`/`await` instead of `.then()` and `.catch()`
 
@@ -430,6 +431,25 @@ function handleClick(event) {
 // Valid: ignored args can start with `_`
 function handleClick(_event) {
   save();
+}
+```
+
+```typescript
+// Invalid
+const userName = user.name;
+const firstUser = users[0];
+const input = { name: user['name'] as string };
+function getName(name = user['name']) {
+  return name;
+}
+
+// Valid
+const { name } = user;
+const [firstUser] = users;
+const userName = name;
+const input = { name };
+function getName(name = user.name) {
+  return name;
 }
 ```
 

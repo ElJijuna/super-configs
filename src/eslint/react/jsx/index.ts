@@ -5,6 +5,10 @@ import react from 'eslint-plugin-react';
 import reactHooks from 'eslint-plugin-react-hooks';
 import globals from 'globals';
 import { preferAsyncAwaitRestrictions } from '../../async-await.js';
+import {
+  preferBracketNotationDestructuringRestriction,
+  preferDestructuringRule,
+} from '../../prefer-destructuring.js';
 import { preferProcessEnvDestructuringRestriction } from '../../process-env.js';
 
 const eslintReactJsxConfig: Linter.Config[] = [
@@ -44,6 +48,7 @@ const eslintReactJsxConfig: Linter.Config[] = [
       'react-hooks/exhaustive-deps': 'warn',
       curly: ['error', 'all'],
       eqeqeq: ['error', 'always'],
+      'prefer-destructuring': preferDestructuringRule,
       'no-restricted-imports': [
         'error',
         {
@@ -59,6 +64,7 @@ const eslintReactJsxConfig: Linter.Config[] = [
       'no-restricted-syntax': [
         'error',
         preferProcessEnvDestructuringRestriction,
+        preferBracketNotationDestructuringRestriction,
         ...preferAsyncAwaitRestrictions,
         {
           selector: 'TSQualifiedName[left.name="React"]',

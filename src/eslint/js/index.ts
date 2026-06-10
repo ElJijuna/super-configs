@@ -2,6 +2,10 @@ import js from '@eslint/js';
 import type { Linter } from 'eslint';
 import globals from 'globals';
 import { preferAsyncAwaitRestrictions } from '../async-await.js';
+import {
+  preferBracketNotationDestructuringRestriction,
+  preferDestructuringRule,
+} from '../prefer-destructuring.js';
 import { preferProcessEnvDestructuringRestriction } from '../process-env.js';
 
 const eslintJsConfig: Linter.Config[] = [
@@ -20,9 +24,11 @@ const eslintJsConfig: Linter.Config[] = [
       'no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
       curly: ['error', 'all'],
       eqeqeq: ['error', 'always'],
+      'prefer-destructuring': preferDestructuringRule,
       'no-restricted-syntax': [
         'error',
         preferProcessEnvDestructuringRestriction,
+        preferBracketNotationDestructuringRestriction,
         ...preferAsyncAwaitRestrictions,
       ],
     },
