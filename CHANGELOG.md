@@ -1,3 +1,9 @@
+## [1.13.0](https://github.com/ElJijuna/super-configs/compare/v1.12.0...v1.13.0) (2026-06-10)
+
+### Features
+
+* add ESLint rules for destructuring and update configurations ([5cfecc6](https://github.com/ElJijuna/super-configs/commit/5cfecc6807db20564c091be9bd1e90540ddd0b9d))
+
 ## [1.12.0](https://github.com/ElJijuna/super-configs/compare/v1.11.0...v1.12.0) (2026-06-07)
 
 ### Features
