@@ -17,12 +17,13 @@
 [![ESLint](https://img.shields.io/badge/lint-ESLint-4B32C3?logo=eslint&logoColor=white)](https://eslint.org/)
 [![Biome](https://img.shields.io/badge/format-Biome-60A5FA)](https://biomejs.dev/)
 [![Jest](https://img.shields.io/badge/test-Jest-C21325?logo=jest&logoColor=white)](https://jestjs.io/)
+[![Vitest](https://img.shields.io/badge/test-Vitest-6E9F18?logo=vitest&logoColor=white)](https://vitest.dev/)
 [![Prettier](https://img.shields.io/badge/legacy-Prettier-F7B93E?logo=prettier&logoColor=black)](https://prettier.io/)
 [![Markdownlint](https://img.shields.io/badge/lint-Markdown-000000?logo=markdown&logoColor=white)](https://github.com/DavidAnson/markdownlint)
 [![Stylelint](https://img.shields.io/badge/lint-Stylelint-263238?logo=stylelint&logoColor=white)](https://stylelint.io/)
 [![TypeDoc](https://img.shields.io/badge/docs-TypeDoc-9600ff)](https://typedoc.org/)
 
-Shared ESLint, Biome, Commitlint, Jest, Markdownlint, Stylelint, TypeDoc, and legacy Prettier configurations for JavaScript, TypeScript, React, CSS, and Markdown projects.
+Shared ESLint, Biome, Commitlint, Jest, Vitest, Markdownlint, Stylelint, TypeDoc, and legacy Prettier configurations for JavaScript, TypeScript, React, CSS, and Markdown projects.
 
 ## Installation
 
@@ -44,7 +45,7 @@ This package requires the following peer dependencies:
 npm install eslint typescript --save-dev
 ```
 
-Biome, Commitlint, Jest, Markdownlint, Stylelint, TypeDoc, and Prettier are optional peers. Use Biome for new projects:
+Biome, Commitlint, Jest, Vitest, Markdownlint, Stylelint, TypeDoc, and Prettier are optional peers. Use Biome for new projects:
 
 ```bash
 npm install @biomejs/biome --save-dev
@@ -66,6 +67,12 @@ Use Jest for TypeScript test projects:
 
 ```bash
 npm install jest ts-jest --save-dev
+```
+
+Use Vitest for TypeScript test projects:
+
+```bash
+npm install vitest --save-dev
 ```
 
 Use Stylelint for CSS projects:
@@ -294,6 +301,31 @@ export default {
 };
 ```
 
+### Vitest
+
+Use the shared Vitest config:
+
+```typescript
+// vitest.config.ts
+import vitestConfig from 'super-configs/vitest';
+
+export default vitestConfig;
+```
+
+Or extend it:
+
+```typescript
+// vitest.config.ts
+import { mergeConfig } from 'vitest/config';
+import vitestConfig from 'super-configs/vitest';
+
+export default mergeConfig(vitestConfig, {
+  test: {
+    include: ['src/**/*.test.ts'],
+  },
+});
+```
+
 ### Stylelint
 
 Use the shared Stylelint config:
@@ -382,6 +414,7 @@ export default {
 | `super-configs/commitlint` | Commitlint configuration for Conventional Commits |
 | `node_modules/super-configs/.editorconfig` | EditorConfig template for common project files |
 | `super-configs/jest` | Jest configuration for TypeScript test projects |
+| `super-configs/vitest` | Vitest configuration for TypeScript test projects |
 | `super-configs/markdownlint` | Markdownlint configuration for Markdown docs |
 | `super-configs/stylelint` | Stylelint configuration for CSS projects |
 | `super-configs/typedoc` | TypeDoc configuration for TypeScript API docs |

@@ -1,7 +1,7 @@
 {
   "name": "super-configs",
   "version": "1.13.0",
-  "description": "Shared ESLint, Biome, Commitlint, Jest, Markdownlint, Stylelint, TypeDoc, and legacy Prettier configurations for JavaScript, TypeScript, React, CSS, and Markdown projects",
+  "description": "Shared ESLint, Biome, Commitlint, Jest, Vitest, Markdownlint, Stylelint, TypeDoc, and legacy Prettier configurations for JavaScript, TypeScript, React, CSS, and Markdown projects",
   "main": "./lib/index.js",
   "module": "./lib/index.js",
   "types": "./lib/index.d.ts",
@@ -34,6 +34,7 @@
     "./biome": "./biome.json",
     "./commitlint": "./commitlint.config.js",
     "./jest": "./jest.config.js",
+    "./vitest": "./vitest.config.js",
     "./markdownlint": "./markdownlint.json",
     "./stylelint": "./stylelint.config.js",
     "./typedoc": "./typedoc.json",
@@ -48,6 +49,7 @@
     ".editorconfig",
     "commitlint.config.js",
     "jest.config.js",
+    "vitest.config.js",
     "markdownlint.json",
     "stylelint.config.js",
     "typedoc.json",
@@ -82,6 +84,7 @@
     "prettier",
     "editorconfig",
     "jest",
+    "vitest",
     "markdownlint",
     "stylelint",
     "typedoc",
@@ -93,6 +96,7 @@
     "editorconfig-template",
     "biome-config",
     "jest-config",
+    "vitest-config",
     "markdownlint-config",
     "stylelint-config",
     "typedoc-config"
@@ -112,6 +116,7 @@
     "@biomejs/biome": ">=2.0.0",
     "eslint": ">=9.0.0",
     "jest": ">=29.0.0",
+    "vitest": ">=2.0.0",
     "prettier": ">=3.0.0",
     "markdownlint": ">=0.37.0",
     "stylelint": ">=16.0.0",
@@ -131,6 +136,9 @@
       "optional": true
     },
     "jest": {
+      "optional": true
+    },
+    "vitest": {
       "optional": true
     },
     "prettier": {
@@ -176,6 +184,7 @@
     "jiti": "^2.6.1",
     "prettier": "^3.6.2",
     "semantic-release": "^25.0.3",
-    "typescript": "^5.0.0"
+    "typescript": "^5.0.0",
+    "vitest": "^2.0.0"
   }
 }

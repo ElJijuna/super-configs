@@ -42,6 +42,7 @@ for (const specifier of [
   '../lib/prettier/index.js',
   '../commitlint.config.js',
   '../jest.config.js',
+  '../vitest.config.js',
   '../stylelint.config.js',
 ]) {
   await importDefault(specifier);
@@ -55,6 +56,7 @@ for (const path of [
   '.editorconfig',
   'commitlint.config.js',
   'jest.config.js',
+  'vitest.config.js',
   'stylelint.config.js',
 ]) {
   await access(join(root, path));
