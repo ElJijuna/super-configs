@@ -1,3 +1,9 @@
+## [1.14.0](https://github.com/ElJijuna/super-configs/compare/v1.13.0...v1.14.0) (2026-06-14)
+
+### Features
+
+* add Vitest configuration and integrate with existing setup ([ff71837](https://github.com/ElJijuna/super-configs/commit/ff7183797923a2e93086a029f5c97b32c3c36380))
+
 ## [1.13.0](https://github.com/ElJijuna/super-configs/compare/v1.12.0...v1.13.0) (2026-06-10)
 
 ### Features
