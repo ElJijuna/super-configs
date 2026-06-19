@@ -165,6 +165,7 @@
   },
   "dependencies": {
     "@eslint/js": "^9.37.0",
+    "@stylistic/eslint-plugin": "^5.10.0",
     "eslint-plugin-jsx-a11y": "^6.10.2",
     "eslint-plugin-react": "^7.37.5",
     "eslint-plugin-react-hooks": "^6.1.1",

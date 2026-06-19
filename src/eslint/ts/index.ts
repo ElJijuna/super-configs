@@ -1,4 +1,5 @@
 import js from '@eslint/js';
+import stylistic from '@stylistic/eslint-plugin';
 import type { Linter } from 'eslint';
 import globals from 'globals';
 import tseslint from 'typescript-eslint';
@@ -22,7 +23,21 @@ const eslintTsConfig: Linter.Config[] = [
         ...globals.es2021,
       },
     },
+    plugins: {
+      '@stylistic': stylistic,
+    },
     rules: {
+      '@stylistic/padding-line-between-statements': [
+        'error',
+        { blankLine: 'always', prev: 'block-like', next: '*' },
+        { blankLine: 'always', prev: '*', next: 'block-like' },
+        { blankLine: 'always', prev: 'const', next: '*' },
+        { blankLine: 'never', prev: 'const', next: 'const' },
+        { blankLine: 'always', prev: 'let', next: '*' },
+        { blankLine: 'never', prev: 'let', next: 'let' },
+        { blankLine: 'always', prev: '*', next: 'return' },
+        { blankLine: 'always', prev: '*', next: 'throw' },
+      ],
       '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
       '@typescript-eslint/explicit-function-return-type': 'off',
       curly: ['error', 'all'],

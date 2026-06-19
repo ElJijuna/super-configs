@@ -3,13 +3,11 @@ import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
-
 const assert = (condition, message) => {
   if (!condition) {
     throw new Error(message);
   }
 };
-
 const importDefault = async (specifier) => {
   const module = await import(specifier);
 
@@ -17,9 +15,7 @@ const importDefault = async (specifier) => {
 
   return module.default;
 };
-
 const readJson = async (path) => JSON.parse(await readFile(join(root, path), 'utf8'));
-
 const rootModule = await import('../lib/index.js');
 
 for (const name of [
