@@ -1,3 +1,9 @@
+## [1.15.0](https://github.com/ElJijuna/super-configs/compare/v1.14.0...v1.15.0) (2026-06-19)
+
+### Features
+
+* add @stylistic/eslint-plugin and update ESLint configurations ([29530a6](https://github.com/ElJijuna/super-configs/commit/29530a6d2936e5bdb13be316ac308fcfed5dd8af))
+
 ## [1.14.0](https://github.com/ElJijuna/super-configs/compare/v1.13.0...v1.14.0) (2026-06-14)
 
 ### Features
