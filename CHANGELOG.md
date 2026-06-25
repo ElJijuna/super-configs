@@ -1,3 +1,9 @@
+## [1.16.0](https://github.com/ElJijuna/super-configs/compare/v1.15.0...v1.16.0) (2026-06-25)
+
+### Features
+
+* add complexity rule to linter configuration ([423243b](https://github.com/ElJijuna/super-configs/commit/423243bf9e75740b8379e90e26ca72db94c6b59f))
+
 ## [1.15.0](https://github.com/ElJijuna/super-configs/compare/v1.14.0...v1.15.0) (2026-06-19)
 
 ### Features
