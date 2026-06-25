@@ -33,6 +33,9 @@
     "enabled": true,
     "rules": {
       "recommended": true,
+      "complexity": {
+        "noStaticOnlyClass": "off"
+      },
       "style": {
         "useBlockStatements": "error"
       }
