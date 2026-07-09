@@ -122,7 +122,7 @@
     "stylelint-config-standard": ">=36.0.0",
     "ts-jest": ">=29.0.0",
     "typedoc": ">=0.28.0",
-    "typescript": ">=5.0.0",
+    "typescript": ">=5.0.0 <6.1.0",
     "vitest": ">=2.0.0"
   },
   "peerDependenciesMeta": {
@@ -170,7 +170,7 @@
     "eslint-plugin-react": "^7.37.5",
     "eslint-plugin-react-hooks": "^6.1.1",
     "globals": "^16.4.0",
-    "typescript-eslint": "^8.45.0"
+    "typescript-eslint": "^8.63.0"
   },
   "devDependencies": {
     "@biomejs/biome": "^2.4.16",
@@ -185,7 +185,7 @@
     "jiti": "^2.6.1",
     "prettier": "^3.6.2",
     "semantic-release": "^25.0.3",
-    "typescript": "^5.0.0",
+    "typescript": "^6.0.3",
     "vitest": "^4.1.8"
   }
 }
