@@ -34,6 +34,8 @@ Last updated: 2026-07-14
   - global usage: `super-configs init`
   - creates ESLint, Biome, TypeScript, and Bun starter config files
   - skips existing files unless `--force` is passed
+  - supports companion flags `--vitest`, `--jest`, and `--react`
+  - supports optional package script insertion with `--scripts`
 - Vitest ESLint preset:
   - `super-configs/eslint/vitest`
   - adds Vitest test globals for `*.test.*` and `*.spec.*`
@@ -52,17 +54,13 @@ Last updated: 2026-07-14
   - Bun config export aliases
   - ESLint factory behavior
   - CLI help and published bin file
+  - CLI temp project generation, skip existing files, and `--force`
   - Jest vs Vitest ESLint globals
 
 ## Next
 
-- Add CLI flags for test/framework companion presets:
-  - `--vitest`
-  - `--jest`
-  - `--react`
-- Add richer CLI package script updates:
-  - optional `package.json` script insertion
-  - skip existing scripts unless `--force`
+- Add CLI smoke tests to a dedicated script if export validation keeps growing
+- Consider factory options for companion presets after CLI behavior settles
 
 ## Validation Baseline
 

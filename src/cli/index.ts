@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-import { access, copyFile, writeFile } from 'node:fs/promises';
+import { access, copyFile, readFile, writeFile } from 'node:fs/promises';
 import { basename, dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -11,6 +11,10 @@ interface InitOptions {
   language: Language;
   typeChecked: boolean;
   force: boolean;
+  jest: boolean;
+  react: boolean;
+  scripts: boolean;
+  vitest: boolean;
 }
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '../..');
@@ -22,6 +26,10 @@ Options:
   --runtime <node|browser|bun>  Runtime globals to configure. Default: node
   --language <js|ts>            Project language. Default: ts
   --type-checked                Enable type-aware TypeScript ESLint
+  --react                       Add React ESLint and TSConfig setup
+  --vitest                      Add Vitest ESLint setup
+  --jest                        Add Jest ESLint setup
+  --scripts                     Add package.json check scripts
   --force                       Overwrite existing config files
   -h, --help                    Show help
 `;
@@ -31,6 +39,10 @@ const parseArgs = (args: string[]): { command?: string; options: InitOptions; he
     language: 'ts',
     typeChecked: false,
     force: false,
+    jest: false,
+    react: false,
+    scripts: false,
+    vitest: false,
   };
 
   let command: string | undefined;
@@ -56,6 +68,26 @@ const parseArgs = (args: string[]): { command?: string; options: InitOptions; he
 
     if (arg === '--force') {
       options.force = true;
+      continue;
+    }
+
+    if (arg === '--jest') {
+      options.jest = true;
+      continue;
+    }
+
+    if (arg === '--react') {
+      options.react = true;
+      continue;
+    }
+
+    if (arg === '--scripts') {
+      options.scripts = true;
+      continue;
+    }
+
+    if (arg === '--vitest') {
+      options.vitest = true;
       continue;
     }
 
@@ -90,6 +122,14 @@ const parseArgs = (args: string[]): { command?: string; options: InitOptions; he
     throw new Error('--type-checked requires --language ts');
   }
 
+  if (options.jest && options.vitest) {
+    throw new Error('choose either --jest or --vitest, not both');
+  }
+
+  if (options.react && options.language === 'js') {
+    throw new Error('--react requires --language ts');
+  }
+
   return { command, options, help };
 };
 const pathExists = async (path: string): Promise<boolean> => {
@@ -119,19 +159,86 @@ const copyNewFile = async (source: string, target: string, force: boolean): Prom
 
   return true;
 };
-const createEslintConfig = (
-  options: InitOptions,
-): string => `import { createEslintConfig } from 'super-configs/eslint';
+const mergePackageScripts = async (target: string, force: boolean): Promise<boolean> => {
+  const defaultScripts = {
+    lint: 'eslint .',
+    'lint:fix': 'eslint . --fix',
+    format: 'biome check --write .',
+    'format:check': 'biome check .',
+    check: 'npm run lint && npm run format:check',
+  };
+  const packageJson = (await pathExists(target))
+    ? JSON.parse(await readFile(target, 'utf8'))
+    : { scripts: {} };
+  const scripts = packageJson.scripts ?? {};
 
-export default createEslintConfig({
-  runtime: '${options.runtime}',
-  language: '${options.language}',
-  typeChecked: ${options.typeChecked},
-  ignores: ['dist/**', 'coverage/**', 'node_modules/**'],
-});
+  let changed = false;
+
+  for (const [name, command] of Object.entries(defaultScripts)) {
+    if (force || scripts[name] === undefined) {
+      scripts[name] = command;
+      changed = true;
+    }
+  }
+
+  if (!changed) {
+    return false;
+  }
+
+  packageJson.scripts = scripts;
+  await writeFile(target, `${JSON.stringify(packageJson, null, 2)}\n`);
+
+  return true;
+};
+const createEslintConfig = (options: InitOptions): string => {
+  if (options.react) {
+    const testImport = options.vitest
+      ? "import eslintVitest from 'super-configs/eslint/vitest';\n"
+      : options.jest
+        ? "import eslintJest from 'super-configs/eslint/jest';\n"
+        : '';
+    const testSpread = options.vitest
+      ? '  ...eslintVitest,\n'
+      : options.jest
+        ? '  ...eslintJest,\n'
+        : '';
+
+    return `import eslintReactTsx from 'super-configs/eslint/react/tsx';
+${testImport}
+export default [
+  {
+    ignores: ['dist/**', 'coverage/**', 'storybook-static/**', 'node_modules/**'],
+  },
+  ...eslintReactTsx,
+${testSpread}];
 `;
+  }
+
+  const testImport = options.vitest
+    ? "import eslintVitest from 'super-configs/eslint/vitest';\n"
+    : options.jest
+      ? "import eslintJest from 'super-configs/eslint/jest';\n"
+      : '';
+  const testSpread = options.vitest
+    ? '  ...eslintVitest,\n'
+    : options.jest
+      ? '  ...eslintJest,\n'
+      : '';
+
+  return `import { createEslintConfig } from 'super-configs/eslint';
+${testImport}
+export default [
+  ...createEslintConfig({
+    runtime: '${options.runtime}',
+    language: '${options.language}',
+    typeChecked: ${options.typeChecked},
+    ignores: ['dist/**', 'coverage/**', 'node_modules/**'],
+  }),
+${testSpread}];
+`;
+};
 const createTsconfig = (options: InitOptions): string => {
-  const preset = options.runtime === 'browser' ? 'react' : 'node';
+  const preset = options.react ? 'react' : options.runtime === 'browser' ? 'react' : 'node';
 
   return `{
   "extends": "super-configs/tsconfig/${preset}",
@@ -171,6 +278,12 @@ const runInit = async (options: InitOptions): Promise<void> => {
 
   if (options.runtime === 'bun') {
     await copy('lib/test/bunfig.toml', 'bunfig.toml');
+  }
+
+  if (options.scripts) {
+    const written = await mergePackageScripts(resolve(cwd, 'package.json'), options.force);
+
+    (written ? changed : skipped).push('package.json');
   }
 
   for (const file of changed) {

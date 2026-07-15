@@ -169,6 +169,13 @@ super-configs init --runtime node --language ts
 
 The command creates starter config files and skips existing files unless `--force` is passed.
 
+Add companion presets and package scripts when needed:
+
+```bash
+super-configs init --runtime bun --language ts --type-checked --vitest --scripts
+super-configs init --react --vitest
+```
+
 ### ESLint
 
 #### Config factory
