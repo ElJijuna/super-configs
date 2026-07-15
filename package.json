@@ -19,6 +19,10 @@
       "types": "./lib/eslint/ts/index.d.ts",
       "import": "./lib/eslint/ts/index.js"
     },
+    "./eslint/ts-type-checked": {
+      "types": "./lib/eslint/ts-type-checked/index.d.ts",
+      "import": "./lib/eslint/ts-type-checked/index.js"
+    },
     "./eslint/browser/js": {
       "types": "./lib/eslint/browser/js/index.d.ts",
       "import": "./lib/eslint/browser/js/index.js"
@@ -26,6 +30,10 @@
     "./eslint/browser/ts": {
       "types": "./lib/eslint/browser/ts/index.d.ts",
       "import": "./lib/eslint/browser/ts/index.js"
+    },
+    "./eslint/browser/ts-type-checked": {
+      "types": "./lib/eslint/browser/ts-type-checked/index.d.ts",
+      "import": "./lib/eslint/browser/ts-type-checked/index.js"
     },
     "./eslint/bun/js": {
       "types": "./lib/eslint/bun/js/index.d.ts",
@@ -35,6 +43,10 @@
       "types": "./lib/eslint/bun/ts/index.d.ts",
       "import": "./lib/eslint/bun/ts/index.js"
     },
+    "./eslint/bun/ts-type-checked": {
+      "types": "./lib/eslint/bun/ts-type-checked/index.d.ts",
+      "import": "./lib/eslint/bun/ts-type-checked/index.js"
+    },
     "./eslint/node/js": {
       "types": "./lib/eslint/node/js/index.d.ts",
       "import": "./lib/eslint/node/js/index.js"
@@ -42,6 +54,10 @@
     "./eslint/node/ts": {
       "types": "./lib/eslint/node/ts/index.d.ts",
       "import": "./lib/eslint/node/ts/index.js"
+    },
+    "./eslint/node/ts-type-checked": {
+      "types": "./lib/eslint/node/ts-type-checked/index.d.ts",
+      "import": "./lib/eslint/node/ts-type-checked/index.js"
     },
     "./eslint/jest": {
       "types": "./lib/eslint/jest/index.d.ts",

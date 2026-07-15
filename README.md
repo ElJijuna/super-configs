@@ -181,11 +181,11 @@ export default [
 Choose an explicit runtime when code does not run in Node.js. The existing `eslint/js` and
 `eslint/ts` imports remain Node.js defaults for backwards compatibility.
 
-| Runtime | JavaScript | TypeScript |
-| --- | --- | --- |
-| Node.js | `super-configs/eslint/node/js` | `super-configs/eslint/node/ts` |
-| Browser | `super-configs/eslint/browser/js` | `super-configs/eslint/browser/ts` |
-| Bun | `super-configs/eslint/bun/js` | `super-configs/eslint/bun/ts` |
+| Runtime | JavaScript | TypeScript | Type-checked TypeScript |
+| --- | --- | --- | --- |
+| Node.js | `super-configs/eslint/node/js` | `super-configs/eslint/node/ts` | `super-configs/eslint/node/ts-type-checked` |
+| Browser | `super-configs/eslint/browser/js` | `super-configs/eslint/browser/ts` | `super-configs/eslint/browser/ts-type-checked` |
+| Bun | `super-configs/eslint/bun/js` | `super-configs/eslint/bun/ts` | `super-configs/eslint/bun/ts-type-checked` |
 
 ```javascript
 // eslint.config.js
@@ -195,6 +195,25 @@ export default [
   ...eslintBrowserTs,
 ];
 ```
+
+#### Type-aware TypeScript
+
+Type-aware presets enable `typescript-eslint` recommended type-checked rules with
+`parserOptions.projectService`. Each linted TypeScript file must belong to its nearest
+`tsconfig.json`. Typed linting is slower but catches unsafe assignments, floating promises, and
+other issues requiring TypeScript type information.
+
+```javascript
+// eslint.config.js
+import eslintTsTypeChecked from 'super-configs/eslint/ts-type-checked';
+
+export default [
+  ...eslintTsTypeChecked,
+];
+```
+
+The short `eslint/ts-type-checked` import uses Node.js globals. Choose a runtime-specific import
+from the table above for Browser or Bun projects.
 
 #### Jest
 
