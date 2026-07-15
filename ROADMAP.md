@@ -41,6 +41,10 @@ Last updated: 2026-07-14
 - Docs matrix and recipes:
   - Available Configurations includes runtime and type-aware ESLint exports
   - recipes cover Node.js library, Browser app, Bun service, and React app
+- ADRs:
+  - `docs/adr/0001-eslint-preset-subpaths-and-factory.md`
+  - documents why preset subpaths stay canonical
+  - documents factory as a convenience layer over existing presets
 - Export validation covers:
   - runtime globals per ESLint preset
   - type-aware parser service
@@ -52,9 +56,13 @@ Last updated: 2026-07-14
 
 ## Next
 
-- Consider ADRs:
-  - document why preset subpaths remain canonical
-  - document factory as convenience layer over existing presets
+- Add CLI flags for test/framework companion presets:
+  - `--vitest`
+  - `--jest`
+  - `--react`
+- Add richer CLI package script updates:
+  - optional `package.json` script insertion
+  - skip existing scripts unless `--force`
 
 ## Validation Baseline
 
