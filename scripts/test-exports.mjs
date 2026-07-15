@@ -16,6 +16,7 @@ const importDefault = async (specifier) => {
   return module.default;
 };
 const readJson = async (path) => JSON.parse(await readFile(join(root, path), 'utf8'));
+const readText = async (path) => readFile(join(root, path), 'utf8');
 const rootModule = await import('../lib/index.js');
 
 for (const name of [
@@ -121,14 +122,28 @@ for (const specifier of [
   assert(config.compilerOptions, `${specifier} must define compilerOptions`);
 }
 
+for (const specifier of ['super-configs/bunfig', 'super-configs/bunfig.toml']) {
+  const url = import.meta.resolve(specifier);
+  const bunfig = await readFile(new URL(url), 'utf8');
+
+  assert(bunfig.includes('[test]'), `${specifier} must define the test section`);
+  assert(bunfig.includes('coverage = true'), `${specifier} must enable coverage`);
+  assert(bunfig.includes('coverageReporter = ["text", "lcov"]'), `${specifier} must emit LCOV`);
+}
+
 for (const path of [
   '.editorconfig',
   'commitlint.config.js',
   'jest.config.js',
+  'lib/test/bunfig.toml',
   'vitest.config.js',
   'stylelint.config.js',
 ]) {
   await access(join(root, path));
 }
+
+const bunfig = await readText('lib/test/bunfig.toml');
+
+assert(bunfig.includes('coverageDir = "coverage"'), 'bunfig must use the coverage directory');
 
 console.log('exports ok');

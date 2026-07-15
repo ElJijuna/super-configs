@@ -18,12 +18,13 @@
 [![Biome](https://img.shields.io/badge/format-Biome-60A5FA)](https://biomejs.dev/)
 [![Jest](https://img.shields.io/badge/test-Jest-C21325?logo=jest&logoColor=white)](https://jestjs.io/)
 [![Vitest](https://img.shields.io/badge/test-Vitest-6E9F18?logo=vitest&logoColor=white)](https://vitest.dev/)
+[![Bun](https://img.shields.io/badge/runtime-Bun-000000?logo=bun&logoColor=white)](https://bun.sh/)
 [![Prettier](https://img.shields.io/badge/legacy-Prettier-F7B93E?logo=prettier&logoColor=black)](https://prettier.io/)
 [![Markdownlint](https://img.shields.io/badge/lint-Markdown-000000?logo=markdown&logoColor=white)](https://github.com/DavidAnson/markdownlint)
 [![Stylelint](https://img.shields.io/badge/lint-Stylelint-263238?logo=stylelint&logoColor=white)](https://stylelint.io/)
 [![TypeDoc](https://img.shields.io/badge/docs-TypeDoc-9600ff)](https://typedoc.org/)
 
-Shared ESLint, Biome, Commitlint, Jest, Vitest, Markdownlint, Stylelint, TypeDoc, and legacy Prettier configurations for JavaScript, TypeScript, React, CSS, and Markdown projects.
+Shared ESLint, Biome, Bun, Commitlint, Jest, Vitest, Markdownlint, Stylelint, TypeDoc, and legacy Prettier configurations for JavaScript, TypeScript, React, CSS, and Markdown projects.
 
 ## Installation
 
@@ -396,6 +397,25 @@ export default mergeConfig(vitestConfig, {
 });
 ```
 
+### Bun test
+
+Bun does not support extending a package `bunfig.toml`. Copy the shared template into your project
+root so relative coverage paths resolve inside your project:
+
+```bash
+cp node_modules/super-configs/lib/test/bunfig.toml bunfig.toml
+```
+
+The template enables text and LCOV coverage, writes reports to `coverage`, skips test files from
+coverage, and ignores common generated directories. Run it with:
+
+```bash
+bun test
+```
+
+The same template is exposed through the `super-configs/bunfig` and
+`super-configs/bunfig.toml` package subpaths for tooling that resolves package exports.
+
 ### Stylelint
 
 Use the shared Stylelint config:
@@ -481,6 +501,7 @@ export default {
 | `super-configs/eslint/react/jsx` | ESLint configuration for React with JSX |
 | `super-configs/eslint/react/tsx` | ESLint configuration for React with TSX |
 | `super-configs/biome` | Biome configuration for formatting, linting, and import organization |
+| `super-configs/bunfig` | Bun test configuration template with coverage enabled |
 | `super-configs/commitlint` | Commitlint configuration for Conventional Commits |
 | `node_modules/super-configs/.editorconfig` | EditorConfig template for common project files |
 | `super-configs/jest` | Jest configuration for TypeScript test projects |
