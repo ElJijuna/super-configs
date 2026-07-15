@@ -538,6 +538,95 @@ export default {
 };
 ```
 
+## Recipes
+
+### Node.js Library
+
+```javascript
+// eslint.config.js
+import { createEslintConfig } from 'super-configs/eslint';
+import eslintVitest from 'super-configs/eslint/vitest';
+
+export default [
+  ...createEslintConfig({
+    runtime: 'node',
+    language: 'ts',
+    typeChecked: true,
+    ignores: ['dist/**', 'coverage/**'],
+  }),
+  ...eslintVitest,
+];
+```
+
+```json
+{
+  "extends": "super-configs/tsconfig/node",
+  "compilerOptions": {
+    "rootDir": "src",
+    "outDir": "dist"
+  },
+  "include": ["src/**/*.ts"]
+}
+```
+
+### Browser App
+
+```javascript
+// eslint.config.js
+import { createEslintConfig } from 'super-configs/eslint';
+
+export default createEslintConfig({
+  runtime: 'browser',
+  language: 'ts',
+  ignores: ['dist/**', 'coverage/**'],
+});
+```
+
+### Bun Service
+
+```javascript
+// eslint.config.js
+import { createEslintConfig } from 'super-configs/eslint';
+
+export default createEslintConfig({
+  runtime: 'bun',
+  language: 'ts',
+  typeChecked: true,
+  ignores: ['dist/**', 'coverage/**'],
+});
+```
+
+```bash
+cp node_modules/super-configs/lib/test/bunfig.toml bunfig.toml
+```
+
+### React App
+
+```javascript
+// eslint.config.js
+import eslintReactTsx from 'super-configs/eslint/react/tsx';
+import eslintVitest from 'super-configs/eslint/vitest';
+
+export default [
+  {
+    ignores: ['dist/**', 'coverage/**', 'storybook-static/**'],
+  },
+  ...eslintReactTsx,
+  ...eslintVitest,
+];
+```
+
+```json
+{
+  "extends": "super-configs/tsconfig/react",
+  "compilerOptions": {
+    "rootDir": "src",
+    "outDir": "dist"
+  },
+  "include": ["src/**/*.ts", "src/**/*.tsx"]
+}
+```
+
 ## Available Configurations
 
 | Export | Description |

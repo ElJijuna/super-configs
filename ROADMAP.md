@@ -38,6 +38,9 @@ Last updated: 2026-07-14
   - `super-configs/eslint/vitest`
   - adds Vitest test globals for `*.test.*` and `*.spec.*`
   - keeps Jest and Vitest globals separate
+- Docs matrix and recipes:
+  - Available Configurations includes runtime and type-aware ESLint exports
+  - recipes cover Node.js library, Browser app, Bun service, and React app
 - Export validation covers:
   - runtime globals per ESLint preset
   - type-aware parser service
@@ -49,9 +52,6 @@ Last updated: 2026-07-14
 
 ## Next
 
-- Improve docs matrix:
-  - include all runtime and type-aware ESLint exports in Available Configurations
-  - add short recipes for Node library, Browser app, Bun service, React app
 - Consider ADRs:
   - document why preset subpaths remain canonical
   - document factory as convenience layer over existing presets
