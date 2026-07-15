@@ -35,10 +35,18 @@ for (const name of [
   'eslintReactTsx',
   'eslintTs',
   'eslintTsTypeChecked',
+  'createEslintConfig',
   'prettierConfig',
 ]) {
   assert(rootModule[name], `root export ${name} is missing`);
 }
+
+const eslintFactoryModule = await import('super-configs/eslint');
+
+assert(
+  typeof eslintFactoryModule.createEslintConfig === 'function',
+  'super-configs/eslint must export createEslintConfig',
+);
 
 for (const specifier of [
   '../lib/eslint/jest/index.js',
@@ -78,6 +86,56 @@ for (const [specifier, expectedGlobal, excludedGlobal] of [
 
   assert(expectedGlobal in configuredGlobals, `${specifier} must define ${expectedGlobal}`);
   assert(!(excludedGlobal in configuredGlobals), `${specifier} must not define ${excludedGlobal}`);
+}
+
+const browserJsFactoryConfig = eslintFactoryModule.createEslintConfig({
+  runtime: 'browser',
+  language: 'js',
+  ignores: ['dist/**'],
+  overrides: [{ name: 'consumer/override', rules: { eqeqeq: 'off' } }],
+});
+const browserJsFactoryGlobals = Object.assign(
+  {},
+  ...browserJsFactoryConfig.map((entry) => entry.languageOptions?.globals ?? {}),
+);
+
+assert(browserJsFactoryConfig[0]?.ignores?.includes('dist/**'), 'factory must prepend ignores');
+assert(
+  browserJsFactoryConfig.at(-1)?.name === 'consumer/override',
+  'factory must append overrides',
+);
+assert('window' in browserJsFactoryGlobals, 'browser JS factory config must define window');
+assert(
+  !('process' in browserJsFactoryGlobals),
+  'browser JS factory config must not define process',
+);
+
+const bunTypeCheckedFactoryConfig = eslintFactoryModule.createEslintConfig({
+  runtime: 'bun',
+  language: 'ts',
+  typeChecked: true,
+});
+const bunTypeCheckedFactoryGlobals = Object.assign(
+  {},
+  ...bunTypeCheckedFactoryConfig.map((entry) => entry.languageOptions?.globals ?? {}),
+);
+const bunFactoryUsesProjectService = bunTypeCheckedFactoryConfig.some(
+  (entry) => entry.languageOptions?.parserOptions?.projectService === true,
+);
+
+assert('Bun' in bunTypeCheckedFactoryGlobals, 'Bun TS factory config must define Bun');
+assert(bunFactoryUsesProjectService, 'type-checked factory config must enable projectService');
+
+try {
+  eslintFactoryModule.createEslintConfig({ language: 'js', typeChecked: true });
+
+  throw new Error('factory must reject type-checked JavaScript');
+} catch (error) {
+  assert(
+    error instanceof TypeError &&
+      error.message === 'typeChecked is only supported when language is "ts"',
+    'factory must reject type-checked JavaScript',
+  );
 }
 
 for (const specifier of [

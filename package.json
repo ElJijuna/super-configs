@@ -11,6 +11,10 @@
       "types": "./lib/index.d.ts",
       "import": "./lib/index.js"
     },
+    "./eslint": {
+      "types": "./lib/eslint/index.d.ts",
+      "import": "./lib/eslint/index.js"
+    },
     "./eslint/js": {
       "types": "./lib/eslint/js/index.d.ts",
       "import": "./lib/eslint/js/index.js"

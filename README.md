@@ -155,6 +155,22 @@ Add scripts to your `package.json`:
 
 ### ESLint
 
+#### Config factory
+
+Use the factory when you want one import and a runtime switch. Defaults are Node.js and TypeScript.
+
+```javascript
+// eslint.config.js
+import { createEslintConfig } from 'super-configs/eslint';
+
+export default createEslintConfig({
+  runtime: 'bun',
+  language: 'ts',
+  typeChecked: true,
+  ignores: ['dist/**', 'coverage/**'],
+});
+```
+
 #### JavaScript
 
 ```javascript
@@ -495,8 +511,19 @@ export default {
 
 | Export | Description |
 | ------ | ----------- |
+| `super-configs/eslint` | ESLint config factory for Node.js, Browser, and Bun projects |
 | `super-configs/eslint/js` | ESLint configuration for JavaScript |
 | `super-configs/eslint/ts` | ESLint configuration for TypeScript |
+| `super-configs/eslint/ts-type-checked` | Type-aware ESLint configuration for TypeScript |
+| `super-configs/eslint/node/js` | ESLint configuration for Node.js JavaScript |
+| `super-configs/eslint/node/ts` | ESLint configuration for Node.js TypeScript |
+| `super-configs/eslint/node/ts-type-checked` | Type-aware ESLint configuration for Node.js TypeScript |
+| `super-configs/eslint/browser/js` | ESLint configuration for Browser JavaScript |
+| `super-configs/eslint/browser/ts` | ESLint configuration for Browser TypeScript |
+| `super-configs/eslint/browser/ts-type-checked` | Type-aware ESLint configuration for Browser TypeScript |
+| `super-configs/eslint/bun/js` | ESLint configuration for Bun JavaScript |
+| `super-configs/eslint/bun/ts` | ESLint configuration for Bun TypeScript |
+| `super-configs/eslint/bun/ts-type-checked` | Type-aware ESLint configuration for Bun TypeScript |
 | `super-configs/eslint/jest` | ESLint overrides for Jest test files |
 | `super-configs/eslint/react/jsx` | ESLint configuration for React with JSX |
 | `super-configs/eslint/react/tsx` | ESLint configuration for React with TSX |
