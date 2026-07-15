@@ -19,8 +19,14 @@ const readJson = async (path) => JSON.parse(await readFile(join(root, path), 'ut
 const rootModule = await import('../lib/index.js');
 
 for (const name of [
+  'eslintBrowserJs',
+  'eslintBrowserTs',
+  'eslintBunJs',
+  'eslintBunTs',
   'eslintJest',
   'eslintJs',
+  'eslintNodeJs',
+  'eslintNodeTs',
   'eslintReactJsx',
   'eslintReactTsx',
   'eslintTs',
@@ -42,6 +48,27 @@ for (const specifier of [
   '../stylelint.config.js',
 ]) {
   await importDefault(specifier);
+}
+
+for (const [specifier, expectedGlobal, excludedGlobal] of [
+  ['super-configs/eslint/browser/js', 'window', 'process'],
+  ['super-configs/eslint/browser/ts', 'window', 'process'],
+  ['super-configs/eslint/bun/js', 'Bun', 'window'],
+  ['super-configs/eslint/bun/ts', 'Bun', 'window'],
+  ['super-configs/eslint/js', 'process', 'window'],
+  ['super-configs/eslint/node/js', 'process', 'window'],
+  ['super-configs/eslint/node/ts', 'process', 'window'],
+  ['super-configs/eslint/react/jsx', 'window', 'process'],
+  ['super-configs/eslint/ts', 'process', 'window'],
+]) {
+  const config = await importDefault(specifier);
+  const configuredGlobals = Object.assign(
+    {},
+    ...config.map((entry) => entry.languageOptions?.globals ?? {}),
+  );
+
+  assert(expectedGlobal in configuredGlobals, `${specifier} must define ${expectedGlobal}`);
+  assert(!(excludedGlobal in configuredGlobals), `${specifier} must not define ${excludedGlobal}`);
 }
 
 for (const path of [

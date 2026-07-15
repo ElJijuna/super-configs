@@ -176,6 +176,26 @@ export default [
 ];
 ```
 
+#### Runtime presets
+
+Choose an explicit runtime when code does not run in Node.js. The existing `eslint/js` and
+`eslint/ts` imports remain Node.js defaults for backwards compatibility.
+
+| Runtime | JavaScript | TypeScript |
+| --- | --- | --- |
+| Node.js | `super-configs/eslint/node/js` | `super-configs/eslint/node/ts` |
+| Browser | `super-configs/eslint/browser/js` | `super-configs/eslint/browser/ts` |
+| Bun | `super-configs/eslint/bun/js` | `super-configs/eslint/bun/ts` |
+
+```javascript
+// eslint.config.js
+import eslintBrowserTs from 'super-configs/eslint/browser/ts';
+
+export default [
+  ...eslintBrowserTs,
+];
+```
+
 #### Jest
 
 Use this alongside the JavaScript, TypeScript, or React presets when your project has Jest tests.
