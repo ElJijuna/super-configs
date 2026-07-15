@@ -99,6 +99,37 @@ import { eslintTs, prettierConfig } from 'super-configs';
 export { eslintTs, prettierConfig };
 ```
 
+### TypeScript
+
+Extend the shared preset that matches your project. Define project-specific paths such as
+`rootDir`, `outDir`, and `include` in your own `tsconfig.json`.
+
+#### Node.js
+
+```json
+{
+  "extends": "super-configs/tsconfig/node",
+  "compilerOptions": {
+    "rootDir": "src",
+    "outDir": "dist"
+  },
+  "include": ["src/**/*.ts"]
+}
+```
+
+#### React
+
+```json
+{
+  "extends": "super-configs/tsconfig/react",
+  "compilerOptions": {
+    "rootDir": "src",
+    "outDir": "dist"
+  },
+  "include": ["src/**/*.ts", "src/**/*.tsx"]
+}
+```
+
 ### Recommended Project Setup
 
 Install the shared config and the peer tools used by your project:

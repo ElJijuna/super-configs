@@ -38,6 +38,9 @@
     "./markdownlint": "./markdownlint.json",
     "./stylelint": "./stylelint.config.js",
     "./typedoc": "./typedoc.json",
+    "./tsconfig/base": "./lib/tsconfig/base.json",
+    "./tsconfig/node": "./lib/tsconfig/node.json",
+    "./tsconfig/react": "./lib/tsconfig/react.json",
     "./prettier": {
       "types": "./lib/prettier/index.d.ts",
       "import": "./lib/prettier/index.js"
@@ -59,7 +62,7 @@
   "scripts": {
     "clean": "node -e \"require('node:fs').rmSync('lib', { recursive: true, force: true })\"",
     "prebuild": "npm run clean",
-    "build": "tsc",
+    "build": "tsc && node scripts/copy-static-assets.mjs",
     "check": "npm run lint && npm run biome:check && npm run build && npm run test:exports",
     "test": "npm run check",
     "test:exports": "node scripts/test-exports.mjs",

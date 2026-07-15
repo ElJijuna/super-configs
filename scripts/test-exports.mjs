@@ -44,8 +44,26 @@ for (const specifier of [
   await importDefault(specifier);
 }
 
-for (const path of ['biome.json', 'markdownlint.json', 'typedoc.json']) {
+for (const path of [
+  'biome.json',
+  'lib/tsconfig/base.json',
+  'lib/tsconfig/node.json',
+  'lib/tsconfig/react.json',
+  'markdownlint.json',
+  'typedoc.json',
+]) {
   await readJson(path);
+}
+
+for (const specifier of [
+  'super-configs/tsconfig/base',
+  'super-configs/tsconfig/node',
+  'super-configs/tsconfig/react',
+]) {
+  const url = import.meta.resolve(specifier);
+  const config = JSON.parse(await readFile(new URL(url), 'utf8'));
+
+  assert(config.compilerOptions, `${specifier} must define compilerOptions`);
 }
 
 for (const path of [

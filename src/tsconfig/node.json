@@ -2,11 +2,9 @@
   "extends": "./base.json",
   "compilerOptions": {
     "moduleResolution": "NodeNext",
-    "outDir": "dist",
     "resolveJsonModule": true,
     "declaration": true,
     "module": "NodeNext",
     "target": "ES2022"
-  },
-  "include": ["*/.ts", "*/.json"]
+  }
 }
