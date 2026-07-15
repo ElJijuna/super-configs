@@ -263,6 +263,21 @@ export default [
 ];
 ```
 
+#### Vitest
+
+Use this alongside the JavaScript, TypeScript, or React presets when your project has Vitest tests.
+
+```javascript
+// eslint.config.js
+import eslintTs from 'super-configs/eslint/ts';
+import eslintVitest from 'super-configs/eslint/vitest';
+
+export default [
+  ...eslintTs,
+  ...eslintVitest,
+];
+```
+
 Common TypeScript library setup:
 
 ```javascript
@@ -541,6 +556,7 @@ export default {
 | `super-configs/eslint/bun/ts` | ESLint configuration for Bun TypeScript |
 | `super-configs/eslint/bun/ts-type-checked` | Type-aware ESLint configuration for Bun TypeScript |
 | `super-configs/eslint/jest` | ESLint overrides for Jest test files |
+| `super-configs/eslint/vitest` | ESLint overrides for Vitest test files |
 | `super-configs/eslint/react/jsx` | ESLint configuration for React with JSX |
 | `super-configs/eslint/react/tsx` | ESLint configuration for React with TSX |
 | `super-configs/biome` | Biome configuration for formatting, linting, and import organization |

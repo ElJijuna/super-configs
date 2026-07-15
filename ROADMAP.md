@@ -34,6 +34,10 @@ Last updated: 2026-07-14
   - global usage: `super-configs init`
   - creates ESLint, Biome, TypeScript, and Bun starter config files
   - skips existing files unless `--force` is passed
+- Vitest ESLint preset:
+  - `super-configs/eslint/vitest`
+  - adds Vitest test globals for `*.test.*` and `*.spec.*`
+  - keeps Jest and Vitest globals separate
 - Export validation covers:
   - runtime globals per ESLint preset
   - type-aware parser service
@@ -41,12 +45,10 @@ Last updated: 2026-07-14
   - Bun config export aliases
   - ESLint factory behavior
   - CLI help and published bin file
+  - Jest vs Vitest ESLint globals
 
 ## Next
 
-- Add Vitest ESLint/test preset:
-  - document pairing with TypeScript/Bun projects
-  - validate export map and package contents
 - Improve docs matrix:
   - include all runtime and type-aware ESLint exports in Available Configurations
   - add short recipes for Node library, Browser app, Bun service, React app

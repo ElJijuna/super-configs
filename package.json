@@ -70,6 +70,10 @@
       "types": "./lib/eslint/jest/index.d.ts",
       "import": "./lib/eslint/jest/index.js"
     },
+    "./eslint/vitest": {
+      "types": "./lib/eslint/vitest/index.d.ts",
+      "import": "./lib/eslint/vitest/index.js"
+    },
     "./eslint/react/jsx": {
       "types": "./lib/eslint/react/jsx/index.d.ts",
       "import": "./lib/eslint/react/jsx/index.js"

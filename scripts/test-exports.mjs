@@ -36,6 +36,7 @@ for (const name of [
   'eslintReactTsx',
   'eslintTs',
   'eslintTsTypeChecked',
+  'eslintVitest',
   'createEslintConfig',
   'prettierConfig',
 ]) {
@@ -55,6 +56,7 @@ for (const specifier of [
   '../lib/eslint/react/jsx/index.js',
   '../lib/eslint/react/tsx/index.js',
   '../lib/eslint/ts/index.js',
+  '../lib/eslint/vitest/index.js',
   '../lib/prettier/index.js',
   '../commitlint.config.js',
   '../jest.config.js',
@@ -78,6 +80,20 @@ for (const [specifier, expectedGlobal, excludedGlobal] of [
   ['super-configs/eslint/react/jsx', 'window', 'process'],
   ['super-configs/eslint/ts', 'process', 'window'],
   ['super-configs/eslint/ts-type-checked', 'process', 'window'],
+]) {
+  const config = await importDefault(specifier);
+  const configuredGlobals = Object.assign(
+    {},
+    ...config.map((entry) => entry.languageOptions?.globals ?? {}),
+  );
+
+  assert(expectedGlobal in configuredGlobals, `${specifier} must define ${expectedGlobal}`);
+  assert(!(excludedGlobal in configuredGlobals), `${specifier} must not define ${excludedGlobal}`);
+}
+
+for (const [specifier, expectedGlobal, excludedGlobal] of [
+  ['super-configs/eslint/jest', 'jest', 'vi'],
+  ['super-configs/eslint/vitest', 'vi', 'jest'],
 ]) {
   const config = await importDefault(specifier);
   const configuredGlobals = Object.assign(
