@@ -1,3 +1,4 @@
+import { spawnSync } from 'node:child_process';
 import { access, readFile } from 'node:fs/promises';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -193,12 +194,20 @@ for (const path of [
   '.editorconfig',
   'commitlint.config.js',
   'jest.config.js',
+  'lib/cli/index.js',
   'lib/test/bunfig.toml',
   'vitest.config.js',
   'stylelint.config.js',
 ]) {
   await access(join(root, path));
 }
+
+const cliHelp = spawnSync(process.execPath, [join(root, 'lib/cli/index.js'), '--help'], {
+  encoding: 'utf8',
+});
+
+assert(cliHelp.status === 0, 'CLI help must exit successfully');
+assert(cliHelp.stdout.includes('super-configs init'), 'CLI help must mention init command');
 
 const bunfig = await readText('lib/test/bunfig.toml');
 

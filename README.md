@@ -153,6 +153,22 @@ Add scripts to your `package.json`:
 }
 ```
 
+### CLI
+
+Run the init command from a local install:
+
+```bash
+npx super-configs init --runtime bun --language ts --type-checked
+```
+
+If installed globally, use the binary directly:
+
+```bash
+super-configs init --runtime node --language ts
+```
+
+The command creates starter config files and skips existing files unless `--force` is passed.
+
 ### ESLint
 
 #### Config factory

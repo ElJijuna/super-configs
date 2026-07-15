@@ -29,19 +29,21 @@ Last updated: 2026-07-14
   - `createEslintConfig({ runtime, language, typeChecked, ignores, overrides })`
   - supports Node.js, Browser, and Bun
   - rejects type-aware JavaScript at runtime
+- Init CLI:
+  - local usage: `npx super-configs init`
+  - global usage: `super-configs init`
+  - creates ESLint, Biome, TypeScript, and Bun starter config files
+  - skips existing files unless `--force` is passed
 - Export validation covers:
   - runtime globals per ESLint preset
   - type-aware parser service
   - TSConfig JSON exports
   - Bun config export aliases
   - ESLint factory behavior
+  - CLI help and published bin file
 
 ## Next
 
-- Add init CLI:
-  - scaffold common config files from installed presets
-  - support Node, Browser, Bun, React, Jest, Vitest choices
-  - avoid overwriting existing project config unless explicit
 - Add Vitest ESLint/test preset:
   - document pairing with TypeScript/Bun projects
   - validate export map and package contents
