@@ -1,3 +1,17 @@
+## [1.17.0](https://github.com/ElJijuna/super-configs/compare/v1.16.0...v1.17.0) (2026-07-18)
+
+### Features
+
+* add Bun support with configuration and testing setup ([99eb49a](https://github.com/ElJijuna/super-configs/commit/99eb49ab1cac24067dae59ff8d868b760f362732))
+* add CLI smoke tests and update ROADMAP with latest changes ([6dffb40](https://github.com/ElJijuna/super-configs/commit/6dffb405ad95041441ccbd9364bcb0c0804d9826))
+* add init CLI with global super-configs binary ([30ce8d5](https://github.com/ElJijuna/super-configs/commit/30ce8d54c4b7ac1bdc75401c9ce388d58159a0d3))
+* add runtime presets for ESLint configurations and update exports ([fd755b7](https://github.com/ElJijuna/super-configs/commit/fd755b75ed93196f04a68a005024feb18eff7722))
+* add type-checked TypeScript presets for ESLint configurations ([2550273](https://github.com/ElJijuna/super-configs/commit/25502737fd68edc859e5f7274624aab76f75ecdb))
+* add TypeScript configuration files and update build process ([52ad353](https://github.com/ElJijuna/super-configs/commit/52ad3530ca3430eb5522f9f823d5214528539a62))
+* add Vitest ESLint preset and update documentation ([ac6f708](https://github.com/ElJijuna/super-configs/commit/ac6f708a9003bf8f65612e502aaab3e72c720e4b))
+* enhance CLI init with support for companion flags and package script insertion ([64c5fab](https://github.com/ElJijuna/super-configs/commit/64c5fab5bcae3cf45f3206bfdf54a6bff22df499))
+* implement ESLint config factory and add Bun support ([170352a](https://github.com/ElJijuna/super-configs/commit/170352a7acfe797bf7852fc6dec5ca22c19826fe))
+
 ## [1.16.0](https://github.com/ElJijuna/super-configs/compare/v1.15.0...v1.16.0) (2026-06-25)
 
 ### Features
