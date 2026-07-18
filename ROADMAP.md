@@ -1,6 +1,6 @@
 # ROADMAP
 
-Last updated: 2026-07-14
+Last updated: 2026-07-18
 
 ## Done
 
@@ -53,18 +53,21 @@ Last updated: 2026-07-14
   - TSConfig JSON exports
   - Bun config export aliases
   - ESLint factory behavior
-  - CLI help and published bin file
-  - CLI temp project generation, skip existing files, and `--force`
+  - published CLI bin file
   - Jest vs Vitest ESLint globals
+- Dedicated CLI smoke tests cover:
+  - CLI help output
+  - temp project generation and companion flags
+  - skip existing files and `--force`
+  - invalid test framework combinations
 
 ## Next
 
-- Add CLI smoke tests to a dedicated script if export validation keeps growing
 - Consider factory options for companion presets after CLI behavior settles
 
 ## Validation Baseline
 
 - Required before release: `npm run check`
 - Required when package exports/files change: `npm run pack:check`
-- Last memory save: codebase graph reindexed on 2026-07-14 with project name
+- Last memory save: codebase graph reindexed on 2026-07-18 with project name
   `Users-pilmee-Documents-Github-super-configs`
