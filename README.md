@@ -43,11 +43,31 @@ bun add super-configs -D
 This package requires the following peer dependencies:
 
 ```bash
-npm install eslint@^10 typescript --save-dev
+npm install eslint@^10 typescript@^6 --save-dev
 ```
 
 ESLint 10 requires Node.js 20.19+, 22.13+, or 24+; odd-numbered Node.js releases are not
 supported.
+
+The Node.js TypeScript preset also requires Node.js declarations:
+
+```bash
+npm install @types/node --save-dev
+```
+
+TypeScript 6 consumers can keep using the standard `typescript` package. To compile with
+TypeScript 7 while keeping TypeScript 6 available to tools such as typescript-eslint, TypeDoc,
+and ts-jest, install both versions with aliases:
+
+```bash
+npm install \
+  typescript@npm:@typescript/typescript6@^6.0.2 \
+  @typescript/native@npm:typescript@^7.0.2 \
+  --save-dev
+```
+
+With this setup, `tsc` runs TypeScript 7 and `tsc6` runs TypeScript 6. Consumers are not required
+to migrate to TypeScript 7.
 
 Biome, Commitlint, Jest, Vitest, Markdownlint, Stylelint, TypeDoc, and Prettier are optional peers. Use Biome for new projects:
 
@@ -139,7 +159,7 @@ Extend the shared preset that matches your project. Define project-specific path
 Install the shared config and the peer tools used by your project:
 
 ```bash
-npm install super-configs eslint typescript @biomejs/biome --save-dev
+npm install super-configs eslint@^10 typescript@^6 @types/node @biomejs/biome --save-dev
 ```
 
 Add scripts to your `package.json`:

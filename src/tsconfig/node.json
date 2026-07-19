@@ -5,6 +5,7 @@
     "resolveJsonModule": true,
     "declaration": true,
     "module": "NodeNext",
-    "target": "ES2022"
+    "target": "ES2022",
+    "types": ["node"]
   }
 }

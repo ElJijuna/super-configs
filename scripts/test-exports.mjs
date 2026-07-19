@@ -280,6 +280,14 @@ for (const specifier of [
   assert(config.compilerOptions, `${specifier} must define compilerOptions`);
 }
 
+const nodeTsconfigUrl = import.meta.resolve('super-configs/tsconfig/node');
+const nodeTsconfig = JSON.parse(await readFile(new URL(nodeTsconfigUrl), 'utf8'));
+
+assert(
+  nodeTsconfig.compilerOptions.types?.includes('node'),
+  'super-configs/tsconfig/node must explicitly include Node.js types',
+);
+
 for (const specifier of ['super-configs/bunfig', 'super-configs/bunfig.toml']) {
   const url = import.meta.resolve(specifier);
   const bunfig = await readFile(new URL(url), 'utf8');
