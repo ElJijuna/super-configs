@@ -1,1 +1,1 @@
-export { default } from '../../js/index.js';
+export { default } from '@/eslint/js/index.js';

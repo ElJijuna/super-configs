@@ -1,1 +1,1 @@
-export { default } from '../../ts-type-checked/index.js';
+export { default } from '@/eslint/ts-type-checked/index.js';

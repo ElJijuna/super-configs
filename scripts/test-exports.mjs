@@ -1,4 +1,4 @@
-import { access, readFile } from 'node:fs/promises';
+import { access, readdir, readFile } from 'node:fs/promises';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { ESLint } from 'eslint';
@@ -19,6 +19,18 @@ const importDefault = async (specifier) => {
 const readJson = async (path) => JSON.parse(await readFile(join(root, path), 'utf8'));
 const readText = async (path) => readFile(join(root, path), 'utf8');
 const rootModule = await import('../lib/index.js');
+const emittedModulePaths = (await readdir(join(root, 'lib'), { recursive: true })).filter(
+  (path) => path.endsWith('.js') || path.endsWith('.d.ts'),
+);
+
+for (const path of emittedModulePaths) {
+  const emittedModule = await readFile(join(root, 'lib', path), 'utf8');
+
+  assert(
+    !emittedModule.includes("'@/") && !emittedModule.includes('"@/'),
+    `${path} must not expose source path aliases`,
+  );
+}
 
 for (const name of [
   'eslintBrowserJs',

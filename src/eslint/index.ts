@@ -1,7 +1,7 @@
 import type { Linter } from 'eslint';
-import { createEslintJsConfig } from './js/create-config.js';
-import { browserGlobals, bunGlobals, nodeGlobals } from './runtime-globals.js';
-import { createEslintTsConfig } from './ts/create-config.js';
+import { createEslintJsConfig } from '@/eslint/js/create-config.js';
+import { browserGlobals, bunGlobals, nodeGlobals } from '@/eslint/runtime-globals.js';
+import { createEslintTsConfig } from '@/eslint/ts/create-config.js';
 
 export type EslintRuntime = 'node' | 'browser' | 'bun';
 export type EslintLanguage = 'js' | 'ts';

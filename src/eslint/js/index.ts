@@ -1,6 +1,6 @@
 import type { Linter } from 'eslint';
-import { nodeGlobals } from '../runtime-globals.js';
-import { createEslintJsConfig } from './create-config.js';
+import { createEslintJsConfig } from '@/eslint/js/create-config.js';
+import { nodeGlobals } from '@/eslint/runtime-globals.js';
 
 const eslintJsConfig: Linter.Config[] = createEslintJsConfig('super-configs/js', nodeGlobals);
 

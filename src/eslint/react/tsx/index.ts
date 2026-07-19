@@ -6,13 +6,13 @@ import react from 'eslint-plugin-react';
 import reactHooks from 'eslint-plugin-react-hooks';
 import globals from 'globals';
 import tseslint from 'typescript-eslint';
-import { preferAsyncAwaitRestrictions } from '../../async-await.js';
-import { eslint9RecommendedCompatibilityRules } from '../../eslint-9-recommended.js';
+import { preferAsyncAwaitRestrictions } from '@/eslint/async-await.js';
+import { eslint9RecommendedCompatibilityRules } from '@/eslint/eslint-9-recommended.js';
 import {
   preferBracketNotationDestructuringRestriction,
   preferDestructuringRule,
-} from '../../prefer-destructuring.js';
-import { preferProcessEnvDestructuringRestriction } from '../../process-env.js';
+} from '@/eslint/prefer-destructuring.js';
+import { preferProcessEnvDestructuringRestriction } from '@/eslint/process-env.js';
 
 const eslintReactTsxConfig: Linter.Config[] = [
   js.configs.recommended,

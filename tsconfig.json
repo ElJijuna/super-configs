@@ -5,6 +5,9 @@
     "moduleResolution": "NodeNext",
     "outDir": "lib",
     "rootDir": "src",
+    "paths": {
+      "@/*": ["./src/*"]
+    },
     "strict": true,
     "jsx": "react-jsx",
     "esModuleInterop": true,
