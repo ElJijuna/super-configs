@@ -1,3 +1,11 @@
+## [1.18.0](https://github.com/ElJijuna/super-configs/compare/v1.17.0...v1.18.0) (2026-07-19)
+
+### Features
+
+* enhance build process and add path aliasing ([93481f3](https://github.com/ElJijuna/super-configs/commit/93481f393d62f9b7be528115e8d06c4cff76747d))
+* update dependencies and ESLint configurations for compatibility with ESLint 10 ([e344134](https://github.com/ElJijuna/super-configs/commit/e3441341642e93f0f17bcb26bc84d4a2a46b1e84))
+* update TypeScript and Node.js configurations for improved compatibility, dual suport ts7 compilar and ts6 api ([e7d249d](https://github.com/ElJijuna/super-configs/commit/e7d249d00d1372a03f92cf4db2e039608173fea6))
+
 ## [1.17.0](https://github.com/ElJijuna/super-configs/compare/v1.16.0...v1.17.0) (2026-07-18)
 
 ### Features
