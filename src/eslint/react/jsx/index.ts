@@ -1,3 +1,4 @@
+import { fixupPluginRules } from '@eslint/compat';
 import js from '@eslint/js';
 import type { Linter } from 'eslint';
 import jsxAccessibility from 'eslint-plugin-jsx-a11y';
@@ -5,6 +6,7 @@ import react from 'eslint-plugin-react';
 import reactHooks from 'eslint-plugin-react-hooks';
 import globals from 'globals';
 import { preferAsyncAwaitRestrictions } from '../../async-await.js';
+import { eslint9RecommendedCompatibilityRules } from '../../eslint-9-recommended.js';
 import {
   preferBracketNotationDestructuringRestriction,
   preferDestructuringRule,
@@ -29,11 +31,12 @@ const eslintReactJsxConfig: Linter.Config[] = [
       },
     },
     plugins: {
-      react,
+      react: fixupPluginRules(react),
       'react-hooks': reactHooks,
-      'jsx-a11y': jsxAccessibility,
+      'jsx-a11y': fixupPluginRules(jsxAccessibility),
     },
     rules: {
+      ...eslint9RecommendedCompatibilityRules,
       'react/prop-types': 'off',
       'react/react-in-jsx-scope': 'off',
       'react/function-component-definition': [

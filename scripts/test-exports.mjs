@@ -1,6 +1,7 @@
 import { access, readFile } from 'node:fs/promises';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { ESLint } from 'eslint';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const assert = (condition, message) => {
@@ -172,6 +173,77 @@ for (const specifier of [
   assert(usesProjectService, `${specifier} must enable projectService`);
   assert(enablesTypedRule, `${specifier} must enable type-aware rules`);
   assert(scopesEveryConfigToTypeScript, `${specifier} must only target TypeScript files`);
+}
+
+for (const [specifier, filePath] of [
+  ['super-configs/eslint/browser/js', 'fixture.js'],
+  ['super-configs/eslint/browser/ts', 'fixture.ts'],
+  ['super-configs/eslint/browser/ts-type-checked', 'fixture.ts'],
+  ['super-configs/eslint/bun/js', 'fixture.js'],
+  ['super-configs/eslint/bun/ts', 'fixture.ts'],
+  ['super-configs/eslint/bun/ts-type-checked', 'fixture.ts'],
+  ['super-configs/eslint/js', 'fixture.js'],
+  ['super-configs/eslint/node/js', 'fixture.js'],
+  ['super-configs/eslint/node/ts', 'fixture.ts'],
+  ['super-configs/eslint/node/ts-type-checked', 'fixture.ts'],
+  ['super-configs/eslint/react/jsx', 'fixture.jsx'],
+  ['super-configs/eslint/react/tsx', 'fixture.tsx'],
+  ['super-configs/eslint/ts', 'fixture.ts'],
+  ['super-configs/eslint/ts-type-checked', 'fixture.ts'],
+]) {
+  const config = await importDefault(specifier);
+  const fileMatchOverride = filePath.endsWith('.jsx') ? [{ files: ['**/*.jsx'] }] : [];
+  const eslint = new ESLint({
+    overrideConfigFile: true,
+    overrideConfig: [...config, ...fileMatchOverride],
+  });
+  const calculatedConfig = await eslint.calculateConfigForFile(filePath);
+
+  for (const ruleName of ['no-unassigned-vars', 'no-useless-assignment', 'preserve-caught-error']) {
+    assert(
+      calculatedConfig.rules[ruleName][0] === 0,
+      `${specifier} must preserve the ESLint 9 recommended behavior for ${ruleName}`,
+    );
+  }
+}
+
+for (const [specifier, filePath, code] of [
+  ['super-configs/eslint/js', 'fixture.js', 'export const value = 1;\n'],
+  ['super-configs/eslint/ts', 'fixture.ts', 'export const value: number = 1;\n'],
+  [
+    'super-configs/eslint/ts-type-checked',
+    'src/eslint/index.ts',
+    'export const value: number = 1;\n',
+  ],
+  [
+    'super-configs/eslint/react/jsx',
+    'fixture.jsx',
+    'export const Component = () => <button type="button">OK</button>;\n',
+  ],
+  [
+    'super-configs/eslint/react/tsx',
+    'fixture.tsx',
+    'export const Component = () => <button type="button">OK</button>;\n',
+  ],
+  ['super-configs/eslint/jest', 'fixture.test.js', "it('works', () => {});\n"],
+  ['super-configs/eslint/vitest', 'fixture.test.js', "it('works', () => {});\n"],
+]) {
+  const config = await importDefault(specifier);
+  const reactVersionOverride = specifier.includes('/react/')
+    ? [
+        {
+          ...(filePath.endsWith('.jsx') ? { files: ['**/*.jsx'] } : {}),
+          settings: { react: { version: '19.0' } },
+        },
+      ]
+    : [];
+  const eslint = new ESLint({
+    overrideConfigFile: true,
+    overrideConfig: [...config, ...reactVersionOverride],
+  });
+  const [result] = await eslint.lintText(code, { filePath });
+
+  assert(result.fatalErrorCount === 0, `${specifier} must execute successfully on ESLint 10`);
 }
 
 for (const path of [

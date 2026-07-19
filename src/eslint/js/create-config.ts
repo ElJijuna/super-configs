@@ -3,6 +3,7 @@ import stylistic from '@stylistic/eslint-plugin';
 import type { Linter } from 'eslint';
 import globals from 'globals';
 import { preferAsyncAwaitRestrictions } from '../async-await.js';
+import { eslint9RecommendedCompatibilityRules } from '../eslint-9-recommended.js';
 import {
   preferBracketNotationDestructuringRestriction,
   preferDestructuringRule,
@@ -28,6 +29,7 @@ export const createEslintJsConfig = (
       '@stylistic': stylistic,
     },
     rules: {
+      ...eslint9RecommendedCompatibilityRules,
       '@stylistic/padding-line-between-statements': [
         'error',
         { blankLine: 'always', prev: 'block-like', next: '*' },

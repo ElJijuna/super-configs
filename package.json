@@ -169,11 +169,14 @@
   "publishConfig": {
     "access": "public"
   },
+  "engines": {
+    "node": "^20.19.0 || ^22.13.0 || >=24"
+  },
   "peerDependencies": {
     "@biomejs/biome": ">=2.0.0",
     "@commitlint/cli": ">=19.0.0",
     "@commitlint/config-conventional": ">=19.0.0",
-    "eslint": ">=9.0.0 <10.0.0",
+    "eslint": ">=10.0.0 <11.0.0",
     "jest": ">=29.0.0",
     "markdownlint": ">=0.37.0",
     "prettier": ">=3.0.0",
@@ -223,11 +226,12 @@
     }
   },
   "dependencies": {
-    "@eslint/js": "^9.39.4",
+    "@eslint/compat": "^2.1.0",
+    "@eslint/js": "^10.0.1",
     "@stylistic/eslint-plugin": "^5.10.0",
     "eslint-plugin-jsx-a11y": "^6.10.2",
     "eslint-plugin-react": "^7.37.5",
-    "eslint-plugin-react-hooks": "^6.1.1",
+    "eslint-plugin-react-hooks": "^7.1.1",
     "globals": "^16.5.0",
     "typescript-eslint": "^8.63.0"
   },
@@ -241,11 +245,19 @@
     "@semantic-release/release-notes-generator": "^14.1.1",
     "@types/node": "^26.1.1",
     "conventional-changelog-conventionalcommits": "^9.3.1",
-    "eslint": "^9.39.4",
+    "eslint": "^10.7.0",
     "jiti": "^2.7.0",
     "prettier": "^3.9.4",
     "semantic-release": "^25.0.5",
     "typescript": "^6.0.3",
     "vitest": "^4.1.10"
+  },
+  "overrides": {
+    "eslint-plugin-jsx-a11y": {
+      "eslint": "$eslint"
+    },
+    "eslint-plugin-react": {
+      "eslint": "$eslint"
+    }
   }
 }

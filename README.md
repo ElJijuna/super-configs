@@ -11,7 +11,7 @@
 [![Release](https://github.com/ElJijuna/super-configs/actions/workflows/publish.yml/badge.svg)](https://github.com/ElJijuna/super-configs/actions/workflows/publish.yml)
 [![semantic-release](https://img.shields.io/badge/release-semantic--release-e10079?logo=semantic-release&logoColor=white)](https://semantic-release.gitbook.io/semantic-release/)
 [![Web Audit Report](https://github.com/ElJijuna/super-configs/actions/workflows/web-audit-report.yml/badge.svg)](https://github.com/ElJijuna/super-configs/actions/workflows/web-audit-report.yml)
-[![Node.js](https://img.shields.io/badge/node-%3E%3D22-339933?logo=node.js&logoColor=white)](https://nodejs.org/)
+[![Node.js](https://img.shields.io/badge/node-20.19%20%7C%2022.13%20%7C%2024%2B-339933?logo=node.js&logoColor=white)](https://nodejs.org/)
 [![TypeScript](https://img.shields.io/badge/types-TypeScript-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 [![Commitlint](https://img.shields.io/badge/lint-Commitlint-000000)](https://commitlint.js.org/)
 [![ESLint](https://img.shields.io/badge/lint-ESLint-4B32C3?logo=eslint&logoColor=white)](https://eslint.org/)
@@ -43,8 +43,11 @@ bun add super-configs -D
 This package requires the following peer dependencies:
 
 ```bash
-npm install eslint typescript --save-dev
+npm install eslint@^10 typescript --save-dev
 ```
+
+ESLint 10 requires Node.js 20.19+, 22.13+, or 24+; odd-numbered Node.js releases are not
+supported.
 
 Biome, Commitlint, Jest, Vitest, Markdownlint, Stylelint, TypeDoc, and Prettier are optional peers. Use Biome for new projects:
 
