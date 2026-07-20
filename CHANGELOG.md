@@ -1,3 +1,9 @@
+## [1.19.0](https://github.com/ElJijuna/super-configs/compare/v1.18.0...v1.19.0) (2026-07-20)
+
+### Features
+
+* add Vitest configuration and improve CLI argument parsing with new tests ([39a5995](https://github.com/ElJijuna/super-configs/commit/39a5995e0a7fde3a1c1b307bfe09a2c03267de29))
+
 ## [1.18.0](https://github.com/ElJijuna/super-configs/compare/v1.17.0...v1.18.0) (2026-07-19)
 
 ### Features
