@@ -6,7 +6,7 @@ import { fileURLToPath } from 'node:url';
 type Runtime = 'node' | 'browser' | 'bun';
 type Language = 'js' | 'ts';
 
-interface InitOptions {
+export interface InitOptions {
   runtime: Runtime;
   language: Language;
   typeChecked: boolean;
@@ -18,7 +18,6 @@ interface InitOptions {
 }
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '../..');
-const cwd = process.cwd();
 const helpText = `Usage:
   super-configs init [options]
 
@@ -33,7 +32,10 @@ Options:
   --force                       Overwrite existing config files
   -h, --help                    Show help
 `;
-const parseArgs = (args: string[]): { command?: string; options: InitOptions; help: boolean } => {
+
+export const parseArgs = (
+  args: string[],
+): { command?: string; options: InitOptions; help: boolean } => {
   const options: InitOptions = {
     runtime: 'node',
     language: 'ts',
@@ -132,7 +134,8 @@ const parseArgs = (args: string[]): { command?: string; options: InitOptions; he
 
   return { command, options, help };
 };
-const pathExists = async (path: string): Promise<boolean> => {
+
+export const pathExists = async (path: string): Promise<boolean> => {
   try {
     await access(path);
 
@@ -141,7 +144,12 @@ const pathExists = async (path: string): Promise<boolean> => {
     return false;
   }
 };
-const writeNewFile = async (path: string, contents: string, force: boolean): Promise<boolean> => {
+
+export const writeNewFile = async (
+  path: string,
+  contents: string,
+  force: boolean,
+): Promise<boolean> => {
   if (!force && (await pathExists(path))) {
     return false;
   }
@@ -150,7 +158,12 @@ const writeNewFile = async (path: string, contents: string, force: boolean): Pro
 
   return true;
 };
-const copyNewFile = async (source: string, target: string, force: boolean): Promise<boolean> => {
+
+export const copyNewFile = async (
+  source: string,
+  target: string,
+  force: boolean,
+): Promise<boolean> => {
   if (!force && (await pathExists(target))) {
     return false;
   }
@@ -159,7 +172,8 @@ const copyNewFile = async (source: string, target: string, force: boolean): Prom
 
   return true;
 };
-const mergePackageScripts = async (target: string, force: boolean): Promise<boolean> => {
+
+export const mergePackageScripts = async (target: string, force: boolean): Promise<boolean> => {
   const defaultScripts = {
     lint: 'eslint .',
     'lint:fix': 'eslint . --fix',
@@ -190,7 +204,8 @@ const mergePackageScripts = async (target: string, force: boolean): Promise<bool
 
   return true;
 };
-const createEslintConfig = (options: InitOptions): string => {
+
+export const createEslintConfig = (options: InitOptions): string => {
   if (options.react) {
     const testImport = options.vitest
       ? "import eslintVitest from 'super-configs/eslint/vitest';\n"
@@ -237,7 +252,8 @@ export default [
 ${testSpread}];
 `;
 };
-const createTsconfig = (options: InitOptions): string => {
+
+export const createTsconfig = (options: InitOptions): string => {
   const preset = options.react ? 'react' : options.runtime === 'browser' ? 'react' : 'node';
 
   return `{
@@ -250,21 +266,36 @@ const createTsconfig = (options: InitOptions): string => {
 }
 `;
 };
-const createBiomeConfig = (): string => `{
+
+export const createBiomeConfig = (): string => `{
   "$schema": "https://biomejs.dev/schemas/2.4.16/schema.json",
   "extends": ["super-configs/biome"]
 }
 `;
-const runInit = async (options: InitOptions): Promise<void> => {
+interface RunInitContext {
+  cwd?: string;
+  root?: string;
+}
+
+export const runInit = async (
+  options: InitOptions,
+  context: RunInitContext = {},
+): Promise<void> => {
+  const workingDirectory = context.cwd ?? process.cwd();
+  const packageRoot = context.root ?? root;
   const changed: string[] = [];
   const skipped: string[] = [];
   const write = async (target: string, contents: string) => {
-    const written = await writeNewFile(resolve(cwd, target), contents, options.force);
+    const written = await writeNewFile(resolve(workingDirectory, target), contents, options.force);
 
     (written ? changed : skipped).push(target);
   };
   const copy = async (source: string, target: string) => {
-    const copied = await copyNewFile(resolve(root, source), resolve(cwd, target), options.force);
+    const copied = await copyNewFile(
+      resolve(packageRoot, source),
+      resolve(workingDirectory, target),
+      options.force,
+    );
 
     (copied ? changed : skipped).push(target);
   };
@@ -281,7 +312,10 @@ const runInit = async (options: InitOptions): Promise<void> => {
   }
 
   if (options.scripts) {
-    const written = await mergePackageScripts(resolve(cwd, 'package.json'), options.force);
+    const written = await mergePackageScripts(
+      resolve(workingDirectory, 'package.json'),
+      options.force,
+    );
 
     (written ? changed : skipped).push('package.json');
   }
@@ -295,22 +329,35 @@ const runInit = async (options: InitOptions): Promise<void> => {
   }
 };
 
-try {
-  const { command, options, help } = parseArgs(process.argv.slice(2));
+export const main = async (
+  args: string[] = process.argv.slice(2),
+  context: RunInitContext = {},
+): Promise<void> => {
+  const { command, options, help } = parseArgs(args);
 
   if (help || !command) {
     console.log(helpText);
-    process.exit(0);
+
+    return;
   }
 
   if (command !== 'init') {
     throw new Error(`Unknown command: ${command}`);
   }
 
-  await runInit(options);
-} catch (error) {
-  const message = error instanceof Error ? error.message : String(error);
+  await runInit(options, context);
+};
 
-  console.error(`${basename(process.argv[1] ?? 'super-configs')}: ${message}`);
-  process.exit(1);
+const isMain =
+  process.argv[1] !== undefined && resolve(process.argv[1]) === fileURLToPath(import.meta.url);
+
+if (isMain) {
+  try {
+    await main();
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error);
+
+    console.error(`${basename(process.argv[1] ?? 'super-configs')}: ${message}`);
+    process.exitCode = 1;
+  }
 }
