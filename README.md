@@ -866,9 +866,29 @@ npm run lint
 # Format code
 npm run format
 
+# Type-check with the TypeScript 6 compiler
+npm run typecheck:ts6
+
+# Run the unit tests
+npm test
+
+# Run the unit tests with coverage thresholds
+npm run test:coverage
+
+# Verify that every declared package export resolves
+npm run test:exports
+
+# Run the init CLI smoke tests against a temporary project
+npm run test:cli
+
 # Run all checks
 npm run check
 ```
+
+`npm run check` is the required regression suite: it runs lint, Biome, the TypeScript 6 type check,
+the build, the unit tests, export verification, and the CLI smoke tests, in that order. It does not
+enforce coverage thresholds — run `npm run test:coverage` for those. Run `npm run pack:check` as
+well whenever package exports or published files change.
 
 ## Changelog
 
