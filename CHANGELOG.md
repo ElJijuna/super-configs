@@ -1,3 +1,11 @@
+## [1.20.0](https://github.com/ElJijuna/super-configs/compare/v1.19.0...v1.20.0) (2026-07-26)
+
+### Features
+
+* add companion preset options for ESLint factory and update related tests ([a4641aa](https://github.com/ElJijuna/super-configs/commit/a4641aac3627ba0b060013731fa388280c584871))
+* add EslintTestFramework type to ESLint exports ([ef7714f](https://github.com/ElJijuna/super-configs/commit/ef7714fc95aaf3acedb735811e82a97433a4476d))
+* update CLI to emit single factory call for ESLint config and reject invalid options ([77fbd8a](https://github.com/ElJijuna/super-configs/commit/77fbd8acfa2e49f249b6a6c52d97365746ce5810))
+
 ## [1.19.0](https://github.com/ElJijuna/super-configs/compare/v1.18.0...v1.19.0) (2026-07-20)
 
 ### Features
