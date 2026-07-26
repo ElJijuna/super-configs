@@ -217,6 +217,35 @@ export default createEslintConfig({
 });
 ```
 
+| Option | Type | Default | Effect |
+| --- | --- | --- | --- |
+| `runtime` | `'node' \| 'browser' \| 'bun'` | `'node'` | Runtime globals for the base preset |
+| `language` | `'js' \| 'ts'` | `'ts'` | Base preset language |
+| `typeChecked` | `boolean` | `false` | Type-aware TypeScript rules; requires `language: 'ts'` |
+| `react` | `boolean` | `false` | Replaces the base preset with `react/tsx` (or `react/jsx` for `language: 'js'`) |
+| `testFramework` | `'vitest' \| 'jest'` | — | Appends the matching companion preset for `*.test.*` and `*.spec.*` files |
+| `ignores` | `string[]` | `[]` | Prepended as a global ignores entry |
+| `overrides` | `Linter.Config[]` | `[]` | Appended last so consumer rules win |
+
+Companion presets keep the same order the manual imports use: ignores, base preset, test
+framework, overrides.
+
+```javascript
+// eslint.config.js
+import { createEslintConfig } from 'super-configs/eslint';
+
+export default createEslintConfig({
+  react: true,
+  testFramework: 'vitest',
+  ignores: ['dist/**', 'coverage/**', 'storybook-static/**'],
+});
+```
+
+`react: true` uses the React presets as the base, so they provide their own globals and the
+`runtime` option no longer applies. `typeChecked` is rejected with `react: true` because no
+type-aware React preset exists yet; compose `eslint/react/tsx` with your own type-aware entry if
+you need it.
+
 #### JavaScript
 
 ```javascript

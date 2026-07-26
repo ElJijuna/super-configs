@@ -167,6 +167,59 @@ try {
   );
 }
 
+for (const [testFramework, expectedName, expectedGlobal] of [
+  ['vitest', 'super-configs/vitest', 'expect'],
+  ['jest', 'super-configs/jest', 'jest'],
+]) {
+  const companionFactoryConfig = eslintFactoryModule.createEslintConfig({ testFramework });
+  const companionConfig = companionFactoryConfig.at(-1);
+
+  assert(
+    companionConfig?.name === expectedName,
+    `factory testFramework "${testFramework}" must append ${expectedName}`,
+  );
+  assert(
+    expectedGlobal in (companionConfig?.languageOptions?.globals ?? {}),
+    `factory testFramework "${testFramework}" must define ${expectedGlobal}`,
+  );
+  assert(
+    companionFactoryConfig.some((entry) => entry.name === 'super-configs/node-ts'),
+    `factory testFramework "${testFramework}" must keep the runtime preset`,
+  );
+}
+
+const reactFactoryConfig = eslintFactoryModule.createEslintConfig({
+  react: true,
+  testFramework: 'vitest',
+});
+
+assert(
+  reactFactoryConfig.some((entry) => entry.name === 'super-configs/react-tsx'),
+  'factory react option must use the React TSX preset',
+);
+assert(
+  reactFactoryConfig.at(-1)?.name === 'super-configs/vitest',
+  'factory react option must keep companion presets last',
+);
+assert(
+  eslintFactoryModule
+    .createEslintConfig({ react: true, language: 'js' })
+    .some((entry) => entry.name === 'super-configs/react-jsx'),
+  'factory react option must use the React JSX preset for JavaScript',
+);
+
+try {
+  eslintFactoryModule.createEslintConfig({ react: true, typeChecked: true });
+
+  throw new Error('factory must reject type-checked React');
+} catch (error) {
+  assert(
+    error instanceof TypeError &&
+      error.message === 'typeChecked is not supported when react is enabled',
+    'factory must reject type-checked React',
+  );
+}
+
 for (const specifier of [
   'super-configs/eslint/browser/ts-type-checked',
   'super-configs/eslint/bun/ts-type-checked',

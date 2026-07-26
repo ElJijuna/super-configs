@@ -1,6 +1,6 @@
 # ROADMAP
 
-Last updated: 2026-07-18
+Last updated: 2026-07-25
 
 ## Done
 
@@ -60,10 +60,16 @@ Last updated: 2026-07-18
   - temp project generation and companion flags
   - skip existing files and `--force`
   - invalid test framework combinations
+- Factory options for companion presets:
+  - `createEslintConfig({ testFramework: 'vitest' | 'jest' })` appends the test preset
+  - `createEslintConfig({ react: true })` swaps the base preset for `react/tsx` or `react/jsx`
+  - rejects `typeChecked` with `react` because no type-aware React preset exists
+  - order stays ignores, base preset, test framework, overrides
 
 ## Next
 
-- Consider factory options for companion presets after CLI behavior settles
+- Consider emitting the factory companion options from `super-configs init` instead of the
+  current multi-import ESLint template
 
 ## Validation Baseline
 

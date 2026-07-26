@@ -116,4 +116,55 @@ describe('createEslintConfig', () => {
       'typeChecked is only supported when language is "ts"',
     );
   });
+
+  it.each([
+    ['vitest', 'super-configs/vitest'],
+    ['jest', 'super-configs/jest'],
+  ] as const)('appends the %s companion preset', (testFramework, expectedName) => {
+    const config = createEslintConfig({ testFramework });
+    const companionConfig = config.at(-1);
+
+    expect(companionConfig?.name).toBe(expectedName);
+    expect(companionConfig?.files).toEqual([
+      '**/*.test.{js,jsx,ts,tsx}',
+      '**/*.spec.{js,jsx,ts,tsx}',
+    ]);
+    expect(config.some((item) => item.name === 'super-configs/node-ts')).toBe(true);
+  });
+
+  it('keeps overrides after the companion preset', () => {
+    const override = { name: 'consumer/override', rules: { eqeqeq: 'off' as const } };
+    const config = createEslintConfig({ testFramework: 'vitest', overrides: [override] });
+
+    expect(config.at(-1)).toBe(override);
+    expect(config.at(-2)?.name).toBe('super-configs/vitest');
+  });
+
+  it.each([
+    ['ts', 'super-configs/react-tsx'],
+    ['js', 'super-configs/react-jsx'],
+  ] as const)('replaces the base preset with React for %s', (language, expectedName) => {
+    const config = createEslintConfig({ language, react: true });
+
+    expect(config.at(-1)?.name).toBe(expectedName);
+    expect(config.some((item) => item.name?.startsWith('super-configs/node-'))).toBe(false);
+  });
+
+  it('combines React with a companion test preset', () => {
+    const config = createEslintConfig({
+      react: true,
+      testFramework: 'jest',
+      ignores: ['dist/**'],
+    });
+
+    expect(config[0]).toEqual({ name: 'super-configs/ignores', ignores: ['dist/**'] });
+    expect(config.some((item) => item.name === 'super-configs/react-tsx')).toBe(true);
+    expect(config.at(-1)?.name).toBe('super-configs/jest');
+  });
+
+  it('rejects type-aware linting for React', () => {
+    expect(() => createEslintConfig({ react: true, typeChecked: true })).toThrowError(
+      'typeChecked is not supported when react is enabled',
+    );
+  });
 });
