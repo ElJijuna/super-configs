@@ -40,7 +40,6 @@ describe('CLI argument parsing', () => {
         'bun',
         '--language',
         'ts',
-        '--type-checked',
         '--force',
         '--jest',
         '--react',
@@ -52,7 +51,6 @@ describe('CLI argument parsing', () => {
       options: {
         ...defaultOptions,
         runtime: 'bun',
-        typeChecked: true,
         force: true,
         jest: true,
         react: true,
@@ -72,6 +70,7 @@ describe('CLI argument parsing', () => {
       help: false,
     });
     expect(parseArgs(['--help']).help).toBe(true);
+    expect(parseArgs(['init', '--type-checked']).options.typeChecked).toBe(true);
   });
 
   it.each([
@@ -81,6 +80,7 @@ describe('CLI argument parsing', () => {
     [['init', '--language', 'js', '--type-checked'], '--type-checked requires --language ts'],
     [['init', '--jest', '--vitest'], 'choose either --jest or --vitest, not both'],
     [['init', '--language', 'js', '--react'], '--react requires --language ts'],
+    [['init', '--react', '--type-checked'], '--type-checked is not supported with --react'],
   ])('rejects invalid arguments: %s', (args, message) => {
     expect(() => parseArgs(args)).toThrowError(message);
   });
@@ -88,14 +88,42 @@ describe('CLI argument parsing', () => {
 
 describe('CLI templates', () => {
   it.each([
-    [{ ...defaultOptions, vitest: true }, 'eslintVitest'],
-    [{ ...defaultOptions, jest: true }, 'eslintJest'],
+    [{ ...defaultOptions, vitest: true }, "testFramework: 'vitest'"],
+    [{ ...defaultOptions, jest: true }, "testFramework: 'jest'"],
     [defaultOptions, 'createEslintConfig'],
-    [{ ...defaultOptions, react: true, vitest: true }, 'eslintVitest'],
-    [{ ...defaultOptions, react: true, jest: true }, 'eslintJest'],
-    [{ ...defaultOptions, react: true }, 'eslintReactTsx'],
-  ] as const)('creates the expected ESLint template', (options, expectedImport) => {
-    expect(createEslintConfig(options)).toContain(expectedImport);
+    [{ ...defaultOptions, react: true, vitest: true }, "testFramework: 'vitest'"],
+    [{ ...defaultOptions, react: true, jest: true }, "testFramework: 'jest'"],
+    [{ ...defaultOptions, react: true }, 'react: true'],
+  ] as const)('creates the expected ESLint template', (options, expectedOption) => {
+    expect(createEslintConfig(options)).toContain(expectedOption);
+  });
+
+  it('emits a single factory call without companion imports', () => {
+    const config = createEslintConfig({ ...defaultOptions, vitest: true });
+
+    expect(config).toBe(`import { createEslintConfig } from 'super-configs/eslint';
+
+export default createEslintConfig({
+  runtime: 'node',
+  language: 'ts',
+  typeChecked: false,
+  testFramework: 'vitest',
+  ignores: ['dist/**', 'coverage/**', 'node_modules/**'],
+});
+`);
+  });
+
+  it('omits runtime and typeChecked from the React template', () => {
+    const config = createEslintConfig({ ...defaultOptions, react: true, vitest: true });
+
+    expect(config).toContain('react: true');
+    expect(config).toContain('storybook-static/**');
+    expect(config).not.toContain('runtime:');
+    expect(config).not.toContain('typeChecked:');
+  });
+
+  it('omits testFramework when no test flag is passed', () => {
+    expect(createEslintConfig(defaultOptions)).not.toContain('testFramework');
   });
 
   it('includes the selected runtime and language in the generic ESLint template', () => {

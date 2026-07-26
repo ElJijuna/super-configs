@@ -65,11 +65,16 @@ Last updated: 2026-07-25
   - `createEslintConfig({ react: true })` swaps the base preset for `react/tsx` or `react/jsx`
   - rejects `typeChecked` with `react` because no type-aware React preset exists
   - order stays ignores, base preset, test framework, overrides
+- Init CLI emits a single factory call:
+  - `eslint.config.js` is one `createEslintConfig({ ... })` call with no companion imports
+  - `--react` maps to `react: true` and omits `runtime` and `typeChecked`
+  - `--vitest` and `--jest` map to `testFramework`
+  - `--react --type-checked` is rejected at parse time instead of silently dropping the flag
+  - README recipes use the same single-call shape
 
 ## Next
 
-- Consider emitting the factory companion options from `super-configs init` instead of the
-  current multi-import ESLint template
+- Enforce the coverage thresholds in CI by running `test:coverage` from `npm run check`
 
 ## Validation Baseline
 

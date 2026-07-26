@@ -58,5 +58,7 @@ early on invalid combinations rather than silently repairing them, with one docu
 `super-configs/eslint` now pulls the React and test plugins into its module graph, since those
 presets are static imports and already direct dependencies of the package.
 
-The init CLI still emits the multi-import template. Migrating it to the factory options is tracked
-in the roadmap and should be a separate, consumer-visible change.
+The init CLI now emits a single `createEslintConfig` call instead of the multi-import template, and
+the README recipes follow the same shape. Because the factory rejects `typeChecked` under `react`,
+the CLI rejects `--react --type-checked` at parse time; previously it accepted the combination and
+silently dropped type checking.

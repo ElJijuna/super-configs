@@ -45,10 +45,15 @@ const bunCliEslint = await readFile(join(bunCliTarget, 'eslint.config.js'), 'utf
 const bunCliPackageJson = JSON.parse(await readFile(join(bunCliTarget, 'package.json'), 'utf8'));
 
 assert(
-  bunCliEslint.includes("import eslintVitest from 'super-configs/eslint/vitest';"),
-  'CLI --vitest must add Vitest import',
+  bunCliEslint.includes("testFramework: 'vitest'"),
+  'CLI --vitest must set the Vitest factory option',
 );
 assert(bunCliEslint.includes("runtime: 'bun'"), 'CLI --runtime bun must configure Bun runtime');
+assert(
+  bunCliEslint.includes("import { createEslintConfig } from 'super-configs/eslint';") &&
+    !bunCliEslint.includes('super-configs/eslint/'),
+  'CLI must generate a single factory import',
+);
 assert(
   bunCliPackageJson.scripts?.check === 'npm run lint && npm run format:check',
   'CLI --scripts must add check script',
@@ -62,13 +67,14 @@ assert(reactCli.status === 0, `React CLI init must succeed: ${reactCli.stderr}`)
 const reactCliEslint = await readFile(join(reactCliTarget, 'eslint.config.js'), 'utf8');
 const reactCliTsconfig = await readFile(join(reactCliTarget, 'tsconfig.json'), 'utf8');
 
+assert(reactCliEslint.includes('react: true'), 'CLI --react must set the React factory option');
 assert(
-  reactCliEslint.includes("import eslintReactTsx from 'super-configs/eslint/react/tsx';"),
-  'CLI --react must add React TSX import',
+  reactCliEslint.includes("testFramework: 'vitest'"),
+  'CLI --react --vitest must set the Vitest factory option',
 );
 assert(
-  reactCliEslint.includes("import eslintVitest from 'super-configs/eslint/vitest';"),
-  'CLI --react --vitest must add Vitest import',
+  !reactCliEslint.includes('runtime:') && !reactCliEslint.includes('typeChecked:'),
+  'CLI --react must omit options the React presets ignore',
 );
 assert(
   reactCliTsconfig.includes('"extends": "super-configs/tsconfig/react"'),
@@ -82,6 +88,15 @@ assert(mixedTestCli.status === 1, 'CLI must reject --jest with --vitest');
 assert(
   mixedTestCli.stderr.includes('choose either --jest or --vitest'),
   'CLI must explain mixed test framework rejection',
+);
+
+const typeCheckedReactCliTarget = await mkdtemp(join(tmpdir(), 'super-configs-react-tc-cli-'));
+const typeCheckedReactCli = runCliInit(typeCheckedReactCliTarget, '--react', '--type-checked');
+
+assert(typeCheckedReactCli.status === 1, 'CLI must reject --react with --type-checked');
+assert(
+  typeCheckedReactCli.stderr.includes('--type-checked is not supported with --react'),
+  'CLI must explain the type-checked React rejection',
 );
 
 const jsCliTarget = await mkdtemp(join(tmpdir(), 'super-configs-js-cli-'));

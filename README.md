@@ -190,7 +190,9 @@ If installed globally, use the binary directly:
 super-configs init --runtime node --language ts
 ```
 
-The command creates starter config files and skips existing files unless `--force` is passed.
+The command creates starter config files and skips existing files unless `--force` is passed. The
+generated `eslint.config.js` is a single [config factory](#config-factory) call, so companion flags
+become factory options instead of extra imports.
 
 Add companion presets and package scripts when needed:
 
@@ -198,6 +200,9 @@ Add companion presets and package scripts when needed:
 super-configs init --runtime bun --language ts --type-checked --vitest --scripts
 super-configs init --react --vitest
 ```
+
+`--react` cannot be combined with `--type-checked`, and `--jest` cannot be combined with
+`--vitest`; both combinations fail before any file is written.
 
 ### ESLint
 
@@ -604,17 +609,14 @@ export default {
 ```javascript
 // eslint.config.js
 import { createEslintConfig } from 'super-configs/eslint';
-import eslintVitest from 'super-configs/eslint/vitest';
 
-export default [
-  ...createEslintConfig({
-    runtime: 'node',
-    language: 'ts',
-    typeChecked: true,
-    ignores: ['dist/**', 'coverage/**'],
-  }),
-  ...eslintVitest,
-];
+export default createEslintConfig({
+  runtime: 'node',
+  language: 'ts',
+  typeChecked: true,
+  testFramework: 'vitest',
+  ignores: ['dist/**', 'coverage/**'],
+});
 ```
 
 ```json
@@ -663,16 +665,14 @@ cp node_modules/super-configs/lib/test/bunfig.toml bunfig.toml
 
 ```javascript
 // eslint.config.js
-import eslintReactTsx from 'super-configs/eslint/react/tsx';
-import eslintVitest from 'super-configs/eslint/vitest';
+import { createEslintConfig } from 'super-configs/eslint';
 
-export default [
-  {
-    ignores: ['dist/**', 'coverage/**', 'storybook-static/**'],
-  },
-  ...eslintReactTsx,
-  ...eslintVitest,
-];
+export default createEslintConfig({
+  language: 'ts',
+  react: true,
+  testFramework: 'vitest',
+  ignores: ['dist/**', 'coverage/**', 'storybook-static/**'],
+});
 ```
 
 ```json

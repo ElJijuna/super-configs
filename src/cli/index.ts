@@ -132,6 +132,10 @@ export const parseArgs = (
     throw new Error('--react requires --language ts');
   }
 
+  if (options.react && options.typeChecked) {
+    throw new Error('--type-checked is not supported with --react');
+  }
+
   return { command, options, help };
 };
 
@@ -206,50 +210,26 @@ export const mergePackageScripts = async (target: string, force: boolean): Promi
 };
 
 export const createEslintConfig = (options: InitOptions): string => {
-  if (options.react) {
-    const testImport = options.vitest
-      ? "import eslintVitest from 'super-configs/eslint/vitest';\n"
-      : options.jest
-        ? "import eslintJest from 'super-configs/eslint/jest';\n"
-        : '';
-    const testSpread = options.vitest
-      ? '  ...eslintVitest,\n'
-      : options.jest
-        ? '  ...eslintJest,\n'
-        : '';
-
-    return `import eslintReactTsx from 'super-configs/eslint/react/tsx';
-${testImport}
-export default [
-  {
-    ignores: ['dist/**', 'coverage/**', 'storybook-static/**', 'node_modules/**'],
-  },
-  ...eslintReactTsx,
-${testSpread}];
-`;
-  }
-
-  const testImport = options.vitest
-    ? "import eslintVitest from 'super-configs/eslint/vitest';\n"
-    : options.jest
-      ? "import eslintJest from 'super-configs/eslint/jest';\n"
-      : '';
-  const testSpread = options.vitest
-    ? '  ...eslintVitest,\n'
-    : options.jest
-      ? '  ...eslintJest,\n'
-      : '';
+  const testFramework = options.vitest ? 'vitest' : options.jest ? 'jest' : undefined;
+  const ignores = options.react
+    ? "['dist/**', 'coverage/**', 'storybook-static/**', 'node_modules/**']"
+    : "['dist/**', 'coverage/**', 'node_modules/**']";
+  // React presets bring their own globals, so the factory ignores `runtime` and rejects
+  // `typeChecked` for them.
+  const factoryOptions = [
+    ...(options.react ? ['react: true'] : [`runtime: '${options.runtime}'`]),
+    `language: '${options.language}'`,
+    ...(options.react ? [] : [`typeChecked: ${options.typeChecked}`]),
+    ...(testFramework === undefined ? [] : [`testFramework: '${testFramework}'`]),
+    `ignores: ${ignores}`,
+  ];
+  const factoryBody = factoryOptions.map((option) => `  ${option},`).join('\n');
 
   return `import { createEslintConfig } from 'super-configs/eslint';
-${testImport}
-export default [
-  ...createEslintConfig({
-    runtime: '${options.runtime}',
-    language: '${options.language}',
-    typeChecked: ${options.typeChecked},
-    ignores: ['dist/**', 'coverage/**', 'node_modules/**'],
-  }),
-${testSpread}];
+
+export default createEslintConfig({
+${factoryBody}
+});
 `;
 };
 
