@@ -10,6 +10,7 @@ export type {
   CreateEslintConfigOptions,
   EslintLanguage,
   EslintRuntime,
+  EslintTestFramework,
 } from '@/eslint/index.js';
 export { createEslintConfig } from '@/eslint/index.js';
 export { default as eslintJest } from '@/eslint/jest/index.js';
