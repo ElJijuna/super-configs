@@ -82,6 +82,14 @@
       "types": "./lib/eslint/react/tsx/index.d.ts",
       "import": "./lib/eslint/react/tsx/index.js"
     },
+    "./eslint/react-native/jsx": {
+      "types": "./lib/eslint/react-native/jsx/index.d.ts",
+      "import": "./lib/eslint/react-native/jsx/index.js"
+    },
+    "./eslint/react-native/tsx": {
+      "types": "./lib/eslint/react-native/tsx/index.d.ts",
+      "import": "./lib/eslint/react-native/tsx/index.js"
+    },
     "./biome": "./biome.json",
     "./bunfig": "./lib/test/bunfig.toml",
     "./bunfig.toml": "./lib/test/bunfig.toml",

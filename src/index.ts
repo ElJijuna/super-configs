@@ -20,6 +20,8 @@ export { default as eslintNodeTs } from '@/eslint/node/ts/index.js';
 export { default as eslintNodeTsTypeChecked } from '@/eslint/node/ts-type-checked/index.js';
 export { default as eslintReactJsx } from '@/eslint/react/jsx/index.js';
 export { default as eslintReactTsx } from '@/eslint/react/tsx/index.js';
+export { default as eslintReactNativeJsx } from '@/eslint/react-native/jsx/index.js';
+export { default as eslintReactNativeTsx } from '@/eslint/react-native/tsx/index.js';
 export { default as eslintTs } from '@/eslint/ts/index.js';
 export { default as eslintTsTypeChecked } from '@/eslint/ts-type-checked/index.js';
 export { default as eslintVitest } from '@/eslint/vitest/index.js';

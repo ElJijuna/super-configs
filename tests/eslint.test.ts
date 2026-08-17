@@ -1,3 +1,4 @@
+import { ESLint } from 'eslint';
 import { describe, expect, it } from 'vitest';
 import { createEslintConfig } from '../src/eslint/index.js';
 import {
@@ -13,6 +14,8 @@ import {
   eslintNodeTs,
   eslintNodeTsTypeChecked,
   eslintReactJsx,
+  eslintReactNativeJsx,
+  eslintReactNativeTsx,
   eslintReactTsx,
   eslintTs,
   eslintTsTypeChecked,
@@ -34,6 +37,8 @@ const presets = [
   eslintNodeTs,
   eslintNodeTsTypeChecked,
   eslintReactJsx,
+  eslintReactNativeJsx,
+  eslintReactNativeTsx,
   eslintReactTsx,
   eslintTs,
   eslintTsTypeChecked,
@@ -46,6 +51,77 @@ describe('public configuration exports', () => {
       expect(preset).toBeInstanceOf(Array);
       expect(preset.length).toBeGreaterThan(0);
     }
+  });
+
+  it.each([
+    ['JSX', eslintReactNativeJsx],
+    ['TSX', eslintReactNativeTsx],
+  ])('configures the React Native %s runtime without broad environment globals', (_, config) => {
+    const configuredGlobals = Object.assign(
+      {},
+      ...config.map((entry) => entry.languageOptions?.globals ?? {}),
+    );
+
+    expect(configuredGlobals).toHaveProperty('__DEV__');
+    expect(configuredGlobals).toHaveProperty('fetch');
+    expect(configuredGlobals).toHaveProperty('process');
+    expect(configuredGlobals).not.toHaveProperty('document');
+    expect(configuredGlobals).not.toHaveProperty('__dirname');
+  });
+
+  it.each([
+    ['JSX', eslintReactNativeJsx],
+    ['TSX', eslintReactNativeTsx],
+  ])('enables the complete recommended React Hooks rules for React Native %s', (_, config) => {
+    const nativeConfig = config.find((entry) =>
+      entry.name?.startsWith('super-configs/react-native'),
+    );
+
+    expect(nativeConfig?.rules?.['react-hooks/rules-of-hooks']).toBe('error');
+    expect(nativeConfig?.rules?.['react-hooks/immutability']).toBe('error');
+    expect(nativeConfig?.plugins).not.toHaveProperty('jsx-a11y');
+  });
+
+  it('accepts native globals and function component declarations', async () => {
+    const eslint = new ESLint({
+      overrideConfigFile: true,
+      overrideConfig: eslintReactNativeTsx,
+    });
+    const [result] = await eslint.lintText(
+      [
+        "import { View } from 'react-native';",
+        'export default function Screen() {',
+        '  if (__DEV__) {',
+        '    console.log(fetch);',
+        '  }',
+        '  return <View />;',
+        '}',
+      ].join('\n'),
+      { filePath: 'src/Screen.native.tsx' },
+    );
+
+    expect(result.messages).toEqual([]);
+  });
+
+  it('rejects browser-only globals and React Native deep imports', async () => {
+    const eslint = new ESLint({
+      overrideConfigFile: true,
+      overrideConfig: eslintReactNativeJsx,
+    });
+    const [result] = await eslint.lintText(
+      [
+        "import View from 'react-native/Libraries/Components/View/View';",
+        'export const Screen = () => <View title={document.title} />;',
+      ].join('\n'),
+      { filePath: 'src/Screen.android.jsx' },
+    );
+
+    expect(result.messages).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ ruleId: 'no-restricted-imports', severity: 2 }),
+        expect.objectContaining({ ruleId: 'no-undef', severity: 2 }),
+      ]),
+    );
   });
 
   it('exports the legacy Prettier configuration', () => {
