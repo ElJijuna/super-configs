@@ -79,10 +79,26 @@ for (const specifier of [
   '../lib/prettier/index.js',
   '../commitlint.config.js',
   '../jest.config.js',
+  '../jest.expo.config.js',
+  '../jest.react-native.config.js',
   '../vitest.config.js',
   '../stylelint.config.js',
 ]) {
   await importDefault(specifier);
+}
+
+for (const [specifier, preset] of [
+  ['super-configs/jest/expo', 'jest-expo'],
+  ['super-configs/jest/react-native', '@react-native/jest-preset'],
+]) {
+  const config = await importDefault(specifier);
+
+  assert(config.preset === preset, `${specifier} must use ${preset}`);
+  assert(config.transform === undefined, `${specifier} must leave transforms to its native preset`);
+  assert(
+    config.testMatch === undefined,
+    `${specifier} must leave test discovery to its native preset`,
+  );
 }
 
 for (const [specifier, expectedGlobal, excludedGlobal] of [

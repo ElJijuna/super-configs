@@ -6,6 +6,7 @@ import {
   copyNewFile,
   createBiomeConfig,
   createEslintConfig,
+  createJestConfig,
   createTsconfig,
   type InitOptions,
   main,
@@ -196,6 +197,14 @@ export default createEslintConfig({
       extends: ['super-configs/biome/react-native'],
     });
   });
+
+  it.each([
+    [defaultOptions, 'super-configs/jest'],
+    [{ ...defaultOptions, reactNative: true }, 'super-configs/jest/react-native'],
+    [{ ...defaultOptions, expo: true }, 'super-configs/jest/expo'],
+  ] as const)('creates the expected Jest template', (options, preset) => {
+    expect(createJestConfig(options)).toBe(`export { default } from '${preset}';\n`);
+  });
 });
 
 describe('CLI file operations', () => {
@@ -275,11 +284,22 @@ describe('CLI file operations', () => {
     expect(await pathExists(join(directory, 'eslint.config.js'))).toBe(true);
     expect(await pathExists(join(directory, 'biome.json'))).toBe(true);
     expect(await pathExists(join(directory, 'tsconfig.json'))).toBe(true);
+    expect(await pathExists(join(directory, 'jest.config.js'))).toBe(false);
     expect(log).toHaveBeenCalledWith('created tsconfig.json');
 
     log.mockClear();
     await runInit(defaultOptions, { cwd: directory });
     expect(log).toHaveBeenCalledWith('skipped eslint.config.js (exists; use --force to overwrite)');
+  });
+
+  it('initializes the selected Jest config', async () => {
+    vi.spyOn(console, 'log').mockImplementation(() => undefined);
+
+    await runInit({ ...defaultOptions, expo: true, jest: true }, { cwd: directory });
+
+    expect(await readFile(join(directory, 'jest.config.js'), 'utf8')).toBe(
+      "export { default } from 'super-configs/jest/expo';\n",
+    );
   });
 
   it('initializes Bun JavaScript projects with test config and package scripts', async () => {

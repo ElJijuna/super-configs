@@ -84,11 +84,17 @@ assert(
 );
 
 const reactNativeCliTarget = await mkdtemp(join(tmpdir(), 'super-configs-react-native-cli-'));
-const reactNativeCli = runCliInit(reactNativeCliTarget, '--react-native', '--type-checked');
+const reactNativeCli = runCliInit(
+  reactNativeCliTarget,
+  '--react-native',
+  '--type-checked',
+  '--jest',
+);
 
 assert(reactNativeCli.status === 0, `React Native CLI init must succeed: ${reactNativeCli.stderr}`);
 
 const reactNativeCliEslint = await readFile(join(reactNativeCliTarget, 'eslint.config.js'), 'utf8');
+const reactNativeCliJest = await readFile(join(reactNativeCliTarget, 'jest.config.js'), 'utf8');
 const reactNativeCliTsconfig = await readFile(join(reactNativeCliTarget, 'tsconfig.json'), 'utf8');
 
 assert(
@@ -101,17 +107,22 @@ assert(
 );
 assert(!reactNativeCliEslint.includes('runtime:'), 'CLI --react-native must omit runtime globals');
 assert(
+  reactNativeCliJest.includes('super-configs/jest/react-native'),
+  'CLI --react-native --jest must use the React Native Jest preset',
+);
+assert(
   reactNativeCliTsconfig.includes('"extends": "super-configs/tsconfig/react-native"'),
   'CLI --react-native must use the React Native TSConfig',
 );
 
 const expoCliTarget = await mkdtemp(join(tmpdir(), 'super-configs-expo-cli-'));
-const expoCli = runCliInit(expoCliTarget, '--expo', '--type-checked');
+const expoCli = runCliInit(expoCliTarget, '--expo', '--type-checked', '--jest');
 
 assert(expoCli.status === 0, `Expo CLI init must succeed: ${expoCli.stderr}`);
 
 const expoCliEslint = await readFile(join(expoCliTarget, 'eslint.config.js'), 'utf8');
 const expoCliBiome = await readFile(join(expoCliTarget, 'biome.json'), 'utf8');
+const expoCliJest = await readFile(join(expoCliTarget, 'jest.config.js'), 'utf8');
 const expoCliTsconfig = await readFile(join(expoCliTarget, 'tsconfig.json'), 'utf8');
 
 assert(expoCliEslint.includes('reactNative: true'), 'CLI --expo must use React Native ESLint');
@@ -119,6 +130,10 @@ assert(expoCliEslint.includes('typeChecked: true'), 'CLI --expo must preserve ty
 assert(
   expoCliBiome.includes('super-configs/biome/react-native'),
   'CLI --expo must use the React Native Biome preset',
+);
+assert(
+  expoCliJest.includes('super-configs/jest/expo'),
+  'CLI --expo --jest must use the Expo Jest preset',
 );
 assert(
   expoCliTsconfig.includes('"extends": "super-configs/tsconfig/expo"'),

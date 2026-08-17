@@ -31,7 +31,7 @@ Options:
   --react-native                Add React Native ESLint and TSConfig setup
   --expo                        Add Expo ESLint, Biome, and TSConfig setup
   --vitest                      Add Vitest ESLint setup
-  --jest                        Add Jest ESLint setup
+  --jest                        Add Jest config and ESLint setup
   --scripts                     Add package.json check scripts
   --force                       Overwrite existing config files
   -h, --help                    Show help
@@ -290,6 +290,14 @@ export const createBiomeConfig = (options: Pick<InitOptions, 'expo' | 'reactNati
   "extends": ["super-configs/biome${options.reactNative || options.expo ? '/react-native' : ''}"]
 }
 `;
+
+export const createJestConfig = (options: Pick<InitOptions, 'expo' | 'reactNative'>): string => {
+  const preset = options.expo ? 'jest/expo' : options.reactNative ? 'jest/react-native' : 'jest';
+
+  return `export { default } from 'super-configs/${preset}';
+`;
+};
+
 interface RunInitContext {
   cwd?: string;
   root?: string;
@@ -320,6 +328,10 @@ export const runInit = async (
 
   await write('eslint.config.js', createEslintConfig(options));
   await write('biome.json', createBiomeConfig(options));
+
+  if (options.jest) {
+    await write('jest.config.js', createJestConfig(options));
+  }
 
   if (options.language === 'ts') {
     await write('tsconfig.json', createTsconfig(options));
