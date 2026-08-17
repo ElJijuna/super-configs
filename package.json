@@ -95,6 +95,7 @@
       "import": "./lib/eslint/react-native/tsx-type-checked/index.js"
     },
     "./biome": "./biome.json",
+    "./biome/react-native": "./biome.react-native.json",
     "./bunfig": "./lib/test/bunfig.toml",
     "./bunfig.toml": "./lib/test/bunfig.toml",
     "./commitlint": "./commitlint.config.js",
@@ -114,6 +115,7 @@
   "files": [
     "lib",
     "biome.json",
+    "biome.react-native.json",
     ".editorconfig",
     "commitlint.config.js",
     "jest.config.js",
@@ -187,7 +189,7 @@
     "node": "^20.19.0 || ^22.13.0 || >=24"
   },
   "peerDependencies": {
-    "@biomejs/biome": ">=2.0.0",
+    "@biomejs/biome": ">=2.4.13",
     "@commitlint/cli": ">=19.0.0",
     "@commitlint/config-conventional": ">=19.0.0",
     "@types/node": ">=20.0.0",

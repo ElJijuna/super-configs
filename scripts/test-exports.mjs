@@ -1,4 +1,5 @@
-import { access, readdir, readFile } from 'node:fs/promises';
+import { spawnSync } from 'node:child_process';
+import { access, readdir, readFile, rm, writeFile } from 'node:fs/promises';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { ESLint } from 'eslint';
@@ -371,6 +372,7 @@ for (const [specifier, filePath, code] of [
 
 for (const path of [
   'biome.json',
+  'biome.react-native.json',
   'lib/tsconfig/base.json',
   'lib/tsconfig/node.json',
   'lib/tsconfig/react.json',
@@ -378,6 +380,75 @@ for (const path of [
   'typedoc.json',
 ]) {
   await readJson(path);
+}
+
+const reactNativeBiomeUrl = import.meta.resolve('super-configs/biome/react-native');
+const reactNativeBiomeConfig = JSON.parse(await readFile(new URL(reactNativeBiomeUrl), 'utf8'));
+
+assert(
+  reactNativeBiomeConfig.extends?.includes('./biome.json'),
+  'super-configs/biome/react-native must extend the base Biome preset',
+);
+
+for (const [rule, level] of [
+  ['noReactNativeDeepImports', 'error'],
+  ['noReactNativeLiteralColors', 'warn'],
+  ['noReactNativeRawText', 'error'],
+  ['useReactNativePlatformComponents', 'error'],
+]) {
+  assert(
+    reactNativeBiomeConfig.linter?.rules?.nursery?.[rule] === level,
+    `super-configs/biome/react-native must configure ${rule} as ${level}`,
+  );
+}
+
+const biomeEntrypoint = join(root, 'node_modules/@biomejs/biome/bin/biome');
+const biomeFixturePath = join(root, '.react-native-biome-fixture.tsx');
+const biomeFixture = `import InternalView from 'react-native/Libraries/Components/View/View';
+import { ProgressBarAndroid, StyleSheet, View } from 'react-native';
+
+const styles = StyleSheet.create({ root: { color: '#fff' } });
+
+export const Screen = () => (
+  <View style={styles.root}>
+    Hello
+    <ProgressBarAndroid />
+    <InternalView />
+  </View>
+);
+`;
+
+let reactNativeLint;
+
+try {
+  await writeFile(biomeFixturePath, biomeFixture);
+  reactNativeLint = spawnSync(
+    process.execPath,
+    [
+      biomeEntrypoint,
+      'lint',
+      '--config-path',
+      join(root, 'biome.react-native.json'),
+      biomeFixturePath,
+      '--reporter=json',
+    ],
+    { encoding: 'utf8' },
+  );
+} finally {
+  await rm(biomeFixturePath, { force: true });
+}
+
+const reactNativeLintOutput = `${reactNativeLint.stdout}${reactNativeLint.stderr}`;
+
+assert(reactNativeLint.status === 1, 'React Native Biome fixture must produce diagnostics');
+
+for (const rule of [
+  'noReactNativeDeepImports',
+  'noReactNativeLiteralColors',
+  'noReactNativeRawText',
+  'useReactNativePlatformComponents',
+]) {
+  assert(reactNativeLintOutput.includes(rule), `React Native Biome fixture must trigger ${rule}`);
 }
 
 for (const specifier of [

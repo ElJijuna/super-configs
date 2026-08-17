@@ -171,10 +171,17 @@ export default createEslintConfig({
     }
   });
 
-  it('creates the Biome template', () => {
-    expect(JSON.parse(createBiomeConfig())).toEqual({
-      $schema: 'https://biomejs.dev/schemas/2.4.16/schema.json',
+  it('creates the base Biome template', () => {
+    expect(JSON.parse(createBiomeConfig(defaultOptions))).toEqual({
+      $schema: 'https://biomejs.dev/schemas/2.5.3/schema.json',
       extends: ['super-configs/biome'],
+    });
+  });
+
+  it('creates the React Native Biome template', () => {
+    expect(JSON.parse(createBiomeConfig({ ...defaultOptions, reactNative: true }))).toEqual({
+      $schema: 'https://biomejs.dev/schemas/2.5.3/schema.json',
+      extends: ['super-configs/biome/react-native'],
     });
   });
 });

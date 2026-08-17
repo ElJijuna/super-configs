@@ -267,9 +267,9 @@ export const createTsconfig = (options: InitOptions): string => {
 `;
 };
 
-export const createBiomeConfig = (): string => `{
-  "$schema": "https://biomejs.dev/schemas/2.4.16/schema.json",
-  "extends": ["super-configs/biome"]
+export const createBiomeConfig = (options: Pick<InitOptions, 'reactNative'>): string => `{
+  "$schema": "https://biomejs.dev/schemas/2.5.3/schema.json",
+  "extends": ["super-configs/biome${options.reactNative ? '/react-native' : ''}"]
 }
 `;
 interface RunInitContext {
@@ -301,7 +301,7 @@ export const runInit = async (
   };
 
   await write('eslint.config.js', createEslintConfig(options));
-  await write('biome.json', createBiomeConfig());
+  await write('biome.json', createBiomeConfig(options));
 
   if (options.language === 'ts') {
     await write('tsconfig.json', createTsconfig(options));
