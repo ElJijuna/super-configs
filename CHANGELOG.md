@@ -1,3 +1,13 @@
+## [1.21.0](https://github.com/ElJijuna/super-configs/compare/v1.20.0...v1.21.0) (2026-08-17)
+
+### Features
+
+* add React Native and Expo presets ([323df98](https://github.com/ElJijuna/super-configs/commit/323df9899517f1adc14c8ae81b177f6a2cb15605))
+* add React Native and Expo presets ([850cff3](https://github.com/ElJijuna/super-configs/commit/850cff33ef07f62e8cfc292c963c226735f22939))
+* add React Native ESLint configurations and related tests ([cb1cd55](https://github.com/ElJijuna/super-configs/commit/cb1cd55f7213830e93fd7271db962329e2245413))
+* add React Native preset ([73e9d08](https://github.com/ElJijuna/super-configs/commit/73e9d08a0c6f0b3eadc8c148a985e69a0f061d00))
+* add React Native presets and CLI support ([4664408](https://github.com/ElJijuna/super-configs/commit/4664408d66d8e24b596cbcae6acbf0e5c050d44b))
+
 ## [1.20.0](https://github.com/ElJijuna/super-configs/compare/v1.19.0...v1.20.0) (2026-07-26)
 
 ### Features
