@@ -1,6 +1,6 @@
 # ROADMAP
 
-Last updated: 2026-07-25
+Last updated: 2026-08-17
 
 ## Done
 
@@ -8,6 +8,8 @@ Last updated: 2026-07-25
   - `super-configs/tsconfig/base`
   - `super-configs/tsconfig/node`
   - `super-configs/tsconfig/react`
+  - `super-configs/tsconfig/react-native`
+  - `super-configs/tsconfig/expo`
 - Runtime-specific ESLint presets:
   - `super-configs/eslint/node/js`
   - `super-configs/eslint/node/ts`
@@ -26,15 +28,16 @@ Last updated: 2026-07-25
   - source template at `src/test/bunfig.toml`
 - Composable ESLint config factory:
   - `super-configs/eslint`
-  - `createEslintConfig({ runtime, language, typeChecked, ignores, overrides })`
-  - supports Node.js, Browser, and Bun
+  - `createEslintConfig({ runtime, language, typeChecked, react, reactNative, testFramework,
+    ignores, overrides })`
+  - supports Node.js, Browser, Bun, React, and React Native
   - rejects type-aware JavaScript at runtime
 - Init CLI:
   - local usage: `npx super-configs init`
   - global usage: `super-configs init`
-  - creates ESLint, Biome, TypeScript, and Bun starter config files
+  - creates ESLint, Biome, TypeScript, and optional Jest or Bun starter config files
   - skips existing files unless `--force` is passed
-  - supports companion flags `--vitest`, `--jest`, and `--react`
+  - supports companion flags `--vitest`, `--jest`, `--react`, `--react-native`, and `--expo`
   - supports optional package script insertion with `--scripts`
 - Vitest ESLint preset:
   - `super-configs/eslint/vitest`
@@ -42,7 +45,15 @@ Last updated: 2026-07-25
   - keeps Jest and Vitest globals separate
 - Docs matrix and recipes:
   - Available Configurations includes runtime and type-aware ESLint exports
-  - recipes cover Node.js library, Browser app, Bun service, and React app
+  - recipes cover Node.js library, Browser app, Bun service, React app, React Native app, and Expo
+    app
+- React Native and Expo presets:
+  - ESLint presets for JSX, TSX, and type-aware TSX
+  - React Native runtime globals, React Hooks rules, and internal deep-import restrictions
+  - `super-configs/biome/react-native` with native lint rules and shared formatting
+  - `super-configs/tsconfig/react-native` and `super-configs/tsconfig/expo`
+  - `super-configs/jest/react-native` and `super-configs/jest/expo`
+  - CLI generation through mutually exclusive `--react-native` and `--expo` flags
 - ADRs:
   - `docs/adr/0001-eslint-preset-subpaths-and-factory.md`
   - documents why preset subpaths stay canonical
@@ -55,14 +66,20 @@ Last updated: 2026-07-25
   - ESLint factory behavior
   - published CLI bin file
   - Jest vs Vitest ESLint globals
+  - React Native ESLint globals, platform filenames, deep imports, and type-aware rules
+  - React Native Biome diagnostics and native Jest/TypeScript preset mappings
 - Dedicated CLI smoke tests cover:
   - CLI help output
   - temp project generation and companion flags
   - skip existing files and `--force`
   - invalid test framework combinations
+  - complete React Native and Expo project generation
+  - mutually exclusive React, React Native, and Expo project flags
 - Factory options for companion presets:
   - `createEslintConfig({ testFramework: 'vitest' | 'jest' })` appends the test preset
   - `createEslintConfig({ react: true })` swaps the base preset for `react/tsx` or `react/jsx`
+  - `createEslintConfig({ reactNative: true })` selects native JSX or TSX and supports
+    `typeChecked`
   - rejects `typeChecked` with `react` because no type-aware React preset exists
   - order stays ignores, base preset, test framework, overrides
 - Init CLI emits a single factory call:
