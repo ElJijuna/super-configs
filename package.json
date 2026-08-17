@@ -1,7 +1,7 @@
 {
   "name": "super-configs",
   "version": "1.20.0",
-  "description": "Shared ESLint, Biome, Bun, Commitlint, Jest, Vitest, Markdownlint, Stylelint, TypeDoc, and legacy Prettier configurations for JavaScript, TypeScript, React, CSS, and Markdown projects",
+  "description": "Shared ESLint, Biome, TypeScript, Jest, Vitest, and formatting configurations for JavaScript, React, React Native, Expo, Node.js, Browser, and Bun projects",
   "main": "./lib/index.js",
   "module": "./lib/index.js",
   "types": "./lib/index.d.ts",
@@ -171,6 +171,8 @@
     "typedoc",
     "typescript",
     "react",
+    "react-native",
+    "expo",
     "eslint-config",
     "commitlint-config",
     "prettier-config",

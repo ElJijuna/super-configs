@@ -24,7 +24,9 @@
 [![Stylelint](https://img.shields.io/badge/lint-Stylelint-263238?logo=stylelint&logoColor=white)](https://stylelint.io/)
 [![TypeDoc](https://img.shields.io/badge/docs-TypeDoc-9600ff)](https://typedoc.org/)
 
-Shared ESLint, Biome, Bun, Commitlint, Jest, Vitest, Markdownlint, Stylelint, TypeDoc, and legacy Prettier configurations for JavaScript, TypeScript, React, CSS, and Markdown projects.
+Shared ESLint, Biome, TypeScript, Jest, Vitest, Commitlint, Markdownlint, Stylelint, TypeDoc, and
+legacy Prettier configurations for JavaScript, React, React Native, Expo, Node.js, Browser, Bun,
+CSS, and Markdown projects.
 
 ## Installation
 
@@ -69,10 +71,26 @@ npm install \
 With this setup, `tsc` runs TypeScript 7 and `tsc6` runs TypeScript 6. Consumers are not required
 to migrate to TypeScript 7.
 
-Biome, Commitlint, Jest, Vitest, Markdownlint, Stylelint, TypeDoc, and Prettier are optional peers. Use Biome for new projects:
+Biome, Commitlint, Jest, Vitest, Markdownlint, Stylelint, TypeDoc, and Prettier are optional peers.
+Use Biome for new projects:
 
 ```bash
 npm install @biomejs/biome --save-dev
+```
+
+The React Native TypeScript and Jest presets use the official packages for the installed React
+Native version. React Native 0.85 and newer use the
+[extracted Jest preset](https://reactnative.dev/blog/2026/04/07/react-native-0.85):
+
+```bash
+npm install @react-native/typescript-config @react-native/jest-preset jest @types/jest --save-dev
+```
+
+For Expo, let Expo select versions compatible with the current SDK, as recommended in the
+[Expo testing guide](https://docs.expo.dev/develop/unit-testing/):
+
+```bash
+npx expo install jest-expo jest @types/jest --dev
 ```
 
 Use Markdownlint for Markdown projects:
@@ -115,7 +133,8 @@ npm install typedoc --save-dev
 
 ### Root Export
 
-Prefer subpath imports for config files. The root export is available when you want to import multiple JavaScript configs from one place:
+Prefer subpath imports for config files. The root export is available when you want to import
+multiple JavaScript configs from one place:
 
 ```javascript
 import { eslintTs, prettierConfig } from 'super-configs';
@@ -151,6 +170,32 @@ Extend the shared preset that matches your project. Define project-specific path
     "outDir": "dist"
   },
   "include": ["src/**/*.ts", "src/**/*.tsx"]
+}
+```
+
+#### React Native
+
+Install `@react-native/typescript-config` at the version matching React Native, then extend the
+native preset. As described in the
+[React Native TypeScript guide](https://reactnative.dev/docs/typescript), Babel and Metro perform
+emission; TypeScript is used for type checking.
+
+```json
+{
+  "extends": "super-configs/tsconfig/react-native"
+}
+```
+
+#### Expo
+
+The Expo preset follows the [Expo TypeScript guide](https://docs.expo.dev/guides/typescript/): it
+extends `expo/tsconfig.base`, enables strict checking, and leaves Metro-specific options with Expo.
+Include Expo's generated declarations in the project config:
+
+```json
+{
+  "extends": "super-configs/tsconfig/expo",
+  "include": ["**/*.ts", "**/*.tsx", ".expo/types/**/*.ts", "expo-env.d.ts"]
 }
 ```
 
@@ -199,10 +244,14 @@ Add companion presets and package scripts when needed:
 ```bash
 super-configs init --runtime bun --language ts --type-checked --vitest --scripts
 super-configs init --react --vitest
+super-configs init --react-native --language ts --type-checked --jest --scripts
+super-configs init --expo --language ts --type-checked --jest --scripts
 ```
 
 `--react` cannot be combined with `--type-checked`, and `--jest` cannot be combined with
-`--vitest`; both combinations fail before any file is written.
+`--vitest`. Choose only one of `--react`, `--react-native`, or `--expo`; invalid combinations fail
+before any file is written. `--expo` reuses the React Native ESLint and Biome presets while
+selecting the Expo TSConfig and, with `--jest`, the Expo Jest preset.
 
 ### ESLint
 
@@ -228,6 +277,7 @@ export default createEslintConfig({
 | `language` | `'js' \| 'ts'` | `'ts'` | Base preset language |
 | `typeChecked` | `boolean` | `false` | Type-aware TypeScript rules; requires `language: 'ts'` |
 | `react` | `boolean` | `false` | Replaces the base preset with `react/tsx` (or `react/jsx` for `language: 'js'`) |
+| `reactNative` | `boolean` | `false` | Replaces the base preset with a React Native JSX/TSX preset; supports type-aware TSX |
 | `testFramework` | `'vitest' \| 'jest'` | — | Appends the matching companion preset for `*.test.*` and `*.spec.*` files |
 | `ignores` | `string[]` | `[]` | Prepended as a global ignores entry |
 | `overrides` | `Linter.Config[]` | `[]` | Appended last so consumer rules win |
@@ -392,23 +442,67 @@ export default [
 ];
 ```
 
+#### React Native
+
+Use the native presets for Metro-resolved JavaScript or TypeScript. They provide React Native
+runtime globals, React Hooks rules, platform suffix support, and reject deep imports from
+`react-native/Libraries/**`.
+
+| Language | Preset |
+| --- | --- |
+| JavaScript and JSX | `super-configs/eslint/react-native/jsx` |
+| TypeScript and TSX | `super-configs/eslint/react-native/tsx` |
+| Type-aware TypeScript and TSX | `super-configs/eslint/react-native/tsx-type-checked` |
+
+```javascript
+// eslint.config.js
+import { createEslintConfig } from 'super-configs/eslint';
+
+export default createEslintConfig({
+  reactNative: true,
+  language: 'ts',
+  typeChecked: true,
+  testFramework: 'jest',
+  ignores: ['coverage/**', 'android/**/build/**', 'ios/build/**'],
+});
+```
+
+The React Native presets intentionally do not enable browser-only globals such as `document`.
+Files ending in `.native.*`, `.ios.*`, and `.android.*` are covered by the normal JSX/TSX globs.
+
 ### Biome
 
 ```json
 {
-  "$schema": "https://biomejs.dev/schemas/2.4.16/schema.json",
+  "$schema": "https://biomejs.dev/schemas/2.5.3/schema.json",
   "extends": ["super-configs/biome"]
 }
 ```
+
+React Native and Expo projects should use the native preset:
+
+```json
+{
+  "$schema": "https://biomejs.dev/schemas/2.5.3/schema.json",
+  "extends": ["super-configs/biome/react-native"]
+}
+```
+
+It adds Biome's React Native checks for internal deep imports, raw text outside `<Text>`, literal
+colors, and platform-specific components. The color rule is a warning; the runtime and portability
+rules are errors. These rules require Biome 2.4.13 or newer.
 
 If your Biome version cannot resolve package exports, use the direct path:
 
 ```json
 {
-  "$schema": "https://biomejs.dev/schemas/2.4.16/schema.json",
+  "$schema": "https://biomejs.dev/schemas/2.5.3/schema.json",
   "extends": ["./node_modules/super-configs/biome.json"]
 }
 ```
+
+For the React Native preset, the equivalent direct path is
+`./node_modules/super-configs/biome.react-native.json`.
 
 ### Commitlint
 
@@ -482,6 +576,24 @@ export default {
   testMatch: ['**/*.test.ts'],
 };
 ```
+
+React Native 0.85 and newer use the extracted native preset. Keep
+`@react-native/jest-preset` aligned with the installed React Native version:
+
+```javascript
+// jest.config.js
+export { default } from 'super-configs/jest/react-native';
+```
+
+Expo projects use `jest-expo`, which supplies Expo SDK mocks and the appropriate Babel transforms:
+
+```javascript
+// jest.config.js
+export { default } from 'super-configs/jest/expo';
+```
+
+Both shared configurations leave `transform` and `testMatch` to their upstream native presets.
+Extend the exported object only for project-specific setup files, module mappings, or coverage.
 
 ### Vitest
 
@@ -580,7 +692,8 @@ Add a docs script:
 
 ### Prettier
 
-Prefer Biome for new projects. The Prettier export remains available for existing projects that still consume it.
+Prefer Biome for new projects. The Prettier export remains available for existing projects that
+still consume it.
 
 ```javascript
 // prettier.config.js
@@ -686,11 +799,34 @@ export default createEslintConfig({
 }
 ```
 
+### React Native App
+
+Generate ESLint, Biome, TypeScript, and Jest configuration together:
+
+```bash
+super-configs init --react-native --language ts --type-checked --jest --scripts
+```
+
+The generated files select `eslint/react-native/tsx-type-checked`,
+`biome/react-native`, `tsconfig/react-native`, and `jest/react-native`. The native TypeScript and
+Jest packages must match the React Native version installed by the application.
+
+### Expo App
+
+Use the Expo flag instead of combining it with `--react-native`:
+
+```bash
+super-configs init --expo --language ts --type-checked --jest --scripts
+```
+
+This uses the React Native ESLint and Biome presets, plus `tsconfig/expo` and `jest/expo`. The
+generated TSConfig includes `.expo/types/**/*.ts` and `expo-env.d.ts`.
+
 ## Available Configurations
 
 | Export | Description |
 | ------ | ----------- |
-| `super-configs/eslint` | ESLint config factory for Node.js, Browser, and Bun projects |
+| `super-configs/eslint` | ESLint config factory for Node.js, Browser, Bun, React, and React Native projects |
 | `super-configs/eslint/js` | ESLint configuration for JavaScript |
 | `super-configs/eslint/ts` | ESLint configuration for TypeScript |
 | `super-configs/eslint/ts-type-checked` | Type-aware ESLint configuration for TypeScript |
@@ -707,15 +843,26 @@ export default createEslintConfig({
 | `super-configs/eslint/vitest` | ESLint overrides for Vitest test files |
 | `super-configs/eslint/react/jsx` | ESLint configuration for React with JSX |
 | `super-configs/eslint/react/tsx` | ESLint configuration for React with TSX |
+| `super-configs/eslint/react-native/jsx` | ESLint configuration for React Native with JSX |
+| `super-configs/eslint/react-native/tsx` | ESLint configuration for React Native with TSX |
+| `super-configs/eslint/react-native/tsx-type-checked` | Type-aware ESLint configuration for React Native with TSX |
 | `super-configs/biome` | Biome configuration for formatting, linting, and import organization |
+| `super-configs/biome/react-native` | Biome configuration with explicit React Native rules |
 | `super-configs/bunfig` | Bun test configuration template with coverage enabled |
 | `super-configs/commitlint` | Commitlint configuration for Conventional Commits |
 | `node_modules/super-configs/.editorconfig` | EditorConfig template for common project files |
 | `super-configs/jest` | Jest configuration for TypeScript test projects |
+| `super-configs/jest/react-native` | Jest configuration based on `@react-native/jest-preset` |
+| `super-configs/jest/expo` | Jest configuration based on `jest-expo` |
 | `super-configs/vitest` | Vitest configuration for TypeScript test projects |
 | `super-configs/markdownlint` | Markdownlint configuration for Markdown docs |
 | `super-configs/stylelint` | Stylelint configuration for CSS projects |
 | `super-configs/typedoc` | TypeDoc configuration for TypeScript API docs |
+| `super-configs/tsconfig/base` | Base strict TypeScript configuration |
+| `super-configs/tsconfig/node` | TypeScript configuration for Node.js |
+| `super-configs/tsconfig/react` | TypeScript configuration for React web projects |
+| `super-configs/tsconfig/react-native` | Strict TypeScript configuration for React Native |
+| `super-configs/tsconfig/expo` | Strict TypeScript configuration for Expo |
 | `super-configs/prettier` | Prettier configuration |
 
 ## Included Rules
@@ -817,6 +964,14 @@ Formatting and import organization are handled by Biome, not ESLint.
 - `eslint-plugin-react-hooks` - React Hooks rules
 - `eslint-plugin-jsx-a11y` - JSX accessibility
 
+### React Native Rules
+
+- React Native runtime globals without the browser-only `document` global
+- React Hooks recommended rules for JSX and TSX
+- Type-aware TypeScript rules through `parserOptions.projectService`
+- Public React Native API imports instead of `react-native/Libraries/**`
+- Platform files using `.native.*`, `.ios.*`, or `.android.*` suffixes
+
 ### Biome Configuration
 
 - Semicolons enabled
@@ -828,6 +983,8 @@ Formatting and import organization are handled by Biome, not ESLint.
 - Arrow parens: always
 - Import organization enabled
 - Block statements required for control flow (`useBlockStatements`)
+- React Native deep imports, raw text, and misplaced platform components reported as errors
+- React Native literal colors reported as warnings
 
 Examples:
 

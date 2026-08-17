@@ -526,4 +526,21 @@ const bunfig = await readText('lib/test/bunfig.toml');
 
 assert(bunfig.includes('coverageDir = "coverage"'), 'bunfig must use the coverage directory');
 
+const readme = await readText('README.md');
+
+for (const documentedValue of [
+  '--react-native',
+  '--expo',
+  'super-configs/biome/react-native',
+  'super-configs/eslint/react-native/jsx',
+  'super-configs/eslint/react-native/tsx',
+  'super-configs/eslint/react-native/tsx-type-checked',
+  'super-configs/jest/expo',
+  'super-configs/jest/react-native',
+  'super-configs/tsconfig/expo',
+  'super-configs/tsconfig/react-native',
+]) {
+  assert(readme.includes(documentedValue), `README must document ${documentedValue}`);
+}
+
 console.log('exports ok');
