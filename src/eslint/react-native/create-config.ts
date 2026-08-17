@@ -13,6 +13,10 @@ import { reactNativeGlobals } from '@/eslint/react-native/runtime-globals.js';
 
 type ReactNativeLanguage = 'js' | 'ts';
 
+interface CreateEslintReactNativeConfigOptions {
+  typeChecked?: boolean;
+}
+
 const javaScriptFiles = ['**/*.js', '**/*.jsx', '**/*.mjs', '**/*.cjs'];
 const typeScriptFiles = ['**/*.ts', '**/*.tsx', '**/*.mts', '**/*.cts'];
 const reactHooksRecommendedConfig = (
@@ -45,8 +49,9 @@ const sharedRules: Linter.RulesRecord = {
 const createReactNativeConfigEntry = (
   language: ReactNativeLanguage,
   files: string[],
+  typeChecked: boolean,
 ): Linter.Config<Linter.RulesRecord> => ({
-  name: `super-configs/react-native-${language === 'js' ? 'jsx' : 'tsx'}`,
+  name: `super-configs/react-native-${language === 'js' ? 'jsx' : `tsx${typeChecked ? '-type-checked' : ''}`}`,
   files,
   languageOptions: {
     ecmaVersion: 2022,
@@ -56,6 +61,7 @@ const createReactNativeConfigEntry = (
       ecmaFeatures: {
         jsx: true,
       },
+      ...(typeChecked ? { projectService: true } : {}),
     },
   },
   plugins: {
@@ -77,15 +83,28 @@ const createReactNativeConfigEntry = (
   },
 });
 
-export const createEslintReactNativeConfig = (language: ReactNativeLanguage): Linter.Config[] => {
+export const createEslintReactNativeConfig = (
+  language: ReactNativeLanguage,
+  options: CreateEslintReactNativeConfigOptions = {},
+): Linter.Config[] => {
+  const { typeChecked = false } = options;
+
+  if (language === 'js' && typeChecked) {
+    throw new TypeError('typeChecked is only supported for React Native TypeScript');
+  }
+
   const files = language === 'js' ? javaScriptFiles : typeScriptFiles;
   const baseConfigs = [
     js.configs.recommended,
-    ...(language === 'ts' ? tseslint.configs.recommended : []),
+    ...(language === 'ts'
+      ? typeChecked
+        ? tseslint.configs.recommendedTypeChecked
+        : tseslint.configs.recommended
+      : []),
   ];
 
   return [
     ...baseConfigs.map((config) => ({ ...config, files })),
-    createReactNativeConfigEntry(language, files),
+    createReactNativeConfigEntry(language, files, typeChecked),
   ];
 };

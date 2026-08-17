@@ -22,6 +22,7 @@ const cliHelp = runCli(root, '--help');
 assert(cliHelp.status === 0, 'CLI help must exit successfully');
 assert(cliHelp.stdout.includes('super-configs init'), 'CLI help must mention init command');
 assert(cliHelp.stdout.includes('--vitest'), 'CLI help must mention test flags');
+assert(cliHelp.stdout.includes('--react-native'), 'CLI help must mention React Native');
 
 const bunCliTarget = await mkdtemp(join(tmpdir(), 'super-configs-bun-cli-'));
 const bunCli = runCliInit(
@@ -79,6 +80,37 @@ assert(
 assert(
   reactCliTsconfig.includes('"extends": "super-configs/tsconfig/react"'),
   'CLI --react must use React TSConfig',
+);
+
+const reactNativeCliTarget = await mkdtemp(join(tmpdir(), 'super-configs-react-native-cli-'));
+const reactNativeCli = runCliInit(reactNativeCliTarget, '--react-native', '--type-checked');
+
+assert(reactNativeCli.status === 0, `React Native CLI init must succeed: ${reactNativeCli.stderr}`);
+
+const reactNativeCliEslint = await readFile(join(reactNativeCliTarget, 'eslint.config.js'), 'utf8');
+const reactNativeCliTsconfig = await readFile(join(reactNativeCliTarget, 'tsconfig.json'), 'utf8');
+
+assert(
+  reactNativeCliEslint.includes('reactNative: true'),
+  'CLI --react-native must set the React Native factory option',
+);
+assert(
+  reactNativeCliEslint.includes('typeChecked: true'),
+  'CLI --react-native must preserve type-aware linting',
+);
+assert(!reactNativeCliEslint.includes('runtime:'), 'CLI --react-native must omit runtime globals');
+assert(
+  reactNativeCliTsconfig.includes('"extends": "super-configs/tsconfig/react"'),
+  'CLI --react-native must use the compatible React TSConfig until the native preset is added',
+);
+
+const mixedReactCliTarget = await mkdtemp(join(tmpdir(), 'super-configs-mixed-react-cli-'));
+const mixedReactCli = runCliInit(mixedReactCliTarget, '--react', '--react-native');
+
+assert(mixedReactCli.status === 1, 'CLI must reject --react with --react-native');
+assert(
+  mixedReactCli.stderr.includes('choose either --react or --react-native'),
+  'CLI must explain mixed React framework rejection',
 );
 
 const mixedTestCliTarget = await mkdtemp(join(tmpdir(), 'super-configs-mixed-test-cli-'));

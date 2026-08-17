@@ -3,6 +3,9 @@ import eslintJestConfig from '@/eslint/jest/index.js';
 import { createEslintJsConfig } from '@/eslint/js/create-config.js';
 import eslintReactJsxConfig from '@/eslint/react/jsx/index.js';
 import eslintReactTsxConfig from '@/eslint/react/tsx/index.js';
+import eslintReactNativeJsxConfig from '@/eslint/react-native/jsx/index.js';
+import eslintReactNativeTsxConfig from '@/eslint/react-native/tsx/index.js';
+import eslintReactNativeTsxTypeCheckedConfig from '@/eslint/react-native/tsx-type-checked/index.js';
 import { browserGlobals, bunGlobals, nodeGlobals } from '@/eslint/runtime-globals.js';
 import { createEslintTsConfig } from '@/eslint/ts/create-config.js';
 import eslintVitestConfig from '@/eslint/vitest/index.js';
@@ -16,6 +19,7 @@ interface CreateEslintConfigBaseOptions {
   ignores?: string[];
   overrides?: Linter.Config[];
   react?: boolean;
+  reactNative?: boolean;
   testFramework?: EslintTestFramework;
 }
 
@@ -41,6 +45,13 @@ const getRuntimeGlobals = (runtime: EslintRuntime): Linter.Globals => {
 };
 const getReactConfig = (language: EslintLanguage): Linter.Config[] =>
   language === 'js' ? eslintReactJsxConfig : eslintReactTsxConfig;
+const getReactNativeConfig = (language: EslintLanguage, typeChecked: boolean): Linter.Config[] => {
+  if (language === 'js') {
+    return eslintReactNativeJsxConfig;
+  }
+
+  return typeChecked ? eslintReactNativeTsxTypeCheckedConfig : eslintReactNativeTsxConfig;
+};
 const getTestFrameworkConfig = (testFramework: EslintTestFramework): Linter.Config[] =>
   testFramework === 'jest' ? eslintJestConfig : eslintVitestConfig;
 
@@ -52,6 +63,7 @@ export const createEslintConfig = (options: CreateEslintConfigOptions = {}): Lin
     ignores = [],
     overrides = [],
     react = false,
+    reactNative = false,
     testFramework,
   } = options;
 
@@ -63,13 +75,19 @@ export const createEslintConfig = (options: CreateEslintConfigOptions = {}): Lin
     throw new TypeError('typeChecked is not supported when react is enabled');
   }
 
+  if (react && reactNative) {
+    throw new TypeError('react and reactNative cannot be enabled together');
+  }
+
   const runtimeGlobals = getRuntimeGlobals(runtime);
   const name = `super-configs/${runtime}-${language}${typeChecked ? '-type-checked' : ''}`;
   const baseConfig = react
     ? getReactConfig(language)
-    : language === 'js'
-      ? createEslintJsConfig(name, runtimeGlobals)
-      : createEslintTsConfig(name, runtimeGlobals, { typeChecked });
+    : reactNative
+      ? getReactNativeConfig(language, typeChecked)
+      : language === 'js'
+        ? createEslintJsConfig(name, runtimeGlobals)
+        : createEslintTsConfig(name, runtimeGlobals, { typeChecked });
 
   return [
     ...(ignores.length > 0 ? [{ name: 'super-configs/ignores', ignores }] : []),

@@ -16,6 +16,7 @@ import {
   eslintReactJsx,
   eslintReactNativeJsx,
   eslintReactNativeTsx,
+  eslintReactNativeTsxTypeChecked,
   eslintReactTsx,
   eslintTs,
   eslintTsTypeChecked,
@@ -39,6 +40,7 @@ const presets = [
   eslintReactJsx,
   eslintReactNativeJsx,
   eslintReactNativeTsx,
+  eslintReactNativeTsxTypeChecked,
   eslintReactTsx,
   eslintTs,
   eslintTsTypeChecked,
@@ -56,6 +58,7 @@ describe('public configuration exports', () => {
   it.each([
     ['JSX', eslintReactNativeJsx],
     ['TSX', eslintReactNativeTsx],
+    ['type-checked TSX', eslintReactNativeTsxTypeChecked],
   ])('configures the React Native %s runtime without broad environment globals', (_, config) => {
     const configuredGlobals = Object.assign(
       {},
@@ -72,6 +75,7 @@ describe('public configuration exports', () => {
   it.each([
     ['JSX', eslintReactNativeJsx],
     ['TSX', eslintReactNativeTsx],
+    ['type-checked TSX', eslintReactNativeTsxTypeChecked],
   ])('enables the complete recommended React Hooks rules for React Native %s', (_, config) => {
     const nativeConfig = config.find((entry) =>
       entry.name?.startsWith('super-configs/react-native'),
@@ -122,6 +126,22 @@ describe('public configuration exports', () => {
         expect.objectContaining({ ruleId: 'no-undef', severity: 2 }),
       ]),
     );
+  });
+
+  it('enables project-service rules for type-checked React Native', () => {
+    expect(
+      eslintReactNativeTsxTypeChecked.some(
+        (entry) => entry.languageOptions?.parserOptions?.projectService === true,
+      ),
+    ).toBe(true);
+    expect(
+      eslintReactNativeTsxTypeChecked.some(
+        (entry) => entry.rules?.['@typescript-eslint/no-floating-promises'] === 'error',
+      ),
+    ).toBe(true);
+    expect(
+      eslintReactNativeTsxTypeChecked.every((entry) => entry.files?.includes('**/*.tsx')),
+    ).toBe(true);
   });
 
   it('exports the legacy Prettier configuration', () => {
@@ -224,6 +244,23 @@ describe('createEslintConfig', () => {
 
     expect(config.at(-1)?.name).toBe(expectedName);
     expect(config.some((item) => item.name?.startsWith('super-configs/node-'))).toBe(false);
+  });
+
+  it.each([
+    ['ts', false, 'super-configs/react-native-tsx'],
+    ['ts', true, 'super-configs/react-native-tsx-type-checked'],
+    ['js', false, 'super-configs/react-native-jsx'],
+  ] as const)('creates the React Native %s preset with typeChecked=%s', (language, typeChecked, expectedName) => {
+    const config = createEslintConfig({ language, reactNative: true, typeChecked });
+
+    expect(config.at(-1)?.name).toBe(expectedName);
+    expect(config.some((item) => item.name?.startsWith('super-configs/node-'))).toBe(false);
+  });
+
+  it('rejects enabling React web and React Native together', () => {
+    expect(() => createEslintConfig({ react: true, reactNative: true })).toThrowError(
+      'react and reactNative cannot be enabled together',
+    );
   });
 
   it('combines React with a companion test preset', () => {

@@ -13,6 +13,7 @@ export interface InitOptions {
   force: boolean;
   jest: boolean;
   react: boolean;
+  reactNative: boolean;
   scripts: boolean;
   vitest: boolean;
 }
@@ -26,6 +27,7 @@ Options:
   --language <js|ts>            Project language. Default: ts
   --type-checked                Enable type-aware TypeScript ESLint
   --react                       Add React ESLint and TSConfig setup
+  --react-native                Add React Native ESLint and TSConfig setup
   --vitest                      Add Vitest ESLint setup
   --jest                        Add Jest ESLint setup
   --scripts                     Add package.json check scripts
@@ -43,6 +45,7 @@ export const parseArgs = (
     force: false,
     jest: false,
     react: false,
+    reactNative: false,
     scripts: false,
     vitest: false,
   };
@@ -80,6 +83,11 @@ export const parseArgs = (
 
     if (arg === '--react') {
       options.react = true;
+      continue;
+    }
+
+    if (arg === '--react-native') {
+      options.reactNative = true;
       continue;
     }
 
@@ -130,6 +138,10 @@ export const parseArgs = (
 
   if (options.react && options.language === 'js') {
     throw new Error('--react requires --language ts');
+  }
+
+  if (options.react && options.reactNative) {
+    throw new Error('choose either --react or --react-native, not both');
   }
 
   if (options.react && options.typeChecked) {
@@ -214,10 +226,13 @@ export const createEslintConfig = (options: InitOptions): string => {
   const ignores = options.react
     ? "['dist/**', 'coverage/**', 'storybook-static/**', 'node_modules/**']"
     : "['dist/**', 'coverage/**', 'node_modules/**']";
-  // React presets bring their own globals, so the factory ignores `runtime` and rejects
-  // `typeChecked` for them.
+  // Framework presets bring their own globals, so the factory ignores `runtime`.
   const factoryOptions = [
-    ...(options.react ? ['react: true'] : [`runtime: '${options.runtime}'`]),
+    ...(options.react
+      ? ['react: true']
+      : options.reactNative
+        ? ['reactNative: true']
+        : [`runtime: '${options.runtime}'`]),
     `language: '${options.language}'`,
     ...(options.react ? [] : [`typeChecked: ${options.typeChecked}`]),
     ...(testFramework === undefined ? [] : [`testFramework: '${testFramework}'`]),
@@ -234,7 +249,12 @@ ${factoryBody}
 };
 
 export const createTsconfig = (options: InitOptions): string => {
-  const preset = options.react ? 'react' : options.runtime === 'browser' ? 'react' : 'node';
+  const preset =
+    options.react || options.reactNative
+      ? 'react'
+      : options.runtime === 'browser'
+        ? 'react'
+        : 'node';
 
   return `{
   "extends": "super-configs/tsconfig/${preset}",

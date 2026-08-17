@@ -47,6 +47,7 @@ for (const name of [
   'eslintReactJsx',
   'eslintReactNativeJsx',
   'eslintReactNativeTsx',
+  'eslintReactNativeTsxTypeChecked',
   'eslintReactTsx',
   'eslintTs',
   'eslintTsTypeChecked',
@@ -70,6 +71,7 @@ for (const specifier of [
   '../lib/eslint/react/jsx/index.js',
   '../lib/eslint/react-native/jsx/index.js',
   '../lib/eslint/react-native/tsx/index.js',
+  '../lib/eslint/react-native/tsx-type-checked/index.js',
   '../lib/eslint/react/tsx/index.js',
   '../lib/eslint/ts/index.js',
   '../lib/eslint/vitest/index.js',
@@ -96,6 +98,7 @@ for (const [specifier, expectedGlobal, excludedGlobal] of [
   ['super-configs/eslint/react/jsx', 'window', 'process'],
   ['super-configs/eslint/react-native/jsx', '__DEV__', 'document'],
   ['super-configs/eslint/react-native/tsx', '__DEV__', 'document'],
+  ['super-configs/eslint/react-native/tsx-type-checked', '__DEV__', 'document'],
   ['super-configs/eslint/ts', 'process', 'window'],
   ['super-configs/eslint/ts-type-checked', 'process', 'window'],
 ]) {
@@ -203,6 +206,36 @@ assert(
   reactFactoryConfig.some((entry) => entry.name === 'super-configs/react-tsx'),
   'factory react option must use the React TSX preset',
 );
+
+for (const [language, typeChecked, expectedName] of [
+  ['js', false, 'super-configs/react-native-jsx'],
+  ['ts', false, 'super-configs/react-native-tsx'],
+  ['ts', true, 'super-configs/react-native-tsx-type-checked'],
+]) {
+  const reactNativeFactoryConfig = eslintFactoryModule.createEslintConfig({
+    language,
+    reactNative: true,
+    typeChecked,
+  });
+
+  assert(
+    reactNativeFactoryConfig.some((entry) => entry.name === expectedName),
+    `factory React Native option must use ${expectedName}`,
+  );
+}
+
+try {
+  eslintFactoryModule.createEslintConfig({ react: true, reactNative: true });
+
+  throw new Error('factory must reject React web with React Native');
+} catch (error) {
+  assert(
+    error instanceof TypeError &&
+      error.message === 'react and reactNative cannot be enabled together',
+    'factory must reject React web with React Native',
+  );
+}
+
 assert(
   reactFactoryConfig.at(-1)?.name === 'super-configs/vitest',
   'factory react option must keep companion presets last',
@@ -230,6 +263,7 @@ for (const specifier of [
   'super-configs/eslint/browser/ts-type-checked',
   'super-configs/eslint/bun/ts-type-checked',
   'super-configs/eslint/node/ts-type-checked',
+  'super-configs/eslint/react-native/tsx-type-checked',
   'super-configs/eslint/ts-type-checked',
 ]) {
   const config = await importDefault(specifier);
@@ -260,6 +294,7 @@ for (const [specifier, filePath] of [
   ['super-configs/eslint/react/jsx', 'fixture.jsx'],
   ['super-configs/eslint/react-native/jsx', 'fixture.native.jsx'],
   ['super-configs/eslint/react-native/tsx', 'fixture.native.tsx'],
+  ['super-configs/eslint/react-native/tsx-type-checked', 'src/eslint/index.ts'],
   ['super-configs/eslint/react/tsx', 'fixture.tsx'],
   ['super-configs/eslint/ts', 'fixture.ts'],
   ['super-configs/eslint/ts-type-checked', 'fixture.ts'],
@@ -307,6 +342,11 @@ for (const [specifier, filePath, code] of [
     'super-configs/eslint/react-native/tsx',
     'fixture.ios.tsx',
     'export default function Screen() { return <View />; }\n',
+  ],
+  [
+    'super-configs/eslint/react-native/tsx-type-checked',
+    'src/eslint/index.ts',
+    'export const value: number = 1;\n',
   ],
   ['super-configs/eslint/jest', 'fixture.test.js', "it('works', () => {});\n"],
   ['super-configs/eslint/vitest', 'fixture.test.js', "it('works', () => {});\n"],

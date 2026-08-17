@@ -90,6 +90,10 @@
       "types": "./lib/eslint/react-native/tsx/index.d.ts",
       "import": "./lib/eslint/react-native/tsx/index.js"
     },
+    "./eslint/react-native/tsx-type-checked": {
+      "types": "./lib/eslint/react-native/tsx-type-checked/index.d.ts",
+      "import": "./lib/eslint/react-native/tsx-type-checked/index.js"
+    },
     "./biome": "./biome.json",
     "./bunfig": "./lib/test/bunfig.toml",
     "./bunfig.toml": "./lib/test/bunfig.toml",

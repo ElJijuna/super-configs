@@ -23,6 +23,7 @@ const defaultOptions: InitOptions = {
   force: false,
   jest: false,
   react: false,
+  reactNative: false,
   scripts: false,
   vitest: false,
 };
@@ -71,6 +72,7 @@ describe('CLI argument parsing', () => {
     });
     expect(parseArgs(['--help']).help).toBe(true);
     expect(parseArgs(['init', '--type-checked']).options.typeChecked).toBe(true);
+    expect(parseArgs(['init', '--react-native']).options.reactNative).toBe(true);
   });
 
   it.each([
@@ -81,6 +83,7 @@ describe('CLI argument parsing', () => {
     [['init', '--jest', '--vitest'], 'choose either --jest or --vitest, not both'],
     [['init', '--language', 'js', '--react'], '--react requires --language ts'],
     [['init', '--react', '--type-checked'], '--type-checked is not supported with --react'],
+    [['init', '--react', '--react-native'], 'choose either --react or --react-native, not both'],
   ])('rejects invalid arguments: %s', (args, message) => {
     expect(() => parseArgs(args)).toThrowError(message);
   });
@@ -94,6 +97,8 @@ describe('CLI templates', () => {
     [{ ...defaultOptions, react: true, vitest: true }, "testFramework: 'vitest'"],
     [{ ...defaultOptions, react: true, jest: true }, "testFramework: 'jest'"],
     [{ ...defaultOptions, react: true }, 'react: true'],
+    [{ ...defaultOptions, reactNative: true }, 'reactNative: true'],
+    [{ ...defaultOptions, reactNative: true, typeChecked: true }, 'typeChecked: true'],
   ] as const)('creates the expected ESLint template', (options, expectedOption) => {
     expect(createEslintConfig(options)).toContain(expectedOption);
   });
@@ -122,6 +127,18 @@ export default createEslintConfig({
     expect(config).not.toContain('typeChecked:');
   });
 
+  it('omits runtime and preserves typeChecked in the React Native template', () => {
+    const config = createEslintConfig({
+      ...defaultOptions,
+      reactNative: true,
+      typeChecked: true,
+    });
+
+    expect(config).toContain('reactNative: true');
+    expect(config).toContain('typeChecked: true');
+    expect(config).not.toContain('runtime:');
+  });
+
   it('omits testFramework when no test flag is passed', () => {
     expect(createEslintConfig(defaultOptions)).not.toContain('testFramework');
   });
@@ -139,6 +156,7 @@ export default createEslintConfig({
 
   it.each([
     [{ ...defaultOptions, react: true }, 'react', 'src/**/*.tsx'],
+    [{ ...defaultOptions, reactNative: true }, 'react', 'src/**/*.tsx'],
     [{ ...defaultOptions, runtime: 'browser' }, 'react', 'src/**/*.tsx'],
     [defaultOptions, 'node', undefined],
   ] as const)('creates the expected TSConfig template', (options, preset, extraInclude) => {
