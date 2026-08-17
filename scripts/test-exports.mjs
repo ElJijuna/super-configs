@@ -374,8 +374,10 @@ for (const path of [
   'biome.json',
   'biome.react-native.json',
   'lib/tsconfig/base.json',
+  'lib/tsconfig/expo.json',
   'lib/tsconfig/node.json',
   'lib/tsconfig/react.json',
+  'lib/tsconfig/react-native.json',
   'markdownlint.json',
   'typedoc.json',
 ]) {
@@ -453,13 +455,26 @@ for (const rule of [
 
 for (const specifier of [
   'super-configs/tsconfig/base',
+  'super-configs/tsconfig/expo',
   'super-configs/tsconfig/node',
   'super-configs/tsconfig/react',
+  'super-configs/tsconfig/react-native',
 ]) {
   const url = import.meta.resolve(specifier);
   const config = JSON.parse(await readFile(new URL(url), 'utf8'));
 
   assert(config.compilerOptions, `${specifier} must define compilerOptions`);
+}
+
+for (const [specifier, baseConfig] of [
+  ['super-configs/tsconfig/expo', 'expo/tsconfig.base'],
+  ['super-configs/tsconfig/react-native', '@react-native/typescript-config'],
+]) {
+  const url = import.meta.resolve(specifier);
+  const config = JSON.parse(await readFile(new URL(url), 'utf8'));
+
+  assert(config.extends === baseConfig, `${specifier} must extend ${baseConfig}`);
+  assert(config.compilerOptions.strict === true, `${specifier} must enable strict mode`);
 }
 
 const nodeTsconfigUrl = import.meta.resolve('super-configs/tsconfig/node');

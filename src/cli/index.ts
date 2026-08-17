@@ -7,6 +7,7 @@ type Runtime = 'node' | 'browser' | 'bun';
 type Language = 'js' | 'ts';
 
 export interface InitOptions {
+  expo: boolean;
   runtime: Runtime;
   language: Language;
   typeChecked: boolean;
@@ -28,6 +29,7 @@ Options:
   --type-checked                Enable type-aware TypeScript ESLint
   --react                       Add React ESLint and TSConfig setup
   --react-native                Add React Native ESLint and TSConfig setup
+  --expo                        Add Expo ESLint, Biome, and TSConfig setup
   --vitest                      Add Vitest ESLint setup
   --jest                        Add Jest ESLint setup
   --scripts                     Add package.json check scripts
@@ -39,6 +41,7 @@ export const parseArgs = (
   args: string[],
 ): { command?: string; options: InitOptions; help: boolean } => {
   const options: InitOptions = {
+    expo: false,
     runtime: 'node',
     language: 'ts',
     typeChecked: false,
@@ -73,6 +76,11 @@ export const parseArgs = (
 
     if (arg === '--force') {
       options.force = true;
+      continue;
+    }
+
+    if (arg === '--expo') {
+      options.expo = true;
       continue;
     }
 
@@ -140,8 +148,8 @@ export const parseArgs = (
     throw new Error('--react requires --language ts');
   }
 
-  if (options.react && options.reactNative) {
-    throw new Error('choose either --react or --react-native, not both');
+  if ([options.react, options.reactNative, options.expo].filter(Boolean).length > 1) {
+    throw new Error('choose one of --react, --react-native, or --expo');
   }
 
   if (options.react && options.typeChecked) {
@@ -230,7 +238,7 @@ export const createEslintConfig = (options: InitOptions): string => {
   const factoryOptions = [
     ...(options.react
       ? ['react: true']
-      : options.reactNative
+      : options.reactNative || options.expo
         ? ['reactNative: true']
         : [`runtime: '${options.runtime}'`]),
     `language: '${options.language}'`,
@@ -249,12 +257,22 @@ ${factoryBody}
 };
 
 export const createTsconfig = (options: InitOptions): string => {
-  const preset =
-    options.react || options.reactNative
-      ? 'react'
-      : options.runtime === 'browser'
-        ? 'react'
-        : 'node';
+  if (options.expo) {
+    return `{
+  "extends": "super-configs/tsconfig/expo",
+  "include": ["**/*.ts", "**/*.tsx", ".expo/types/**/*.ts", "expo-env.d.ts"]
+}
+`;
+  }
+
+  if (options.reactNative) {
+    return `{
+  "extends": "super-configs/tsconfig/react-native"
+}
+`;
+  }
+
+  const preset = options.react || options.runtime === 'browser' ? 'react' : 'node';
 
   return `{
   "extends": "super-configs/tsconfig/${preset}",
@@ -267,9 +285,9 @@ export const createTsconfig = (options: InitOptions): string => {
 `;
 };
 
-export const createBiomeConfig = (options: Pick<InitOptions, 'reactNative'>): string => `{
+export const createBiomeConfig = (options: Pick<InitOptions, 'expo' | 'reactNative'>): string => `{
   "$schema": "https://biomejs.dev/schemas/2.5.3/schema.json",
-  "extends": ["super-configs/biome${options.reactNative ? '/react-native' : ''}"]
+  "extends": ["super-configs/biome${options.reactNative || options.expo ? '/react-native' : ''}"]
 }
 `;
 interface RunInitContext {

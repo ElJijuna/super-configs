@@ -23,6 +23,7 @@ assert(cliHelp.status === 0, 'CLI help must exit successfully');
 assert(cliHelp.stdout.includes('super-configs init'), 'CLI help must mention init command');
 assert(cliHelp.stdout.includes('--vitest'), 'CLI help must mention test flags');
 assert(cliHelp.stdout.includes('--react-native'), 'CLI help must mention React Native');
+assert(cliHelp.stdout.includes('--expo'), 'CLI help must mention Expo');
 
 const bunCliTarget = await mkdtemp(join(tmpdir(), 'super-configs-bun-cli-'));
 const bunCli = runCliInit(
@@ -100,8 +101,32 @@ assert(
 );
 assert(!reactNativeCliEslint.includes('runtime:'), 'CLI --react-native must omit runtime globals');
 assert(
-  reactNativeCliTsconfig.includes('"extends": "super-configs/tsconfig/react"'),
-  'CLI --react-native must use the compatible React TSConfig until the native preset is added',
+  reactNativeCliTsconfig.includes('"extends": "super-configs/tsconfig/react-native"'),
+  'CLI --react-native must use the React Native TSConfig',
+);
+
+const expoCliTarget = await mkdtemp(join(tmpdir(), 'super-configs-expo-cli-'));
+const expoCli = runCliInit(expoCliTarget, '--expo', '--type-checked');
+
+assert(expoCli.status === 0, `Expo CLI init must succeed: ${expoCli.stderr}`);
+
+const expoCliEslint = await readFile(join(expoCliTarget, 'eslint.config.js'), 'utf8');
+const expoCliBiome = await readFile(join(expoCliTarget, 'biome.json'), 'utf8');
+const expoCliTsconfig = await readFile(join(expoCliTarget, 'tsconfig.json'), 'utf8');
+
+assert(expoCliEslint.includes('reactNative: true'), 'CLI --expo must use React Native ESLint');
+assert(expoCliEslint.includes('typeChecked: true'), 'CLI --expo must preserve type-aware linting');
+assert(
+  expoCliBiome.includes('super-configs/biome/react-native'),
+  'CLI --expo must use the React Native Biome preset',
+);
+assert(
+  expoCliTsconfig.includes('"extends": "super-configs/tsconfig/expo"'),
+  'CLI --expo must use the Expo TSConfig',
+);
+assert(
+  expoCliTsconfig.includes('".expo/types/**/*.ts"'),
+  'CLI --expo must include generated Expo types',
 );
 
 const mixedReactCliTarget = await mkdtemp(join(tmpdir(), 'super-configs-mixed-react-cli-'));
@@ -109,9 +134,14 @@ const mixedReactCli = runCliInit(mixedReactCliTarget, '--react', '--react-native
 
 assert(mixedReactCli.status === 1, 'CLI must reject --react with --react-native');
 assert(
-  mixedReactCli.stderr.includes('choose either --react or --react-native'),
+  mixedReactCli.stderr.includes('choose one of --react, --react-native, or --expo'),
   'CLI must explain mixed React framework rejection',
 );
+
+const mixedNativeCliTarget = await mkdtemp(join(tmpdir(), 'super-configs-mixed-native-cli-'));
+const mixedNativeCli = runCliInit(mixedNativeCliTarget, '--react-native', '--expo');
+
+assert(mixedNativeCli.status === 1, 'CLI must reject --react-native with --expo');
 
 const mixedTestCliTarget = await mkdtemp(join(tmpdir(), 'super-configs-mixed-test-cli-'));
 const mixedTestCli = runCliInit(mixedTestCliTarget, '--jest', '--vitest');
