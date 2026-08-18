@@ -1,4 +1,6 @@
 import type { Linter } from 'eslint';
+import eslintExpoConfig from '@/eslint/expo/index.js';
+import eslintExpoTypeCheckedConfig from '@/eslint/expo/type-checked/index.js';
 import eslintJestConfig from '@/eslint/jest/index.js';
 import { createEslintJsConfig } from '@/eslint/js/create-config.js';
 import eslintReactJsxConfig from '@/eslint/react/jsx/index.js';
@@ -19,6 +21,7 @@ interface CreateEslintConfigBaseOptions {
   runtime?: EslintRuntime;
   ignores?: string[];
   overrides?: Linter.Config[];
+  expo?: boolean;
   react?: boolean;
   reactNative?: boolean;
   testFramework?: EslintTestFramework;
@@ -60,6 +63,8 @@ const getReactNativeConfig = (language: EslintLanguage, typeChecked: boolean): L
 };
 const getTestFrameworkConfig = (testFramework: EslintTestFramework): Linter.Config[] =>
   testFramework === 'jest' ? eslintJestConfig : eslintVitestConfig;
+const getExpoConfig = (typeChecked: boolean): Linter.Config[] =>
+  typeChecked ? eslintExpoTypeCheckedConfig : eslintExpoConfig;
 
 export const createEslintConfig = (options: CreateEslintConfigOptions = {}): Linter.Config[] => {
   const {
@@ -68,6 +73,7 @@ export const createEslintConfig = (options: CreateEslintConfigOptions = {}): Lin
     typeChecked = false,
     ignores = [],
     overrides = [],
+    expo = false,
     react = false,
     reactNative = false,
     testFramework,
@@ -77,19 +83,21 @@ export const createEslintConfig = (options: CreateEslintConfigOptions = {}): Lin
     throw new TypeError('typeChecked is only supported when language is "ts"');
   }
 
-  if (react && reactNative) {
-    throw new TypeError('react and reactNative cannot be enabled together');
+  if ([expo, react, reactNative].filter(Boolean).length > 1) {
+    throw new TypeError('expo, react, and reactNative cannot be enabled together');
   }
 
   const runtimeGlobals = getRuntimeGlobals(runtime);
   const name = `super-configs/${runtime}-${language}${typeChecked ? '-type-checked' : ''}`;
-  const baseConfig = react
-    ? getReactConfig(language, typeChecked)
-    : reactNative
-      ? getReactNativeConfig(language, typeChecked)
-      : language === 'js'
-        ? createEslintJsConfig(name, runtimeGlobals)
-        : createEslintTsConfig(name, runtimeGlobals, { typeChecked });
+  const baseConfig = expo
+    ? getExpoConfig(typeChecked)
+    : react
+      ? getReactConfig(language, typeChecked)
+      : reactNative
+        ? getReactNativeConfig(language, typeChecked)
+        : language === 'js'
+          ? createEslintJsConfig(name, runtimeGlobals)
+          : createEslintTsConfig(name, runtimeGlobals, { typeChecked });
 
   return [
     ...(ignores.length > 0 ? [{ name: 'super-configs/ignores', ignores }] : []),

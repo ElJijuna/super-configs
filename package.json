@@ -30,6 +30,14 @@
       "types": "./lib/eslint/ts-type-checked/index.d.ts",
       "import": "./lib/eslint/ts-type-checked/index.js"
     },
+    "./eslint/expo": {
+      "types": "./lib/eslint/expo/index.d.ts",
+      "import": "./lib/eslint/expo/index.js"
+    },
+    "./eslint/expo/type-checked": {
+      "types": "./lib/eslint/expo/type-checked/index.d.ts",
+      "import": "./lib/eslint/expo/type-checked/index.js"
+    },
     "./eslint/browser/js": {
       "types": "./lib/eslint/browser/js/index.d.ts",
       "import": "./lib/eslint/browser/js/index.js"
@@ -277,6 +285,7 @@
     "@eslint/compat": "^2.1.0",
     "@eslint/js": "^10.0.1",
     "@stylistic/eslint-plugin": "^5.10.0",
+    "eslint-config-expo": "^57.0.1",
     "eslint-plugin-jsx-a11y": "^6.10.2",
     "eslint-plugin-react": "^7.37.5",
     "eslint-plugin-react-hooks": "^7.1.1",
@@ -308,6 +317,9 @@
       "eslint": "$eslint"
     },
     "eslint-plugin-react": {
+      "eslint": "$eslint"
+    },
+    "eslint-plugin-import": {
       "eslint": "$eslint"
     }
   }

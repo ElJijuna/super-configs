@@ -40,6 +40,8 @@ for (const name of [
   'eslintBunJs',
   'eslintBunTs',
   'eslintBunTsTypeChecked',
+  'eslintExpo',
+  'eslintExpoTypeChecked',
   'eslintJest',
   'eslintJs',
   'eslintNodeJs',
@@ -70,6 +72,8 @@ assert(
 for (const specifier of [
   '../lib/eslint/jest/index.js',
   '../lib/eslint/js/index.js',
+  '../lib/eslint/expo/index.js',
+  '../lib/eslint/expo/type-checked/index.js',
   '../lib/eslint/react/jsx/index.js',
   '../lib/eslint/react-native/jsx/index.js',
   '../lib/eslint/react-native/tsx/index.js',
@@ -224,6 +228,10 @@ const typeCheckedReactFactoryConfig = eslintFactoryModule.createEslintConfig({
   react: true,
   typeChecked: true,
 });
+const expoFactoryConfig = eslintFactoryModule.createEslintConfig({
+  expo: true,
+  typeChecked: true,
+});
 
 assert(
   reactFactoryConfig.some((entry) => entry.name === 'super-configs/react-tsx'),
@@ -234,6 +242,14 @@ assert(
     (entry) => entry.name === 'super-configs/react-tsx-type-checked',
   ),
   'factory react option must use the type-checked React TSX preset',
+);
+assert(
+  expoFactoryConfig.some((entry) => entry.name === 'super-configs/expo-ts-type-checked'),
+  'factory expo option must use the type-checked Expo preset',
+);
+assert(
+  !expoFactoryConfig.some((entry) => entry.name?.startsWith('super-configs/react-native-')),
+  'factory expo option must not use the React Native preset',
 );
 
 for (const [language, typeChecked, expectedName] of [
@@ -260,10 +276,40 @@ try {
 } catch (error) {
   assert(
     error instanceof TypeError &&
-      error.message === 'react and reactNative cannot be enabled together',
+      error.message === 'expo, react, and reactNative cannot be enabled together',
     'factory must reject React web with React Native',
   );
 }
+
+const expoTypeCheckedConfig = await importDefault('super-configs/eslint/expo/type-checked');
+const expoTypeCheckedEntry = expoTypeCheckedConfig.find(
+  (entry) => entry.name === 'super-configs/expo-ts-type-checked',
+);
+const expoConfig = await importDefault('super-configs/eslint/expo');
+const expoEslint = new ESLint({ overrideConfigFile: true, overrideConfig: expoConfig });
+const expoAppConfig = await expoEslint.calculateConfigForFile('src/App.tsx');
+const expoMetroConfig = await expoEslint.calculateConfigForFile('metro.config.js');
+
+assert('expo' in expoAppConfig.plugins, 'Expo preset must load the official Expo plugin');
+assert('__DEV__' in expoAppConfig.languageOptions.globals, 'Expo preset must define __DEV__');
+assert('window' in expoAppConfig.languageOptions.globals, 'Expo preset must define web globals');
+assert(
+  !('__dirname' in expoAppConfig.languageOptions.globals),
+  'Expo app files must not receive Node.js-only globals',
+);
+assert(
+  '__dirname' in expoMetroConfig.languageOptions.globals,
+  'Expo preset must define Node.js globals for metro.config.js',
+);
+
+assert(
+  expoTypeCheckedEntry?.languageOptions?.parserOptions?.projectService === true,
+  'type-checked Expo preset must enable projectService',
+);
+assert(
+  expoTypeCheckedEntry?.rules?.['@typescript-eslint/no-floating-promises'] === 'error',
+  'type-checked Expo preset must enable type-aware rules',
+);
 
 assert(
   reactFactoryConfig.at(-1)?.name === 'super-configs/vitest',
@@ -309,6 +355,8 @@ for (const [specifier, filePath] of [
   ['super-configs/eslint/node/js', 'fixture.js'],
   ['super-configs/eslint/node/ts', 'fixture.ts'],
   ['super-configs/eslint/node/ts-type-checked', 'fixture.ts'],
+  ['super-configs/eslint/expo', 'fixture.tsx'],
+  ['super-configs/eslint/expo/type-checked', 'src/index.ts'],
   ['super-configs/eslint/react/jsx', 'fixture.jsx'],
   ['super-configs/eslint/react-native/jsx', 'fixture.native.jsx'],
   ['super-configs/eslint/react-native/tsx', 'fixture.native.tsx'],
@@ -347,6 +395,8 @@ for (const [specifier, filePath, code] of [
     'fixture.jsx',
     'export const Component = () => <button type="button">OK</button>;\n',
   ],
+  ['super-configs/eslint/expo', 'fixture.tsx', 'export const Screen = () => <View />;\n'],
+  ['super-configs/eslint/expo/type-checked', 'src/index.ts', 'export const value: number = 1;\n'],
   [
     'super-configs/eslint/react/tsx',
     'fixture.tsx',
@@ -376,14 +426,15 @@ for (const [specifier, filePath, code] of [
   ['super-configs/eslint/vitest', 'fixture.test.js', "it('works', () => {});\n"],
 ]) {
   const config = await importDefault(specifier);
-  const reactVersionOverride = specifier.includes('/react/')
-    ? [
-        {
-          ...(filePath.endsWith('.jsx') ? { files: ['**/*.jsx'] } : {}),
-          settings: { react: { version: '19.0' } },
-        },
-      ]
-    : [];
+  const reactVersionOverride =
+    specifier.includes('/react/') || specifier.includes('/expo')
+      ? [
+          {
+            ...(filePath.endsWith('.jsx') ? { files: ['**/*.jsx'] } : {}),
+            settings: { react: { version: '19.0' } },
+          },
+        ]
+      : [];
   const eslint = new ESLint({
     overrideConfigFile: true,
     overrideConfig: [...config, ...reactVersionOverride],
@@ -539,6 +590,8 @@ for (const documentedValue of [
   '--react-native',
   '--expo',
   'super-configs/biome/react-native',
+  'super-configs/eslint/expo',
+  'super-configs/eslint/expo/type-checked',
   'super-configs/eslint/react-native/jsx',
   'super-configs/eslint/react-native/tsx',
   'super-configs/eslint/react-native/tsx-type-checked',

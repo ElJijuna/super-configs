@@ -86,7 +86,8 @@ Native version. React Native 0.85 and newer use the
 npm install @react-native/typescript-config @react-native/jest-preset jest @types/jest --save-dev
 ```
 
-For Expo, let Expo select versions compatible with the current SDK, as recommended in the
+The Expo ESLint preset includes the official `eslint-config-expo` flat configuration. For Jest,
+let Expo select versions compatible with the current SDK, as recommended in the
 [Expo testing guide](https://docs.expo.dev/develop/unit-testing/):
 
 ```bash
@@ -249,8 +250,9 @@ super-configs init --expo --language ts --type-checked --jest --scripts
 ```
 
 `--jest` cannot be combined with `--vitest`. Choose only one of `--react`, `--react-native`, or
-`--expo`; invalid combinations fail before any file is written. `--expo` reuses the React Native
-ESLint and Biome presets while selecting the Expo TSConfig and, with `--jest`, the Expo Jest preset.
+`--expo`; invalid combinations fail before any file is written. `--expo` selects the dedicated
+Expo ESLint preset, the React Native Biome preset, the Expo TSConfig, and, with `--jest`, the Expo
+Jest preset.
 
 ### ESLint
 
@@ -275,6 +277,7 @@ export default createEslintConfig({
 | `runtime` | `'node' \| 'browser' \| 'bun'` | `'node'` | Runtime globals for the base preset |
 | `language` | `'js' \| 'ts'` | `'ts'` | Base preset language |
 | `typeChecked` | `boolean` | `false` | Type-aware TypeScript rules; requires `language: 'ts'` |
+| `expo` | `boolean` | `false` | Replaces the base preset with the official Expo flat config plus shared rules |
 | `react` | `boolean` | `false` | Replaces the base preset with a React JSX/TSX preset; supports type-aware TSX |
 | `reactNative` | `boolean` | `false` | Replaces the base preset with a React Native JSX/TSX preset; supports type-aware TSX |
 | `testFramework` | `'vitest' \| 'jest'` | — | Appends the matching companion preset for `*.test.*` and `*.spec.*` files |
@@ -483,6 +486,28 @@ export default createEslintConfig({
 
 The React Native presets intentionally do not enable browser-only globals such as `document`.
 Files ending in `.native.*`, `.ios.*`, and `.android.*` are covered by the normal JSX/TSX globs.
+
+#### Expo
+
+The Expo preset composes `eslint-config-expo/flat`, so application files receive Expo's
+multi-environment globals. It also keeps Expo's Node.js override for `metro.config.js`, platform
+extensions, import resolution, React rules, and Expo-specific rules.
+
+```javascript
+// eslint.config.js
+import { createEslintConfig } from 'super-configs/eslint';
+
+export default createEslintConfig({
+  expo: true,
+  language: 'ts',
+  typeChecked: true,
+  testFramework: 'jest',
+  ignores: ['coverage/**', '.expo/**'],
+});
+```
+
+Use `super-configs/eslint/expo` for the standard project-wide preset or
+`super-configs/eslint/expo/type-checked` when TypeScript project-service rules are required.
 
 ### Biome
 
@@ -834,14 +859,14 @@ Use the Expo flag instead of combining it with `--react-native`:
 super-configs init --expo --language ts --type-checked --jest --scripts
 ```
 
-This uses the React Native ESLint and Biome presets, plus `tsconfig/expo` and `jest/expo`. The
-generated TSConfig includes `.expo/types/**/*.ts` and `expo-env.d.ts`.
+This uses the dedicated Expo ESLint preset, the React Native Biome preset, plus `tsconfig/expo` and
+`jest/expo`. The generated TSConfig includes `.expo/types/**/*.ts` and `expo-env.d.ts`.
 
 ## Available Configurations
 
 | Export | Description |
 | ------ | ----------- |
-| `super-configs/eslint` | ESLint config factory for Node.js, Browser, Bun, React, and React Native projects |
+| `super-configs/eslint` | ESLint config factory for Node.js, Browser, Bun, React, React Native, and Expo projects |
 | `super-configs/eslint/js` | ESLint configuration for JavaScript |
 | `super-configs/eslint/ts` | ESLint configuration for TypeScript |
 | `super-configs/eslint/ts-type-checked` | Type-aware ESLint configuration for TypeScript |
@@ -854,6 +879,8 @@ generated TSConfig includes `.expo/types/**/*.ts` and `expo-env.d.ts`.
 | `super-configs/eslint/bun/js` | ESLint configuration for Bun JavaScript |
 | `super-configs/eslint/bun/ts` | ESLint configuration for Bun TypeScript |
 | `super-configs/eslint/bun/ts-type-checked` | Type-aware ESLint configuration for Bun TypeScript |
+| `super-configs/eslint/expo` | Project-wide ESLint configuration based on the official Expo flat config |
+| `super-configs/eslint/expo/type-checked` | Expo ESLint configuration with type-aware TypeScript rules |
 | `super-configs/eslint/jest` | ESLint overrides for Jest test files |
 | `super-configs/eslint/vitest` | ESLint overrides for Vitest test files |
 | `super-configs/eslint/react/jsx` | ESLint configuration for React with JSX |
@@ -976,6 +1003,7 @@ Formatting and import organization are handled by Biome, not ESLint.
 
 - `@eslint/js` - ESLint recommended rules
 - `typescript-eslint` - TypeScript support
+- `eslint-config-expo` - Official Expo globals, extensions, import resolution, and lint rules
 - `eslint-plugin-react` - React rules
 - `eslint-plugin-react-hooks` - React Hooks rules
 - `eslint-plugin-jsx-a11y` - JSX accessibility
@@ -987,6 +1015,14 @@ Formatting and import organization are handled by Biome, not ESLint.
 - Type-aware TypeScript rules through `parserOptions.projectService`
 - Public React Native API imports instead of `react-native/Libraries/**`
 - Platform files using `.native.*`, `.ios.*`, or `.android.*` suffixes
+
+### Expo Rules
+
+- Official `eslint-plugin-expo`, React, React Hooks, TypeScript, and import rules
+- Universal Expo globals for Hermes and web application code
+- Node.js globals scoped to `metro.config.js`
+- Type-aware TypeScript rules through `parserOptions.projectService` in the typed preset
+- Public React Native API imports instead of `react-native/Libraries/**`
 
 ### Biome Configuration
 

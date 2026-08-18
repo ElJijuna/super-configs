@@ -125,7 +125,14 @@ const expoCliBiome = await readFile(join(expoCliTarget, 'biome.json'), 'utf8');
 const expoCliJest = await readFile(join(expoCliTarget, 'jest.config.js'), 'utf8');
 const expoCliTsconfig = await readFile(join(expoCliTarget, 'tsconfig.json'), 'utf8');
 
-assert(expoCliEslint.includes('reactNative: true'), 'CLI --expo must use React Native ESLint');
+assert(
+  expoCliEslint.includes('expo: true'),
+  'CLI --expo must use the dedicated Expo ESLint preset',
+);
+assert(
+  !expoCliEslint.includes('reactNative: true'),
+  'CLI --expo must not fall back to React Native ESLint',
+);
 assert(expoCliEslint.includes('typeChecked: true'), 'CLI --expo must preserve type-aware linting');
 assert(
   expoCliBiome.includes('super-configs/biome/react-native'),

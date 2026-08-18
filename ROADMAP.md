@@ -23,15 +23,16 @@ Last updated: 2026-08-17
   - `super-configs/eslint/browser/ts-type-checked`
   - `super-configs/eslint/bun/ts-type-checked`
   - `super-configs/eslint/react/tsx-type-checked`
+  - `super-configs/eslint/expo/type-checked`
 - Bun test template:
   - `super-configs/bunfig`
   - `super-configs/bunfig.toml`
   - source template at `src/test/bunfig.toml`
 - Composable ESLint config factory:
   - `super-configs/eslint`
-  - `createEslintConfig({ runtime, language, typeChecked, react, reactNative, testFramework,
+  - `createEslintConfig({ runtime, language, typeChecked, expo, react, reactNative, testFramework,
     ignores, overrides })`
-  - supports Node.js, Browser, Bun, React, and React Native
+  - supports Node.js, Browser, Bun, React, React Native, and Expo
   - rejects type-aware JavaScript at runtime
 - Init CLI:
   - local usage: `npx super-configs init`
@@ -50,6 +51,8 @@ Last updated: 2026-08-17
     app
 - React Native and Expo presets:
   - ESLint presets for JSX, TSX, and type-aware TSX
+  - dedicated `super-configs/eslint/expo` and `super-configs/eslint/expo/type-checked` presets
+    composed from the official Expo flat configuration
   - React Native runtime globals, React Hooks rules, and internal deep-import restrictions
   - `super-configs/biome/react-native` with native lint rules and shared formatting
   - `super-configs/tsconfig/react-native` and `super-configs/tsconfig/expo`
@@ -69,6 +72,7 @@ Last updated: 2026-08-17
   - Jest vs Vitest ESLint globals
   - React Native ESLint globals, platform filenames, deep imports, and type-aware rules
   - React type-aware parser service and rules
+  - Expo universal globals, Metro override, official plugin rules, and type-aware rules
   - React Native Biome diagnostics and native Jest/TypeScript preset mappings
 - Dedicated CLI smoke tests cover:
   - CLI help output
@@ -83,10 +87,13 @@ Last updated: 2026-08-17
     and supports type-aware TSX
   - `createEslintConfig({ reactNative: true })` selects native JSX or TSX and supports
     `typeChecked`
+  - `createEslintConfig({ expo: true })` selects the project-wide Expo preset and supports
+    `typeChecked`
   - order stays ignores, base preset, test framework, overrides
 - Init CLI emits a single factory call:
   - `eslint.config.js` is one `createEslintConfig({ ... })` call with no companion imports
   - `--react` maps to `react: true`, omits `runtime`, and preserves enabled `typeChecked`
+  - `--expo` maps to `expo: true` instead of falling back to React Native ESLint
   - `--vitest` and `--jest` map to `testFramework`
   - `--react --type-checked` selects the type-aware React TSX preset
   - README recipes use the same single-call shape

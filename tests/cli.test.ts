@@ -107,7 +107,7 @@ describe('CLI templates', () => {
     [{ ...defaultOptions, react: true, typeChecked: true }, 'typeChecked: true'],
     [{ ...defaultOptions, reactNative: true }, 'reactNative: true'],
     [{ ...defaultOptions, reactNative: true, typeChecked: true }, 'typeChecked: true'],
-    [{ ...defaultOptions, expo: true }, 'reactNative: true'],
+    [{ ...defaultOptions, expo: true }, 'expo: true'],
   ] as const)('creates the expected ESLint template', (options, expectedOption) => {
     expect(createEslintConfig(options)).toContain(expectedOption);
   });
@@ -157,6 +157,19 @@ export default createEslintConfig({
 
     expect(config).toContain('reactNative: true');
     expect(config).toContain('typeChecked: true');
+    expect(config).not.toContain('runtime:');
+  });
+
+  it('uses the dedicated Expo ESLint preset and preserves typeChecked', () => {
+    const config = createEslintConfig({
+      ...defaultOptions,
+      expo: true,
+      typeChecked: true,
+    });
+
+    expect(config).toContain('expo: true');
+    expect(config).toContain('typeChecked: true');
+    expect(config).not.toContain('reactNative: true');
     expect(config).not.toContain('runtime:');
   });
 

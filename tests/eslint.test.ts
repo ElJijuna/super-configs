@@ -8,6 +8,8 @@ import {
   eslintBunJs,
   eslintBunTs,
   eslintBunTsTypeChecked,
+  eslintExpo,
+  eslintExpoTypeChecked,
   eslintJest,
   eslintJs,
   eslintNodeJs,
@@ -33,6 +35,8 @@ const presets = [
   eslintBunJs,
   eslintBunTs,
   eslintBunTsTypeChecked,
+  eslintExpo,
+  eslintExpoTypeChecked,
   eslintJest,
   eslintJs,
   eslintNodeJs,
@@ -162,6 +166,32 @@ describe('public configuration exports', () => {
     );
   });
 
+  it('configures Expo globals, rules, and Node.js Metro files', async () => {
+    const eslint = new ESLint({
+      overrideConfigFile: true,
+      overrideConfig: eslintExpo,
+    });
+    const appConfig = await eslint.calculateConfigForFile('src/App.tsx');
+    const metroConfig = await eslint.calculateConfigForFile('metro.config.js');
+
+    expect(appConfig.plugins).toHaveProperty('expo');
+    expect(appConfig.languageOptions.globals).toHaveProperty('__DEV__');
+    expect(appConfig.languageOptions.globals).toHaveProperty('window');
+    expect(appConfig.languageOptions.globals).not.toHaveProperty('__dirname');
+    expect(appConfig.rules['expo/no-env-var-destructuring']).toEqual([2]);
+    expect(metroConfig.languageOptions.globals).toHaveProperty('__dirname');
+  });
+
+  it('enables project-service rules for type-checked Expo TypeScript', () => {
+    const typeScriptConfig = eslintExpoTypeChecked.find(
+      (entry) => entry.name === 'super-configs/expo-ts-type-checked',
+    );
+
+    expect(typeScriptConfig?.languageOptions?.parserOptions?.projectService).toBe(true);
+    expect(typeScriptConfig?.rules?.['@typescript-eslint/no-floating-promises']).toBe('error');
+    expect(typeScriptConfig?.files).toContain('**/*.tsx');
+  });
+
   it('exports the legacy Prettier configuration', () => {
     expect(prettierConfig).toMatchObject({
       printWidth: 100,
@@ -276,9 +306,23 @@ describe('createEslintConfig', () => {
     expect(config.some((item) => item.name?.startsWith('super-configs/node-'))).toBe(false);
   });
 
-  it('rejects enabling React web and React Native together', () => {
-    expect(() => createEslintConfig({ react: true, reactNative: true })).toThrowError(
-      'react and reactNative cannot be enabled together',
+  it.each([
+    [false, 'super-configs/expo-ts'],
+    [true, 'super-configs/expo-ts-type-checked'],
+  ] as const)('creates the Expo preset with typeChecked=%s', (typeChecked, expectedName) => {
+    const config = createEslintConfig({ expo: true, typeChecked });
+
+    expect(config.at(-1)?.name).toBe(expectedName);
+    expect(config.some((item) => item.name?.startsWith('super-configs/react-native-'))).toBe(false);
+  });
+
+  it.each([
+    { expo: true, react: true },
+    { expo: true, reactNative: true },
+    { react: true, reactNative: true },
+  ])('rejects enabling multiple frameworks: %o', (options) => {
+    expect(() => createEslintConfig(options)).toThrowError(
+      'expo, react, and reactNative cannot be enabled together',
     );
   });
 

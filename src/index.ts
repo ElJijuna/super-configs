@@ -6,6 +6,8 @@ export { default as eslintBrowserTsTypeChecked } from '@/eslint/browser/ts-type-
 export { default as eslintBunJs } from '@/eslint/bun/js/index.js';
 export { default as eslintBunTs } from '@/eslint/bun/ts/index.js';
 export { default as eslintBunTsTypeChecked } from '@/eslint/bun/ts-type-checked/index.js';
+export { default as eslintExpo } from '@/eslint/expo/index.js';
+export { default as eslintExpoTypeChecked } from '@/eslint/expo/type-checked/index.js';
 export type {
   CreateEslintConfigOptions,
   EslintLanguage,

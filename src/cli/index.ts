@@ -234,9 +234,11 @@ export const createEslintConfig = (options: InitOptions): string => {
   const factoryOptions = [
     ...(options.react
       ? ['react: true']
-      : options.reactNative || options.expo
-        ? ['reactNative: true']
-        : [`runtime: '${options.runtime}'`]),
+      : options.expo
+        ? ['expo: true']
+        : options.reactNative
+          ? ['reactNative: true']
+          : [`runtime: '${options.runtime}'`]),
     `language: '${options.language}'`,
     ...(options.react && !options.typeChecked ? [] : [`typeChecked: ${options.typeChecked}`]),
     ...(testFramework === undefined ? [] : [`testFramework: '${testFramework}'`]),
