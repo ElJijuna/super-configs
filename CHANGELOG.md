@@ -1,3 +1,11 @@
+## [1.22.0](https://github.com/ElJijuna/super-configs/compare/v1.21.0...v1.22.0) (2026-08-18)
+
+### Features
+
+* add Next.js support with ESLint and TypeScript configurations ([1e7c894](https://github.com/ElJijuna/super-configs/commit/1e7c894c32d4f4a6e672e4866f906bf945132d10))
+* add support for Expo ESLint configuration ([56eb465](https://github.com/ElJijuna/super-configs/commit/56eb465767d3d4e24c75aa2550092d65a16c2cec))
+* enable type-checked React support in ESLint configuration and CLI ([436944c](https://github.com/ElJijuna/super-configs/commit/436944ce3f168cb0253b7cf740f86ca5be211ca3))
+
 ## [1.21.0](https://github.com/ElJijuna/super-configs/compare/v1.20.0...v1.21.0) (2026-08-17)
 
 ### Features

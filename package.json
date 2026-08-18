@@ -1,6 +1,6 @@
 {
   "name": "super-configs",
-  "version": "1.21.0",
+  "version": "1.22.0",
   "description": "Shared ESLint, Biome, TypeScript, Jest, Vitest, and formatting configurations for JavaScript, React, Next.js, React Native, Expo, Node.js, Browser, and Bun projects",
   "main": "./lib/index.js",
   "module": "./lib/index.js",
