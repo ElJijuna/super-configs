@@ -13,6 +13,7 @@ export interface InitOptions {
   typeChecked: boolean;
   force: boolean;
   jest: boolean;
+  next: boolean;
   react: boolean;
   reactNative: boolean;
   scripts: boolean;
@@ -27,6 +28,7 @@ Options:
   --runtime <node|browser|bun>  Runtime globals to configure. Default: node
   --language <js|ts>            Project language. Default: ts
   --type-checked                Enable type-aware TypeScript ESLint
+  --next                        Add Next.js ESLint and TSConfig setup
   --react                       Add React ESLint and TSConfig setup
   --react-native                Add React Native ESLint and TSConfig setup
   --expo                        Add Expo ESLint, Biome, and TSConfig setup
@@ -47,6 +49,7 @@ export const parseArgs = (
     typeChecked: false,
     force: false,
     jest: false,
+    next: false,
     react: false,
     reactNative: false,
     scripts: false,
@@ -86,6 +89,11 @@ export const parseArgs = (
 
     if (arg === '--jest') {
       options.jest = true;
+      continue;
+    }
+
+    if (arg === '--next') {
+      options.next = true;
       continue;
     }
 
@@ -148,8 +156,8 @@ export const parseArgs = (
     throw new Error('--react requires --language ts');
   }
 
-  if ([options.react, options.reactNative, options.expo].filter(Boolean).length > 1) {
-    throw new Error('choose one of --react, --react-native, or --expo');
+  if ([options.next, options.react, options.reactNative, options.expo].filter(Boolean).length > 1) {
+    throw new Error('choose one of --next, --react, --react-native, or --expo');
   }
 
   return { command, options, help };
@@ -227,18 +235,22 @@ export const mergePackageScripts = async (target: string, force: boolean): Promi
 
 export const createEslintConfig = (options: InitOptions): string => {
   const testFramework = options.vitest ? 'vitest' : options.jest ? 'jest' : undefined;
-  const ignores = options.react
-    ? "['dist/**', 'coverage/**', 'storybook-static/**', 'node_modules/**']"
-    : "['dist/**', 'coverage/**', 'node_modules/**']";
+  const ignores = options.next
+    ? "['.next/**', 'out/**', 'coverage/**', 'node_modules/**']"
+    : options.react
+      ? "['dist/**', 'coverage/**', 'storybook-static/**', 'node_modules/**']"
+      : "['dist/**', 'coverage/**', 'node_modules/**']";
   // Framework presets bring their own globals, so the factory ignores `runtime`.
   const factoryOptions = [
     ...(options.react
       ? ['react: true']
-      : options.expo
-        ? ['expo: true']
-        : options.reactNative
-          ? ['reactNative: true']
-          : [`runtime: '${options.runtime}'`]),
+      : options.next
+        ? ['next: true']
+        : options.expo
+          ? ['expo: true']
+          : options.reactNative
+            ? ['reactNative: true']
+            : [`runtime: '${options.runtime}'`]),
     `language: '${options.language}'`,
     ...(options.react && !options.typeChecked ? [] : [`typeChecked: ${options.typeChecked}`]),
     ...(testFramework === undefined ? [] : [`testFramework: '${testFramework}'`]),
@@ -255,6 +267,15 @@ ${factoryBody}
 };
 
 export const createTsconfig = (options: InitOptions): string => {
+  if (options.next) {
+    return `{
+  "extends": "super-configs/tsconfig/next",
+  "include": ["next-env.d.ts", ".next/types/**/*.ts", ".next/dev/types/**/*.ts", "**/*.mts", "**/*.ts", "**/*.tsx"],
+  "exclude": ["node_modules"]
+}
+`;
+  }
+
   if (options.expo) {
     return `{
   "extends": "super-configs/tsconfig/expo",

@@ -3,6 +3,7 @@ import eslintExpoConfig from '@/eslint/expo/index.js';
 import eslintExpoTypeCheckedConfig from '@/eslint/expo/type-checked/index.js';
 import eslintJestConfig from '@/eslint/jest/index.js';
 import { createEslintJsConfig } from '@/eslint/js/create-config.js';
+import { createEslintNextConfig } from '@/eslint/next/create-config.js';
 import eslintReactJsxConfig from '@/eslint/react/jsx/index.js';
 import eslintReactTsxConfig from '@/eslint/react/tsx/index.js';
 import eslintReactTsxTypeCheckedConfig from '@/eslint/react/tsx-type-checked/index.js';
@@ -22,6 +23,7 @@ interface CreateEslintConfigBaseOptions {
   ignores?: string[];
   overrides?: Linter.Config[];
   expo?: boolean;
+  next?: boolean;
   react?: boolean;
   reactNative?: boolean;
   testFramework?: EslintTestFramework;
@@ -65,6 +67,8 @@ const getTestFrameworkConfig = (testFramework: EslintTestFramework): Linter.Conf
   testFramework === 'jest' ? eslintJestConfig : eslintVitestConfig;
 const getExpoConfig = (typeChecked: boolean): Linter.Config[] =>
   typeChecked ? eslintExpoTypeCheckedConfig : eslintExpoConfig;
+const getNextConfig = (typeChecked: boolean): Linter.Config[] =>
+  createEslintNextConfig({ typeChecked });
 
 export const createEslintConfig = (options: CreateEslintConfigOptions = {}): Linter.Config[] => {
   const {
@@ -74,6 +78,7 @@ export const createEslintConfig = (options: CreateEslintConfigOptions = {}): Lin
     ignores = [],
     overrides = [],
     expo = false,
+    next = false,
     react = false,
     reactNative = false,
     testFramework,
@@ -83,21 +88,23 @@ export const createEslintConfig = (options: CreateEslintConfigOptions = {}): Lin
     throw new TypeError('typeChecked is only supported when language is "ts"');
   }
 
-  if ([expo, react, reactNative].filter(Boolean).length > 1) {
-    throw new TypeError('expo, react, and reactNative cannot be enabled together');
+  if ([expo, next, react, reactNative].filter(Boolean).length > 1) {
+    throw new TypeError('expo, next, react, and reactNative cannot be enabled together');
   }
 
   const runtimeGlobals = getRuntimeGlobals(runtime);
   const name = `super-configs/${runtime}-${language}${typeChecked ? '-type-checked' : ''}`;
   const baseConfig = expo
     ? getExpoConfig(typeChecked)
-    : react
-      ? getReactConfig(language, typeChecked)
-      : reactNative
-        ? getReactNativeConfig(language, typeChecked)
-        : language === 'js'
-          ? createEslintJsConfig(name, runtimeGlobals)
-          : createEslintTsConfig(name, runtimeGlobals, { typeChecked });
+    : next
+      ? getNextConfig(typeChecked)
+      : react
+        ? getReactConfig(language, typeChecked)
+        : reactNative
+          ? getReactNativeConfig(language, typeChecked)
+          : language === 'js'
+            ? createEslintJsConfig(name, runtimeGlobals)
+            : createEslintTsConfig(name, runtimeGlobals, { typeChecked });
 
   return [
     ...(ignores.length > 0 ? [{ name: 'super-configs/ignores', ignores }] : []),

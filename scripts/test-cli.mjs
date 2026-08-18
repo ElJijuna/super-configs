@@ -24,6 +24,7 @@ assert(cliHelp.stdout.includes('super-configs init'), 'CLI help must mention ini
 assert(cliHelp.stdout.includes('--vitest'), 'CLI help must mention test flags');
 assert(cliHelp.stdout.includes('--react-native'), 'CLI help must mention React Native');
 assert(cliHelp.stdout.includes('--expo'), 'CLI help must mention Expo');
+assert(cliHelp.stdout.includes('--next'), 'CLI help must mention Next.js');
 
 const bunCliTarget = await mkdtemp(join(tmpdir(), 'super-configs-bun-cli-'));
 const bunCli = runCliInit(
@@ -151,12 +152,32 @@ assert(
   'CLI --expo must include generated Expo types',
 );
 
+const nextCliTarget = await mkdtemp(join(tmpdir(), 'super-configs-next-cli-'));
+const nextCli = runCliInit(nextCliTarget, '--next', '--type-checked', '--vitest');
+
+assert(nextCli.status === 0, `Next.js CLI init must succeed: ${nextCli.stderr}`);
+
+const nextCliEslint = await readFile(join(nextCliTarget, 'eslint.config.js'), 'utf8');
+const nextCliTsconfig = await readFile(join(nextCliTarget, 'tsconfig.json'), 'utf8');
+
+assert(nextCliEslint.includes('next: true'), 'CLI --next must use the Next.js ESLint preset');
+assert(nextCliEslint.includes('typeChecked: true'), 'CLI --next must preserve type-aware linting');
+assert(!nextCliEslint.includes('runtime:'), 'CLI --next must omit runtime globals');
+assert(
+  nextCliTsconfig.includes('"extends": "super-configs/tsconfig/next"'),
+  'CLI --next must use the Next.js TSConfig',
+);
+assert(
+  nextCliTsconfig.includes('".next/dev/types/**/*.ts"'),
+  'CLI --next must include generated development route types',
+);
+
 const mixedReactCliTarget = await mkdtemp(join(tmpdir(), 'super-configs-mixed-react-cli-'));
 const mixedReactCli = runCliInit(mixedReactCliTarget, '--react', '--react-native');
 
 assert(mixedReactCli.status === 1, 'CLI must reject --react with --react-native');
 assert(
-  mixedReactCli.stderr.includes('choose one of --react, --react-native, or --expo'),
+  mixedReactCli.stderr.includes('choose one of --next, --react, --react-native, or --expo'),
   'CLI must explain mixed React framework rejection',
 );
 

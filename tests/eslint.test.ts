@@ -1,6 +1,8 @@
 import { ESLint } from 'eslint';
 import { describe, expect, it } from 'vitest';
 import { createEslintConfig } from '../src/eslint/index.js';
+import eslintNext from '../src/eslint/next/index.js';
+import eslintNextTypeChecked from '../src/eslint/next/type-checked/index.js';
 import {
   eslintBrowserJs,
   eslintBrowserTs,
@@ -39,6 +41,8 @@ const presets = [
   eslintExpoTypeChecked,
   eslintJest,
   eslintJs,
+  eslintNext,
+  eslintNextTypeChecked,
   eslintNodeJs,
   eslintNodeTs,
   eslintNodeTsTypeChecked,
@@ -192,6 +196,51 @@ describe('public configuration exports', () => {
     expect(typeScriptConfig?.files).toContain('**/*.tsx');
   });
 
+  it('configures Next.js Core Web Vitals and TypeScript rules', async () => {
+    const eslint = new ESLint({
+      overrideConfigFile: true,
+      overrideConfig: eslintNext,
+    });
+    const compatibilityEslint = new ESLint({
+      overrideConfigFile: true,
+      overrideConfig: [
+        ...eslintNext,
+        {
+          settings: { react: { version: '19.0' } },
+          rules: { '@next/next/no-html-link-for-pages': 'off' },
+        },
+      ],
+    });
+    const appConfig = await eslint.calculateConfigForFile('app/page.tsx');
+    const [result] = await compatibilityEslint.lintText(
+      "export const Page = () => <img src='/hero.png' alt='Hero' />;\n",
+      { filePath: 'app/page.tsx' },
+    );
+
+    expect(appConfig.plugins).toHaveProperty('@next/next');
+    expect(appConfig.plugins).toHaveProperty('@typescript-eslint');
+    expect(appConfig.rules['@next/next/no-html-link-for-pages']).toEqual([2]);
+    expect(appConfig.rules['@typescript-eslint/no-unused-vars']).toEqual([
+      1,
+      { argsIgnorePattern: '^_' },
+    ]);
+    expect(result.messages).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ ruleId: '@next/next/no-img-element', severity: 1 }),
+      ]),
+    );
+  });
+
+  it('enables project-service rules for type-checked Next.js TypeScript', () => {
+    const typeScriptConfig = eslintNextTypeChecked.find(
+      (entry) => entry.name === 'super-configs/next-ts-type-checked',
+    );
+
+    expect(typeScriptConfig?.languageOptions?.parserOptions?.projectService).toBe(true);
+    expect(typeScriptConfig?.rules?.['@typescript-eslint/no-floating-promises']).toBe('error');
+    expect(typeScriptConfig?.files).toContain('**/*.tsx');
+  });
+
   it('exports the legacy Prettier configuration', () => {
     expect(prettierConfig).toMatchObject({
       printWidth: 100,
@@ -307,6 +356,16 @@ describe('createEslintConfig', () => {
   });
 
   it.each([
+    [false, 'super-configs/next-ts'],
+    [true, 'super-configs/next-ts-type-checked'],
+  ] as const)('creates the Next.js preset with typeChecked=%s', (typeChecked, expectedName) => {
+    const config = createEslintConfig({ next: true, typeChecked });
+
+    expect(config.at(-1)?.name).toBe(expectedName);
+    expect(config.some((item) => item.name?.startsWith('super-configs/node-'))).toBe(false);
+  });
+
+  it.each([
     [false, 'super-configs/expo-ts'],
     [true, 'super-configs/expo-ts-type-checked'],
   ] as const)('creates the Expo preset with typeChecked=%s', (typeChecked, expectedName) => {
@@ -317,12 +376,14 @@ describe('createEslintConfig', () => {
   });
 
   it.each([
+    { next: true, react: true },
+    { next: true, expo: true },
     { expo: true, react: true },
     { expo: true, reactNative: true },
     { react: true, reactNative: true },
   ])('rejects enabling multiple frameworks: %o', (options) => {
     expect(() => createEslintConfig(options)).toThrowError(
-      'expo, react, and reactNative cannot be enabled together',
+      'expo, next, react, and reactNative cannot be enabled together',
     );
   });
 

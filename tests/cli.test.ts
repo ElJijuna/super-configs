@@ -24,6 +24,7 @@ const defaultOptions: InitOptions = {
   typeChecked: false,
   force: false,
   jest: false,
+  next: false,
   react: false,
   reactNative: false,
   scripts: false,
@@ -80,6 +81,7 @@ describe('CLI argument parsing', () => {
     });
     expect(parseArgs(['init', '--react-native']).options.reactNative).toBe(true);
     expect(parseArgs(['init', '--expo']).options.expo).toBe(true);
+    expect(parseArgs(['init', '--next']).options.next).toBe(true);
   });
 
   it.each([
@@ -89,8 +91,15 @@ describe('CLI argument parsing', () => {
     [['init', '--language', 'js', '--type-checked'], '--type-checked requires --language ts'],
     [['init', '--jest', '--vitest'], 'choose either --jest or --vitest, not both'],
     [['init', '--language', 'js', '--react'], '--react requires --language ts'],
-    [['init', '--react', '--react-native'], 'choose one of --react, --react-native, or --expo'],
-    [['init', '--react-native', '--expo'], 'choose one of --react, --react-native, or --expo'],
+    [
+      ['init', '--react', '--react-native'],
+      'choose one of --next, --react, --react-native, or --expo',
+    ],
+    [
+      ['init', '--react-native', '--expo'],
+      'choose one of --next, --react, --react-native, or --expo',
+    ],
+    [['init', '--next', '--react'], 'choose one of --next, --react, --react-native, or --expo'],
   ])('rejects invalid arguments: %s', (args, message) => {
     expect(() => parseArgs(args)).toThrowError(message);
   });
@@ -108,6 +117,7 @@ describe('CLI templates', () => {
     [{ ...defaultOptions, reactNative: true }, 'reactNative: true'],
     [{ ...defaultOptions, reactNative: true, typeChecked: true }, 'typeChecked: true'],
     [{ ...defaultOptions, expo: true }, 'expo: true'],
+    [{ ...defaultOptions, next: true }, 'next: true'],
   ] as const)('creates the expected ESLint template', (options, expectedOption) => {
     expect(createEslintConfig(options)).toContain(expectedOption);
   });
@@ -173,6 +183,19 @@ export default createEslintConfig({
     expect(config).not.toContain('runtime:');
   });
 
+  it('uses the dedicated Next.js ESLint preset and preserves typeChecked', () => {
+    const config = createEslintConfig({
+      ...defaultOptions,
+      next: true,
+      typeChecked: true,
+    });
+
+    expect(config).toContain('next: true');
+    expect(config).toContain('typeChecked: true');
+    expect(config).toContain("ignores: ['.next/**', 'out/**'");
+    expect(config).not.toContain('runtime:');
+  });
+
   it('omits testFramework when no test flag is passed', () => {
     expect(createEslintConfig(defaultOptions)).not.toContain('testFramework');
   });
@@ -189,6 +212,7 @@ export default createEslintConfig({
   });
 
   it.each([
+    [{ ...defaultOptions, next: true }, 'next', '.next/dev/types/**/*.ts'],
     [{ ...defaultOptions, react: true }, 'react', 'src/**/*.tsx'],
     [{ ...defaultOptions, reactNative: true }, 'react-native', undefined],
     [{ ...defaultOptions, expo: true }, 'expo', '.expo/types/**/*.ts'],

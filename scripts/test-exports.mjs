@@ -74,6 +74,8 @@ for (const specifier of [
   '../lib/eslint/js/index.js',
   '../lib/eslint/expo/index.js',
   '../lib/eslint/expo/type-checked/index.js',
+  '../lib/eslint/next/index.js',
+  '../lib/eslint/next/type-checked/index.js',
   '../lib/eslint/react/jsx/index.js',
   '../lib/eslint/react-native/jsx/index.js',
   '../lib/eslint/react-native/tsx/index.js',
@@ -232,6 +234,10 @@ const expoFactoryConfig = eslintFactoryModule.createEslintConfig({
   expo: true,
   typeChecked: true,
 });
+const nextFactoryConfig = eslintFactoryModule.createEslintConfig({
+  next: true,
+  typeChecked: true,
+});
 
 assert(
   reactFactoryConfig.some((entry) => entry.name === 'super-configs/react-tsx'),
@@ -250,6 +256,14 @@ assert(
 assert(
   !expoFactoryConfig.some((entry) => entry.name?.startsWith('super-configs/react-native-')),
   'factory expo option must not use the React Native preset',
+);
+assert(
+  nextFactoryConfig.some((entry) => entry.name === 'super-configs/next-ts-type-checked'),
+  'factory next option must use the type-checked Next.js preset',
+);
+assert(
+  !nextFactoryConfig.some((entry) => entry.name?.startsWith('super-configs/node-')),
+  'factory next option must not use a generic Node.js preset',
 );
 
 for (const [language, typeChecked, expectedName] of [
@@ -270,14 +284,14 @@ for (const [language, typeChecked, expectedName] of [
 }
 
 try {
-  eslintFactoryModule.createEslintConfig({ react: true, reactNative: true });
+  eslintFactoryModule.createEslintConfig({ next: true, react: true });
 
-  throw new Error('factory must reject React web with React Native');
+  throw new Error('factory must reject Next.js with React web');
 } catch (error) {
   assert(
     error instanceof TypeError &&
-      error.message === 'expo, react, and reactNative cannot be enabled together',
-    'factory must reject React web with React Native',
+      error.message === 'expo, next, react, and reactNative cannot be enabled together',
+    'factory must reject Next.js with React web',
   );
 }
 
@@ -309,6 +323,28 @@ assert(
 assert(
   expoTypeCheckedEntry?.rules?.['@typescript-eslint/no-floating-promises'] === 'error',
   'type-checked Expo preset must enable type-aware rules',
+);
+
+const nextConfig = await importDefault('super-configs/eslint/next');
+const nextTypeCheckedConfig = await importDefault('super-configs/eslint/next/type-checked');
+const nextTypeCheckedEntry = nextTypeCheckedConfig.find(
+  (entry) => entry.name === 'super-configs/next-ts-type-checked',
+);
+const nextEslint = new ESLint({ overrideConfigFile: true, overrideConfig: nextConfig });
+const nextAppConfig = await nextEslint.calculateConfigForFile('app/page.tsx');
+
+assert('@next/next' in nextAppConfig.plugins, 'Next.js preset must load the official plugin');
+assert(
+  nextAppConfig.rules['@next/next/no-html-link-for-pages'][0] === 2,
+  'Next.js preset must enable Core Web Vitals rules',
+);
+assert(
+  nextTypeCheckedEntry?.languageOptions?.parserOptions?.projectService === true,
+  'type-checked Next.js preset must enable projectService',
+);
+assert(
+  nextTypeCheckedEntry?.rules?.['@typescript-eslint/no-floating-promises'] === 'error',
+  'type-checked Next.js preset must enable type-aware rules',
 );
 
 assert(
@@ -357,6 +393,8 @@ for (const [specifier, filePath] of [
   ['super-configs/eslint/node/ts-type-checked', 'fixture.ts'],
   ['super-configs/eslint/expo', 'fixture.tsx'],
   ['super-configs/eslint/expo/type-checked', 'src/index.ts'],
+  ['super-configs/eslint/next', 'app/page.tsx'],
+  ['super-configs/eslint/next/type-checked', 'src/index.ts'],
   ['super-configs/eslint/react/jsx', 'fixture.jsx'],
   ['super-configs/eslint/react-native/jsx', 'fixture.native.jsx'],
   ['super-configs/eslint/react-native/tsx', 'fixture.native.tsx'],
@@ -397,6 +435,8 @@ for (const [specifier, filePath, code] of [
   ],
   ['super-configs/eslint/expo', 'fixture.tsx', 'export const Screen = () => <View />;\n'],
   ['super-configs/eslint/expo/type-checked', 'src/index.ts', 'export const value: number = 1;\n'],
+  ['super-configs/eslint/next', 'app/page.tsx', 'export const Page = () => <main>OK</main>;\n'],
+  ['super-configs/eslint/next/type-checked', 'src/index.ts', 'export const value: number = 1;\n'],
   [
     'super-configs/eslint/react/tsx',
     'fixture.tsx',
@@ -427,11 +467,14 @@ for (const [specifier, filePath, code] of [
 ]) {
   const config = await importDefault(specifier);
   const reactVersionOverride =
-    specifier.includes('/react/') || specifier.includes('/expo')
+    specifier.includes('/react/') || specifier.includes('/expo') || specifier.includes('/next')
       ? [
           {
             ...(filePath.endsWith('.jsx') ? { files: ['**/*.jsx'] } : {}),
             settings: { react: { version: '19.0' } },
+            ...(specifier.includes('/next')
+              ? { rules: { '@next/next/no-html-link-for-pages': 'off' } }
+              : {}),
           },
         ]
       : [];
@@ -449,6 +492,7 @@ for (const path of [
   'biome.react-native.json',
   'lib/tsconfig/base.json',
   'lib/tsconfig/expo.json',
+  'lib/tsconfig/next.json',
   'lib/tsconfig/node.json',
   'lib/tsconfig/react.json',
   'lib/tsconfig/react-native.json',
@@ -530,6 +574,7 @@ for (const rule of [
 for (const specifier of [
   'super-configs/tsconfig/base',
   'super-configs/tsconfig/expo',
+  'super-configs/tsconfig/next',
   'super-configs/tsconfig/node',
   'super-configs/tsconfig/react',
   'super-configs/tsconfig/react-native',
@@ -553,10 +598,17 @@ for (const [specifier, baseConfig] of [
 
 const nodeTsconfigUrl = import.meta.resolve('super-configs/tsconfig/node');
 const nodeTsconfig = JSON.parse(await readFile(new URL(nodeTsconfigUrl), 'utf8'));
+const nextTsconfigUrl = import.meta.resolve('super-configs/tsconfig/next');
+const nextTsconfig = JSON.parse(await readFile(new URL(nextTsconfigUrl), 'utf8'));
 
 assert(
   nodeTsconfig.compilerOptions.types?.includes('node'),
   'super-configs/tsconfig/node must explicitly include Node.js types',
+);
+assert(nextTsconfig.extends === './react.json', 'Next.js TSConfig must extend the React preset');
+assert(
+  nextTsconfig.compilerOptions.plugins?.some((plugin) => plugin.name === 'next'),
+  'Next.js TSConfig must enable the Next.js TypeScript plugin',
 );
 
 for (const specifier of ['super-configs/bunfig', 'super-configs/bunfig.toml']) {
@@ -589,9 +641,12 @@ const readme = await readText('README.md');
 for (const documentedValue of [
   '--react-native',
   '--expo',
+  '--next',
   'super-configs/biome/react-native',
   'super-configs/eslint/expo',
   'super-configs/eslint/expo/type-checked',
+  'super-configs/eslint/next',
+  'super-configs/eslint/next/type-checked',
   'super-configs/eslint/react-native/jsx',
   'super-configs/eslint/react-native/tsx',
   'super-configs/eslint/react-native/tsx-type-checked',
@@ -599,6 +654,7 @@ for (const documentedValue of [
   'super-configs/jest/expo',
   'super-configs/jest/react-native',
   'super-configs/tsconfig/expo',
+  'super-configs/tsconfig/next',
   'super-configs/tsconfig/react-native',
 ]) {
   assert(readme.includes(documentedValue), `README must document ${documentedValue}`);

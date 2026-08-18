@@ -25,8 +25,8 @@
 [![TypeDoc](https://img.shields.io/badge/docs-TypeDoc-9600ff)](https://typedoc.org/)
 
 Shared ESLint, Biome, TypeScript, Jest, Vitest, Commitlint, Markdownlint, Stylelint, TypeDoc, and
-legacy Prettier configurations for JavaScript, React, React Native, Expo, Node.js, Browser, Bun,
-CSS, and Markdown projects.
+legacy Prettier configurations for JavaScript, React, Next.js, React Native, Expo, Node.js,
+Browser, Bun, CSS, and Markdown projects.
 
 ## Installation
 
@@ -93,6 +93,9 @@ let Expo select versions compatible with the current SDK, as recommended in the
 ```bash
 npx expo install jest-expo jest @types/jest --dev
 ```
+
+The Next.js presets use `eslint-config-next` 16 and expect Next.js 16 to be installed by the
+application. They include the official Core Web Vitals and TypeScript rule sets.
 
 Use Markdownlint for Markdown projects:
 
@@ -174,6 +177,26 @@ Extend the shared preset that matches your project. Define project-specific path
 }
 ```
 
+#### Next.js
+
+The Next.js preset enables the Next TypeScript plugin and the compiler options required by the
+framework. Keep generated route declarations in the project-level `include` list:
+
+```json
+{
+  "extends": "super-configs/tsconfig/next",
+  "include": [
+    "next-env.d.ts",
+    ".next/types/**/*.ts",
+    ".next/dev/types/**/*.ts",
+    "**/*.mts",
+    "**/*.ts",
+    "**/*.tsx"
+  ],
+  "exclude": ["node_modules"]
+}
+```
+
 #### React Native
 
 Install `@react-native/typescript-config` at the version matching React Native, then extend the
@@ -245,14 +268,15 @@ Add companion presets and package scripts when needed:
 ```bash
 super-configs init --runtime bun --language ts --type-checked --vitest --scripts
 super-configs init --react --type-checked --vitest
+super-configs init --next --type-checked --vitest --scripts
 super-configs init --react-native --language ts --type-checked --jest --scripts
 super-configs init --expo --language ts --type-checked --jest --scripts
 ```
 
-`--jest` cannot be combined with `--vitest`. Choose only one of `--react`, `--react-native`, or
-`--expo`; invalid combinations fail before any file is written. `--expo` selects the dedicated
-Expo ESLint preset, the React Native Biome preset, the Expo TSConfig, and, with `--jest`, the Expo
-Jest preset.
+`--jest` cannot be combined with `--vitest`. Choose only one of `--next`, `--react`,
+`--react-native`, or `--expo`; invalid combinations fail before any file is written. `--next`
+selects the Next.js ESLint and TSConfig presets. `--expo` selects the dedicated Expo ESLint preset,
+the React Native Biome preset, the Expo TSConfig, and, with `--jest`, the Expo Jest preset.
 
 ### ESLint
 
@@ -278,6 +302,7 @@ export default createEslintConfig({
 | `language` | `'js' \| 'ts'` | `'ts'` | Base preset language |
 | `typeChecked` | `boolean` | `false` | Type-aware TypeScript rules; requires `language: 'ts'` |
 | `expo` | `boolean` | `false` | Replaces the base preset with the official Expo flat config plus shared rules |
+| `next` | `boolean` | `false` | Replaces the base preset with Next.js Core Web Vitals and TypeScript rules |
 | `react` | `boolean` | `false` | Replaces the base preset with a React JSX/TSX preset; supports type-aware TSX |
 | `reactNative` | `boolean` | `false` | Replaces the base preset with a React Native JSX/TSX preset; supports type-aware TSX |
 | `testFramework` | `'vitest' \| 'jest'` | — | Appends the matching companion preset for `*.test.*` and `*.spec.*` files |
@@ -302,6 +327,26 @@ export default createEslintConfig({
 `react: true` uses the React presets as the base, so they provide their own globals and the
 `runtime` option no longer applies. With TypeScript, `typeChecked: true` selects
 `eslint/react/tsx-type-checked` and enables type-aware rules through the TypeScript project service.
+
+#### Next.js
+
+The Next.js presets compose the official `core-web-vitals` and `typescript` flat configurations,
+including React, React Hooks, JSX accessibility, import, and `@next/next` rules.
+
+```javascript
+// eslint.config.js
+import { createEslintConfig } from 'super-configs/eslint';
+
+export default createEslintConfig({
+  next: true,
+  typeChecked: true,
+  ignores: ['coverage/**'],
+});
+```
+
+Use `super-configs/eslint/next` for the standard preset or
+`super-configs/eslint/next/type-checked` to enable TypeScript project-service rules. Both presets
+ignore `.next/**`, `out/**`, `build/**`, and `next-env.d.ts` through the official configuration.
 
 #### JavaScript
 
@@ -851,6 +896,18 @@ The generated files select `eslint/react-native/tsx-type-checked`,
 `biome/react-native`, `tsconfig/react-native`, and `jest/react-native`. The native TypeScript and
 Jest packages must match the React Native version installed by the application.
 
+### Next.js App
+
+Generate the Core Web Vitals ESLint preset, type-aware TypeScript linting, Biome, and the Next.js
+TSConfig together:
+
+```bash
+super-configs init --next --type-checked --vitest --scripts
+```
+
+The generated TSConfig includes both production and development route declarations from `.next`,
+while the generated ESLint config ignores framework output.
+
 ### Expo App
 
 Use the Expo flag instead of combining it with `--react-native`:
@@ -866,7 +923,7 @@ This uses the dedicated Expo ESLint preset, the React Native Biome preset, plus 
 
 | Export | Description |
 | ------ | ----------- |
-| `super-configs/eslint` | ESLint config factory for Node.js, Browser, Bun, React, React Native, and Expo projects |
+| `super-configs/eslint` | ESLint config factory for Node.js, Browser, Bun, React, Next.js, React Native, and Expo projects |
 | `super-configs/eslint/js` | ESLint configuration for JavaScript |
 | `super-configs/eslint/ts` | ESLint configuration for TypeScript |
 | `super-configs/eslint/ts-type-checked` | Type-aware ESLint configuration for TypeScript |
@@ -881,6 +938,8 @@ This uses the dedicated Expo ESLint preset, the React Native Biome preset, plus 
 | `super-configs/eslint/bun/ts-type-checked` | Type-aware ESLint configuration for Bun TypeScript |
 | `super-configs/eslint/expo` | Project-wide ESLint configuration based on the official Expo flat config |
 | `super-configs/eslint/expo/type-checked` | Expo ESLint configuration with type-aware TypeScript rules |
+| `super-configs/eslint/next` | Next.js Core Web Vitals and TypeScript ESLint configuration |
+| `super-configs/eslint/next/type-checked` | Next.js ESLint configuration with type-aware TypeScript rules |
 | `super-configs/eslint/jest` | ESLint overrides for Jest test files |
 | `super-configs/eslint/vitest` | ESLint overrides for Vitest test files |
 | `super-configs/eslint/react/jsx` | ESLint configuration for React with JSX |
@@ -906,6 +965,7 @@ This uses the dedicated Expo ESLint preset, the React Native Biome preset, plus 
 | `super-configs/tsconfig/react` | TypeScript configuration for React web projects |
 | `super-configs/tsconfig/react-native` | Strict TypeScript configuration for React Native |
 | `super-configs/tsconfig/expo` | Strict TypeScript configuration for Expo |
+| `super-configs/tsconfig/next` | Strict TypeScript configuration with the Next.js plugin and bundler resolution |
 | `super-configs/prettier` | Prettier configuration |
 
 ## Included Rules
@@ -1004,6 +1064,7 @@ Formatting and import organization are handled by Biome, not ESLint.
 - `@eslint/js` - ESLint recommended rules
 - `typescript-eslint` - TypeScript support
 - `eslint-config-expo` - Official Expo globals, extensions, import resolution, and lint rules
+- `eslint-config-next` - Official Next.js Core Web Vitals and TypeScript rules
 - `eslint-plugin-react` - React rules
 - `eslint-plugin-react-hooks` - React Hooks rules
 - `eslint-plugin-jsx-a11y` - JSX accessibility
@@ -1023,6 +1084,13 @@ Formatting and import organization are handled by Biome, not ESLint.
 - Node.js globals scoped to `metro.config.js`
 - Type-aware TypeScript rules through `parserOptions.projectService` in the typed preset
 - Public React Native API imports instead of `react-native/Libraries/**`
+
+### Next.js Rules
+
+- Official `@next/next` Core Web Vitals rules
+- Official React, React Hooks, JSX accessibility, import, and TypeScript rules
+- Type-aware TypeScript rules through `parserOptions.projectService` in the typed preset
+- Framework output and `next-env.d.ts` ignored by default
 
 ### Biome Configuration
 

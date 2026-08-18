@@ -1,6 +1,6 @@
 # ROADMAP
 
-Last updated: 2026-08-17
+Last updated: 2026-08-18
 
 ## Done
 
@@ -10,6 +10,7 @@ Last updated: 2026-08-17
   - `super-configs/tsconfig/react`
   - `super-configs/tsconfig/react-native`
   - `super-configs/tsconfig/expo`
+  - `super-configs/tsconfig/next`
 - Runtime-specific ESLint presets:
   - `super-configs/eslint/node/js`
   - `super-configs/eslint/node/ts`
@@ -24,22 +25,24 @@ Last updated: 2026-08-17
   - `super-configs/eslint/bun/ts-type-checked`
   - `super-configs/eslint/react/tsx-type-checked`
   - `super-configs/eslint/expo/type-checked`
+  - `super-configs/eslint/next/type-checked`
 - Bun test template:
   - `super-configs/bunfig`
   - `super-configs/bunfig.toml`
   - source template at `src/test/bunfig.toml`
 - Composable ESLint config factory:
   - `super-configs/eslint`
-  - `createEslintConfig({ runtime, language, typeChecked, expo, react, reactNative, testFramework,
-    ignores, overrides })`
-  - supports Node.js, Browser, Bun, React, React Native, and Expo
+  - `createEslintConfig({ runtime, language, typeChecked, expo, next, react, reactNative,
+    testFramework, ignores, overrides })`
+  - supports Node.js, Browser, Bun, React, Next.js, React Native, and Expo
   - rejects type-aware JavaScript at runtime
 - Init CLI:
   - local usage: `npx super-configs init`
   - global usage: `super-configs init`
   - creates ESLint, Biome, TypeScript, and optional Jest or Bun starter config files
   - skips existing files unless `--force` is passed
-  - supports companion flags `--vitest`, `--jest`, `--react`, `--react-native`, and `--expo`
+  - supports companion flags `--vitest`, `--jest`, `--next`, `--react`, `--react-native`, and
+    `--expo`
   - supports optional package script insertion with `--scripts`
 - Vitest ESLint preset:
   - `super-configs/eslint/vitest`
@@ -81,6 +84,7 @@ Last updated: 2026-08-17
   - invalid test framework combinations
   - complete React Native and Expo project generation
   - mutually exclusive React, React Native, and Expo project flags
+  - complete Next.js project generation
 - Factory options for companion presets:
   - `createEslintConfig({ testFramework: 'vitest' | 'jest' })` appends the test preset
   - `createEslintConfig({ react: true })` swaps the base preset for `react/tsx` or `react/jsx`
@@ -89,11 +93,13 @@ Last updated: 2026-08-17
     `typeChecked`
   - `createEslintConfig({ expo: true })` selects the project-wide Expo preset and supports
     `typeChecked`
+  - `createEslintConfig({ next: true })` selects Core Web Vitals and supports `typeChecked`
   - order stays ignores, base preset, test framework, overrides
 - Init CLI emits a single factory call:
   - `eslint.config.js` is one `createEslintConfig({ ... })` call with no companion imports
   - `--react` maps to `react: true`, omits `runtime`, and preserves enabled `typeChecked`
   - `--expo` maps to `expo: true` instead of falling back to React Native ESLint
+  - `--next` maps to `next: true` and generates `tsconfig/next`
   - `--vitest` and `--jest` map to `testFramework`
   - `--react --type-checked` selects the type-aware React TSX preset
   - README recipes use the same single-call shape
