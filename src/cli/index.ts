@@ -152,10 +152,6 @@ export const parseArgs = (
     throw new Error('choose one of --react, --react-native, or --expo');
   }
 
-  if (options.react && options.typeChecked) {
-    throw new Error('--type-checked is not supported with --react');
-  }
-
   return { command, options, help };
 };
 
@@ -242,7 +238,7 @@ export const createEslintConfig = (options: InitOptions): string => {
         ? ['reactNative: true']
         : [`runtime: '${options.runtime}'`]),
     `language: '${options.language}'`,
-    ...(options.react ? [] : [`typeChecked: ${options.typeChecked}`]),
+    ...(options.react && !options.typeChecked ? [] : [`typeChecked: ${options.typeChecked}`]),
     ...(testFramework === undefined ? [] : [`testFramework: '${testFramework}'`]),
     `ignores: ${ignores}`,
   ];

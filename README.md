@@ -243,15 +243,14 @@ Add companion presets and package scripts when needed:
 
 ```bash
 super-configs init --runtime bun --language ts --type-checked --vitest --scripts
-super-configs init --react --vitest
+super-configs init --react --type-checked --vitest
 super-configs init --react-native --language ts --type-checked --jest --scripts
 super-configs init --expo --language ts --type-checked --jest --scripts
 ```
 
-`--react` cannot be combined with `--type-checked`, and `--jest` cannot be combined with
-`--vitest`. Choose only one of `--react`, `--react-native`, or `--expo`; invalid combinations fail
-before any file is written. `--expo` reuses the React Native ESLint and Biome presets while
-selecting the Expo TSConfig and, with `--jest`, the Expo Jest preset.
+`--jest` cannot be combined with `--vitest`. Choose only one of `--react`, `--react-native`, or
+`--expo`; invalid combinations fail before any file is written. `--expo` reuses the React Native
+ESLint and Biome presets while selecting the Expo TSConfig and, with `--jest`, the Expo Jest preset.
 
 ### ESLint
 
@@ -276,7 +275,7 @@ export default createEslintConfig({
 | `runtime` | `'node' \| 'browser' \| 'bun'` | `'node'` | Runtime globals for the base preset |
 | `language` | `'js' \| 'ts'` | `'ts'` | Base preset language |
 | `typeChecked` | `boolean` | `false` | Type-aware TypeScript rules; requires `language: 'ts'` |
-| `react` | `boolean` | `false` | Replaces the base preset with `react/tsx` (or `react/jsx` for `language: 'js'`) |
+| `react` | `boolean` | `false` | Replaces the base preset with a React JSX/TSX preset; supports type-aware TSX |
 | `reactNative` | `boolean` | `false` | Replaces the base preset with a React Native JSX/TSX preset; supports type-aware TSX |
 | `testFramework` | `'vitest' \| 'jest'` | — | Appends the matching companion preset for `*.test.*` and `*.spec.*` files |
 | `ignores` | `string[]` | `[]` | Prepended as a global ignores entry |
@@ -291,15 +290,15 @@ import { createEslintConfig } from 'super-configs/eslint';
 
 export default createEslintConfig({
   react: true,
+  typeChecked: true,
   testFramework: 'vitest',
   ignores: ['dist/**', 'coverage/**', 'storybook-static/**'],
 });
 ```
 
 `react: true` uses the React presets as the base, so they provide their own globals and the
-`runtime` option no longer applies. `typeChecked` is rejected with `react: true` because no
-type-aware React preset exists yet; compose `eslint/react/tsx` with your own type-aware entry if
-you need it.
+`runtime` option no longer applies. With TypeScript, `typeChecked: true` selects
+`eslint/react/tsx-type-checked` and enables type-aware rules through the TypeScript project service.
 
 #### JavaScript
 
@@ -439,6 +438,21 @@ export default [
     ignores: ['dist/**', 'coverage/**', 'storybook-static/**', 'node_modules/**'],
   },
   ...eslintReactTsx,
+];
+```
+
+For type-aware React and TypeScript rules, use the dedicated preset. Ensure the project TSConfig
+includes every file linted by ESLint.
+
+```javascript
+// eslint.config.js
+import eslintReactTsxTypeChecked from 'super-configs/eslint/react/tsx-type-checked';
+
+export default [
+  {
+    ignores: ['dist/**', 'coverage/**', 'storybook-static/**', 'node_modules/**'],
+  },
+  ...eslintReactTsxTypeChecked,
 ];
 ```
 
@@ -783,6 +797,7 @@ import { createEslintConfig } from 'super-configs/eslint';
 export default createEslintConfig({
   language: 'ts',
   react: true,
+  typeChecked: true,
   testFramework: 'vitest',
   ignores: ['dist/**', 'coverage/**', 'storybook-static/**'],
 });
@@ -843,6 +858,7 @@ generated TSConfig includes `.expo/types/**/*.ts` and `expo-env.d.ts`.
 | `super-configs/eslint/vitest` | ESLint overrides for Vitest test files |
 | `super-configs/eslint/react/jsx` | ESLint configuration for React with JSX |
 | `super-configs/eslint/react/tsx` | ESLint configuration for React with TSX |
+| `super-configs/eslint/react/tsx-type-checked` | Type-aware ESLint configuration for React with TSX |
 | `super-configs/eslint/react-native/jsx` | ESLint configuration for React Native with JSX |
 | `super-configs/eslint/react-native/tsx` | ESLint configuration for React Native with TSX |
 | `super-configs/eslint/react-native/tsx-type-checked` | Type-aware ESLint configuration for React Native with TSX |

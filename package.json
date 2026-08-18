@@ -82,6 +82,10 @@
       "types": "./lib/eslint/react/tsx/index.d.ts",
       "import": "./lib/eslint/react/tsx/index.js"
     },
+    "./eslint/react/tsx-type-checked": {
+      "types": "./lib/eslint/react/tsx-type-checked/index.d.ts",
+      "import": "./lib/eslint/react/tsx-type-checked/index.js"
+    },
     "./eslint/react-native/jsx": {
       "types": "./lib/eslint/react-native/jsx/index.d.ts",
       "import": "./lib/eslint/react-native/jsx/index.js"

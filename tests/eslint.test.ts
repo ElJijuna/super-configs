@@ -18,6 +18,7 @@ import {
   eslintReactNativeTsx,
   eslintReactNativeTsxTypeChecked,
   eslintReactTsx,
+  eslintReactTsxTypeChecked,
   eslintTs,
   eslintTsTypeChecked,
   eslintVitest,
@@ -42,6 +43,7 @@ const presets = [
   eslintReactNativeTsx,
   eslintReactNativeTsxTypeChecked,
   eslintReactTsx,
+  eslintReactTsxTypeChecked,
   eslintTs,
   eslintTsTypeChecked,
   eslintVitest,
@@ -144,6 +146,22 @@ describe('public configuration exports', () => {
     ).toBe(true);
   });
 
+  it('enables project-service rules for type-checked React', () => {
+    expect(
+      eslintReactTsxTypeChecked.some(
+        (entry) => entry.languageOptions?.parserOptions?.projectService === true,
+      ),
+    ).toBe(true);
+    expect(
+      eslintReactTsxTypeChecked.some(
+        (entry) => entry.rules?.['@typescript-eslint/no-floating-promises'] === 'error',
+      ),
+    ).toBe(true);
+    expect(eslintReactTsxTypeChecked.every((entry) => entry.files?.includes('**/*.tsx'))).toBe(
+      true,
+    );
+  });
+
   it('exports the legacy Prettier configuration', () => {
     expect(prettierConfig).toMatchObject({
       printWidth: 100,
@@ -237,10 +255,11 @@ describe('createEslintConfig', () => {
   });
 
   it.each([
-    ['ts', 'super-configs/react-tsx'],
-    ['js', 'super-configs/react-jsx'],
-  ] as const)('replaces the base preset with React for %s', (language, expectedName) => {
-    const config = createEslintConfig({ language, react: true });
+    ['ts', false, 'super-configs/react-tsx'],
+    ['ts', true, 'super-configs/react-tsx-type-checked'],
+    ['js', false, 'super-configs/react-jsx'],
+  ] as const)('replaces the base preset with React for %s and typeChecked=%s', (language, typeChecked, expectedName) => {
+    const config = createEslintConfig({ language, react: true, typeChecked });
 
     expect(config.at(-1)?.name).toBe(expectedName);
     expect(config.some((item) => item.name?.startsWith('super-configs/node-'))).toBe(false);
@@ -273,11 +292,5 @@ describe('createEslintConfig', () => {
     expect(config[0]).toEqual({ name: 'super-configs/ignores', ignores: ['dist/**'] });
     expect(config.some((item) => item.name === 'super-configs/react-tsx')).toBe(true);
     expect(config.at(-1)?.name).toBe('super-configs/jest');
-  });
-
-  it('rejects type-aware linting for React', () => {
-    expect(() => createEslintConfig({ react: true, typeChecked: true })).toThrowError(
-      'typeChecked is not supported when react is enabled',
-    );
   });
 });

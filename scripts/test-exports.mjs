@@ -50,6 +50,7 @@ for (const name of [
   'eslintReactNativeTsx',
   'eslintReactNativeTsxTypeChecked',
   'eslintReactTsx',
+  'eslintReactTsxTypeChecked',
   'eslintTs',
   'eslintTsTypeChecked',
   'eslintVitest',
@@ -74,6 +75,7 @@ for (const specifier of [
   '../lib/eslint/react-native/tsx/index.js',
   '../lib/eslint/react-native/tsx-type-checked/index.js',
   '../lib/eslint/react/tsx/index.js',
+  '../lib/eslint/react/tsx-type-checked/index.js',
   '../lib/eslint/ts/index.js',
   '../lib/eslint/vitest/index.js',
   '../lib/prettier/index.js',
@@ -218,10 +220,20 @@ const reactFactoryConfig = eslintFactoryModule.createEslintConfig({
   react: true,
   testFramework: 'vitest',
 });
+const typeCheckedReactFactoryConfig = eslintFactoryModule.createEslintConfig({
+  react: true,
+  typeChecked: true,
+});
 
 assert(
   reactFactoryConfig.some((entry) => entry.name === 'super-configs/react-tsx'),
   'factory react option must use the React TSX preset',
+);
+assert(
+  typeCheckedReactFactoryConfig.some(
+    (entry) => entry.name === 'super-configs/react-tsx-type-checked',
+  ),
+  'factory react option must use the type-checked React TSX preset',
 );
 
 for (const [language, typeChecked, expectedName] of [
@@ -264,23 +276,12 @@ assert(
   'factory react option must use the React JSX preset for JavaScript',
 );
 
-try {
-  eslintFactoryModule.createEslintConfig({ react: true, typeChecked: true });
-
-  throw new Error('factory must reject type-checked React');
-} catch (error) {
-  assert(
-    error instanceof TypeError &&
-      error.message === 'typeChecked is not supported when react is enabled',
-    'factory must reject type-checked React',
-  );
-}
-
 for (const specifier of [
   'super-configs/eslint/browser/ts-type-checked',
   'super-configs/eslint/bun/ts-type-checked',
   'super-configs/eslint/node/ts-type-checked',
   'super-configs/eslint/react-native/tsx-type-checked',
+  'super-configs/eslint/react/tsx-type-checked',
   'super-configs/eslint/ts-type-checked',
 ]) {
   const config = await importDefault(specifier);
@@ -313,6 +314,7 @@ for (const [specifier, filePath] of [
   ['super-configs/eslint/react-native/tsx', 'fixture.native.tsx'],
   ['super-configs/eslint/react-native/tsx-type-checked', 'src/eslint/index.ts'],
   ['super-configs/eslint/react/tsx', 'fixture.tsx'],
+  ['super-configs/eslint/react/tsx-type-checked', 'src/index.ts'],
   ['super-configs/eslint/ts', 'fixture.ts'],
   ['super-configs/eslint/ts-type-checked', 'fixture.ts'],
 ]) {
@@ -349,6 +351,11 @@ for (const [specifier, filePath, code] of [
     'super-configs/eslint/react/tsx',
     'fixture.tsx',
     'export const Component = () => <button type="button">OK</button>;\n',
+  ],
+  [
+    'super-configs/eslint/react/tsx-type-checked',
+    'src/index.ts',
+    'export const value: number = 1;\n',
   ],
   [
     'super-configs/eslint/react-native/jsx',
@@ -535,6 +542,7 @@ for (const documentedValue of [
   'super-configs/eslint/react-native/jsx',
   'super-configs/eslint/react-native/tsx',
   'super-configs/eslint/react-native/tsx-type-checked',
+  'super-configs/eslint/react/tsx-type-checked',
   'super-configs/jest/expo',
   'super-configs/jest/react-native',
   'super-configs/tsconfig/expo',

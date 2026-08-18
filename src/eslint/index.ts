@@ -3,6 +3,7 @@ import eslintJestConfig from '@/eslint/jest/index.js';
 import { createEslintJsConfig } from '@/eslint/js/create-config.js';
 import eslintReactJsxConfig from '@/eslint/react/jsx/index.js';
 import eslintReactTsxConfig from '@/eslint/react/tsx/index.js';
+import eslintReactTsxTypeCheckedConfig from '@/eslint/react/tsx-type-checked/index.js';
 import eslintReactNativeJsxConfig from '@/eslint/react-native/jsx/index.js';
 import eslintReactNativeTsxConfig from '@/eslint/react-native/tsx/index.js';
 import eslintReactNativeTsxTypeCheckedConfig from '@/eslint/react-native/tsx-type-checked/index.js';
@@ -43,8 +44,13 @@ const getRuntimeGlobals = (runtime: EslintRuntime): Linter.Globals => {
       return nodeGlobals;
   }
 };
-const getReactConfig = (language: EslintLanguage): Linter.Config[] =>
-  language === 'js' ? eslintReactJsxConfig : eslintReactTsxConfig;
+const getReactConfig = (language: EslintLanguage, typeChecked: boolean): Linter.Config[] => {
+  if (language === 'js') {
+    return eslintReactJsxConfig;
+  }
+
+  return typeChecked ? eslintReactTsxTypeCheckedConfig : eslintReactTsxConfig;
+};
 const getReactNativeConfig = (language: EslintLanguage, typeChecked: boolean): Linter.Config[] => {
   if (language === 'js') {
     return eslintReactNativeJsxConfig;
@@ -71,10 +77,6 @@ export const createEslintConfig = (options: CreateEslintConfigOptions = {}): Lin
     throw new TypeError('typeChecked is only supported when language is "ts"');
   }
 
-  if (react && typeChecked) {
-    throw new TypeError('typeChecked is not supported when react is enabled');
-  }
-
   if (react && reactNative) {
     throw new TypeError('react and reactNative cannot be enabled together');
   }
@@ -82,7 +84,7 @@ export const createEslintConfig = (options: CreateEslintConfigOptions = {}): Lin
   const runtimeGlobals = getRuntimeGlobals(runtime);
   const name = `super-configs/${runtime}-${language}${typeChecked ? '-type-checked' : ''}`;
   const baseConfig = react
-    ? getReactConfig(language)
+    ? getReactConfig(language, typeChecked)
     : reactNative
       ? getReactNativeConfig(language, typeChecked)
       : language === 'js'

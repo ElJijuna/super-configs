@@ -74,6 +74,10 @@ describe('CLI argument parsing', () => {
     });
     expect(parseArgs(['--help']).help).toBe(true);
     expect(parseArgs(['init', '--type-checked']).options.typeChecked).toBe(true);
+    expect(parseArgs(['init', '--react', '--type-checked']).options).toMatchObject({
+      react: true,
+      typeChecked: true,
+    });
     expect(parseArgs(['init', '--react-native']).options.reactNative).toBe(true);
     expect(parseArgs(['init', '--expo']).options.expo).toBe(true);
   });
@@ -85,7 +89,6 @@ describe('CLI argument parsing', () => {
     [['init', '--language', 'js', '--type-checked'], '--type-checked requires --language ts'],
     [['init', '--jest', '--vitest'], 'choose either --jest or --vitest, not both'],
     [['init', '--language', 'js', '--react'], '--react requires --language ts'],
-    [['init', '--react', '--type-checked'], '--type-checked is not supported with --react'],
     [['init', '--react', '--react-native'], 'choose one of --react, --react-native, or --expo'],
     [['init', '--react-native', '--expo'], 'choose one of --react, --react-native, or --expo'],
   ])('rejects invalid arguments: %s', (args, message) => {
@@ -101,6 +104,7 @@ describe('CLI templates', () => {
     [{ ...defaultOptions, react: true, vitest: true }, "testFramework: 'vitest'"],
     [{ ...defaultOptions, react: true, jest: true }, "testFramework: 'jest'"],
     [{ ...defaultOptions, react: true }, 'react: true'],
+    [{ ...defaultOptions, react: true, typeChecked: true }, 'typeChecked: true'],
     [{ ...defaultOptions, reactNative: true }, 'reactNative: true'],
     [{ ...defaultOptions, reactNative: true, typeChecked: true }, 'typeChecked: true'],
     [{ ...defaultOptions, expo: true }, 'reactNative: true'],
@@ -130,6 +134,18 @@ export default createEslintConfig({
     expect(config).toContain('storybook-static/**');
     expect(config).not.toContain('runtime:');
     expect(config).not.toContain('typeChecked:');
+  });
+
+  it('omits runtime and preserves typeChecked in the React template when enabled', () => {
+    const config = createEslintConfig({
+      ...defaultOptions,
+      react: true,
+      typeChecked: true,
+    });
+
+    expect(config).toContain('react: true');
+    expect(config).toContain('typeChecked: true');
+    expect(config).not.toContain('runtime:');
   });
 
   it('omits runtime and preserves typeChecked in the React Native template', () => {

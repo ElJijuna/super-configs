@@ -22,6 +22,7 @@ Last updated: 2026-08-17
   - `super-configs/eslint/node/ts-type-checked`
   - `super-configs/eslint/browser/ts-type-checked`
   - `super-configs/eslint/bun/ts-type-checked`
+  - `super-configs/eslint/react/tsx-type-checked`
 - Bun test template:
   - `super-configs/bunfig`
   - `super-configs/bunfig.toml`
@@ -67,6 +68,7 @@ Last updated: 2026-08-17
   - published CLI bin file
   - Jest vs Vitest ESLint globals
   - React Native ESLint globals, platform filenames, deep imports, and type-aware rules
+  - React type-aware parser service and rules
   - React Native Biome diagnostics and native Jest/TypeScript preset mappings
 - Dedicated CLI smoke tests cover:
   - CLI help output
@@ -78,15 +80,15 @@ Last updated: 2026-08-17
 - Factory options for companion presets:
   - `createEslintConfig({ testFramework: 'vitest' | 'jest' })` appends the test preset
   - `createEslintConfig({ react: true })` swaps the base preset for `react/tsx` or `react/jsx`
+    and supports type-aware TSX
   - `createEslintConfig({ reactNative: true })` selects native JSX or TSX and supports
     `typeChecked`
-  - rejects `typeChecked` with `react` because no type-aware React preset exists
   - order stays ignores, base preset, test framework, overrides
 - Init CLI emits a single factory call:
   - `eslint.config.js` is one `createEslintConfig({ ... })` call with no companion imports
-  - `--react` maps to `react: true` and omits `runtime` and `typeChecked`
+  - `--react` maps to `react: true`, omits `runtime`, and preserves enabled `typeChecked`
   - `--vitest` and `--jest` map to `testFramework`
-  - `--react --type-checked` is rejected at parse time instead of silently dropping the flag
+  - `--react --type-checked` selects the type-aware React TSX preset
   - README recipes use the same single-call shape
 
 ## Next

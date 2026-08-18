@@ -170,10 +170,20 @@ assert(
 const typeCheckedReactCliTarget = await mkdtemp(join(tmpdir(), 'super-configs-react-tc-cli-'));
 const typeCheckedReactCli = runCliInit(typeCheckedReactCliTarget, '--react', '--type-checked');
 
-assert(typeCheckedReactCli.status === 1, 'CLI must reject --react with --type-checked');
 assert(
-  typeCheckedReactCli.stderr.includes('--type-checked is not supported with --react'),
-  'CLI must explain the type-checked React rejection',
+  typeCheckedReactCli.status === 0,
+  `Type-checked React CLI init must succeed: ${typeCheckedReactCli.stderr}`,
+);
+
+const typeCheckedReactCliEslint = await readFile(
+  join(typeCheckedReactCliTarget, 'eslint.config.js'),
+  'utf8',
+);
+
+assert(
+  typeCheckedReactCliEslint.includes('react: true') &&
+    typeCheckedReactCliEslint.includes('typeChecked: true'),
+  'CLI --react --type-checked must enable the type-checked React preset',
 );
 
 const jsCliTarget = await mkdtemp(join(tmpdir(), 'super-configs-js-cli-'));
