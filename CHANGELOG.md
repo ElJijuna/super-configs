@@ -1,3 +1,9 @@
+## [1.23.0](https://github.com/ElJijuna/super-configs/compare/v1.22.0...v1.23.0) (2026-08-21)
+
+### Features
+
+* update TypeScript and ESLint configurations for improved compatibility and add type-checking script ([8d86e14](https://github.com/ElJijuna/super-configs/commit/8d86e14ef46d4af88d97c956e7414bcccf18d3d0))
+
 ## [1.22.0](https://github.com/ElJijuna/super-configs/compare/v1.21.0...v1.22.0) (2026-08-18)
 
 ### Features
