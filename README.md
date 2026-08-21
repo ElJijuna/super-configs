@@ -42,11 +42,22 @@ bun add super-configs -D
 
 ### Peer Dependencies
 
-This package requires the following peer dependencies:
+TypeScript 7 is the recommended compiler. TypeScript 7.0 does not yet expose a programmatic API,
+so tools such as typescript-eslint, TypeDoc, and ts-jest still need TypeScript 6 under the standard
+`typescript` package name. Install both versions with the aliases recommended by the TypeScript
+team:
 
 ```bash
-npm install eslint@^10 typescript@^6 --save-dev
+npm install \
+  eslint@^10 \
+  typescript@npm:@typescript/typescript6@^6.0.2 \
+  @typescript/native@npm:typescript@^7.0.2 \
+  --save-dev
 ```
+
+With this setup, `tsc` runs TypeScript 7 and `tsc6` runs TypeScript 6. The TypeScript 6 alias is a
+temporary compatibility layer and can be removed once the API-dependent tools support TypeScript
+7.1 or newer.
 
 ESLint 10 requires Node.js 20.19+, 22.13+, or 24+; odd-numbered Node.js releases are not
 supported.
@@ -57,19 +68,14 @@ The Node.js TypeScript preset also requires Node.js declarations:
 npm install @types/node --save-dev
 ```
 
-TypeScript 6 consumers can keep using the standard `typescript` package. To compile with
-TypeScript 7 while keeping TypeScript 6 available to tools such as typescript-eslint, TypeDoc,
-and ts-jest, install both versions with aliases:
+Projects that are not ready for the native compiler can keep using TypeScript 6 only:
 
 ```bash
-npm install \
-  typescript@npm:@typescript/typescript6@^6.0.2 \
-  @typescript/native@npm:typescript@^7.0.2 \
-  --save-dev
+npm install eslint@^10 typescript@^6 --save-dev
 ```
 
-With this setup, `tsc` runs TypeScript 7 and `tsc6` runs TypeScript 6. Consumers are not required
-to migrate to TypeScript 7.
+The published presets remain compatible with TypeScript 5 and 6; adopting TypeScript 7 is not
+required for consumers.
 
 Biome, Commitlint, Jest, Vitest, Markdownlint, Stylelint, TypeDoc, and Prettier are optional peers.
 Use Biome for new projects:
@@ -228,7 +234,14 @@ Include Expo's generated declarations in the project config:
 Install the shared config and the peer tools used by your project:
 
 ```bash
-npm install super-configs eslint@^10 typescript@^6 @types/node @biomejs/biome --save-dev
+npm install \
+  super-configs \
+  eslint@^10 \
+  typescript@npm:@typescript/typescript6@^6.0.2 \
+  @typescript/native@npm:typescript@^7.0.2 \
+  @types/node \
+  @biomejs/biome \
+  --save-dev
 ```
 
 Add scripts to your `package.json`:
@@ -1143,7 +1156,10 @@ npm run lint
 # Format code
 npm run format
 
-# Type-check with the TypeScript 6 compiler
+# Type-check with the TypeScript 7 compiler
+npm run typecheck
+
+# Check compatibility with the TypeScript 6 API/tooling compiler
 npm run typecheck:ts6
 
 # Run the unit tests
@@ -1162,10 +1178,10 @@ npm run test:cli
 npm run check
 ```
 
-`npm run check` is the required regression suite: it runs lint, Biome, the TypeScript 6 type check,
-the build, the unit tests, export verification, and the CLI smoke tests, in that order. It does not
-enforce coverage thresholds — run `npm run test:coverage` for those. Run `npm run pack:check` as
-well whenever package exports or published files change.
+`npm run check` is the required regression suite: it runs lint, Biome, the TypeScript 6
+compatibility check, the TypeScript 7 build, the unit tests, export verification, and the CLI smoke
+tests, in that order. It does not enforce coverage thresholds — run `npm run test:coverage` for
+those. Run `npm run pack:check` as well whenever package exports or published files change.
 
 ## Changelog
 

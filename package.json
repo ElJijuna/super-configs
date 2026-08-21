@@ -162,6 +162,7 @@
     "test:coverage": "vitest run --config vitest.repo.config.ts --coverage",
     "test:exports": "node scripts/test-exports.mjs",
     "test:cli": "node scripts/test-cli.mjs",
+    "typecheck": "tsc --noEmit",
     "typecheck:ts6": "tsc6 --noEmit",
     "pack:check": "npm --cache /private/tmp/npm-cache-super-configs pack --dry-run",
     "lint": "eslint .",
@@ -306,7 +307,7 @@
     "eslint-plugin-react": "^7.37.5",
     "eslint-plugin-react-hooks": "^7.1.1",
     "globals": "^16.5.0",
-    "typescript-eslint": "^8.63.0"
+    "typescript-eslint": "^8.67.0"
   },
   "devDependencies": {
     "@biomejs/biome": "^2.5.3",
