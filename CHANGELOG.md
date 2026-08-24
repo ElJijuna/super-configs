@@ -1,3 +1,9 @@
+## [1.24.0](https://github.com/ElJijuna/super-configs/compare/v1.23.0...v1.24.0) (2026-08-24)
+
+### Features
+
+* update TypeScript peer dependency to support versions 5, 6, and 7 ([8c0972f](https://github.com/ElJijuna/super-configs/commit/8c0972fc6e4c44c8df7cdaa9bd1a36fa6f375581))
+
 ## [1.23.0](https://github.com/ElJijuna/super-configs/compare/v1.22.0...v1.23.0) (2026-08-21)
 
 ### Features
