@@ -74,8 +74,9 @@ Projects that are not ready for the native compiler can keep using TypeScript 6 
 npm install eslint@^10 typescript@^6 --save-dev
 ```
 
-The published presets remain compatible with TypeScript 5 and 6; adopting TypeScript 7 is not
-required for consumers.
+The published presets support TypeScript 5, 6.0, and 7. The optional TypeScript peer declares that
+range explicitly: `>=5.0.0 <6.1.0 || >=7.0.0 <8.0.0`. Consumers using TypeScript 7 with
+API-dependent tools still need the side-by-side TypeScript 6 compatibility package shown above.
 
 Biome, Commitlint, Jest, Vitest, Markdownlint, Stylelint, TypeDoc, and Prettier are optional peers.
 Use Biome for new projects:
