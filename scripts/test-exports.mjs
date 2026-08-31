@@ -1,5 +1,15 @@
 import { spawnSync } from 'node:child_process';
-import { access, readdir, readFile, rm, writeFile } from 'node:fs/promises';
+import {
+  access,
+  mkdir,
+  mkdtemp,
+  readdir,
+  readFile,
+  rm,
+  symlink,
+  writeFile,
+} from 'node:fs/promises';
+import { tmpdir } from 'node:os';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { ESLint } from 'eslint';
@@ -506,8 +516,10 @@ const reactNativeBiomeUrl = import.meta.resolve('super-configs/biome/react-nativ
 const reactNativeBiomeConfig = JSON.parse(await readFile(new URL(reactNativeBiomeUrl), 'utf8'));
 
 assert(
-  reactNativeBiomeConfig.extends?.includes('./biome.json'),
-  'super-configs/biome/react-native must extend the base Biome preset',
+  reactNativeBiomeConfig.formatter?.indentStyle === 'space' &&
+    reactNativeBiomeConfig.formatter?.indentWidth === 2 &&
+    reactNativeBiomeConfig.javascript?.formatter?.quoteStyle === 'single',
+  'super-configs/biome/react-native must include the base formatter settings',
 );
 
 for (const [rule, level] of [
@@ -523,6 +535,9 @@ for (const [rule, level] of [
 }
 
 const biomeEntrypoint = join(root, 'node_modules/@biomejs/biome/bin/biome');
+const biomeConsumerFixtureDirectory = await mkdtemp(join(tmpdir(), 'super-configs-biome-'));
+const biomeConsumerConfigPath = join(biomeConsumerFixtureDirectory, 'biome.json');
+const biomeConsumerSourcePath = join(biomeConsumerFixtureDirectory, 'input.js');
 const biomeFixturePath = join(root, '.react-native-biome-fixture.tsx');
 const biomeFixture = `import InternalView from 'react-native/Libraries/Components/View/View';
 import { ProgressBarAndroid, StyleSheet, View } from 'react-native';
@@ -539,8 +554,33 @@ export const Screen = () => (
 `;
 
 let reactNativeLint;
+let reactNativeFormat;
+let reactNativeFormattedSource;
 
 try {
+  await mkdir(join(biomeConsumerFixtureDirectory, 'node_modules'));
+  await symlink(root, join(biomeConsumerFixtureDirectory, 'node_modules/super-configs'), 'dir');
+  await writeFile(
+    biomeConsumerConfigPath,
+    JSON.stringify({ extends: ['super-configs/biome/react-native'] }),
+  );
+  await writeFile(
+    biomeConsumerSourcePath,
+    'const greeting = "hello";\nfunction greet() {\nconsole.log(greeting);\n}\n',
+  );
+  reactNativeFormat = spawnSync(
+    process.execPath,
+    [
+      biomeEntrypoint,
+      'format',
+      '--config-path',
+      biomeConsumerConfigPath,
+      biomeConsumerSourcePath,
+      '--write',
+    ],
+    { encoding: 'utf8' },
+  );
+  reactNativeFormattedSource = await readFile(biomeConsumerSourcePath, 'utf8');
   await writeFile(biomeFixturePath, biomeFixture);
   reactNativeLint = spawnSync(
     process.execPath,
@@ -555,11 +595,18 @@ try {
     { encoding: 'utf8' },
   );
 } finally {
+  await rm(biomeConsumerFixtureDirectory, { force: true, recursive: true });
   await rm(biomeFixturePath, { force: true });
 }
 
 const reactNativeLintOutput = `${reactNativeLint.stdout}${reactNativeLint.stderr}`;
 
+assert(reactNativeFormat.status === 0, 'React Native Biome fixture must format successfully');
+assert(
+  reactNativeFormattedSource ===
+    "const greeting = 'hello';\nfunction greet() {\n  console.log(greeting);\n}\n",
+  'super-configs/biome/react-native must inherit single quotes and two-space indentation',
+);
 assert(reactNativeLint.status === 1, 'React Native Biome fixture must produce diagnostics');
 
 for (const rule of [
