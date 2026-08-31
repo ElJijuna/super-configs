@@ -1,3 +1,9 @@
+## [1.25.0](https://github.com/ElJijuna/super-configs/compare/v1.24.0...v1.25.0) (2026-08-31)
+
+### Features
+
+* enhance biome configuration and testing for React Native compatibility ([6ccdb2c](https://github.com/ElJijuna/super-configs/commit/6ccdb2cf6e22be457eef603cdc51a8511167ad6e))
+
 ## [1.24.0](https://github.com/ElJijuna/super-configs/compare/v1.23.0...v1.24.0) (2026-08-24)
 
 ### Features
