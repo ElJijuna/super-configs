@@ -1,8 +1,8 @@
 {
-  "$schema": "https://json.schemastore.org/tsconfig",
-  "display": "super-configs Expo",
-  "extends": "expo/tsconfig.base",
-  "compilerOptions": {
-    "strict": true
-  }
+    "$schema": "https://json.schemastore.org/tsconfig",
+    "display": "super-configs Expo",
+    "extends": "expo/tsconfig.base",
+    "compilerOptions": {
+        "strict": true
+    }
 }

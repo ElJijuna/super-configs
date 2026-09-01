@@ -1,344 +1,344 @@
 {
-  "name": "super-configs",
-  "version": "1.25.0",
-  "description": "Shared ESLint, Biome, TypeScript, Jest, Vitest, and formatting configurations for JavaScript, React, Next.js, React Native, Expo, Node.js, Browser, and Bun projects",
-  "main": "./lib/index.js",
-  "module": "./lib/index.js",
-  "types": "./lib/index.d.ts",
-  "type": "module",
-  "bin": {
-    "super-configs": "./lib/cli/index.js"
-  },
-  "exports": {
-    ".": {
-      "types": "./lib/index.d.ts",
-      "import": "./lib/index.js"
+    "name": "super-configs",
+    "version": "1.25.0",
+    "description": "Shared ESLint, Biome, TypeScript, Jest, Vitest, and formatting configurations for JavaScript, React, Next.js, React Native, Expo, Node.js, Browser, and Bun projects",
+    "main": "./lib/index.js",
+    "module": "./lib/index.js",
+    "types": "./lib/index.d.ts",
+    "type": "module",
+    "bin": {
+        "super-configs": "./lib/cli/index.js"
     },
-    "./eslint": {
-      "types": "./lib/eslint/index.d.ts",
-      "import": "./lib/eslint/index.js"
+    "exports": {
+        ".": {
+            "types": "./lib/index.d.ts",
+            "import": "./lib/index.js"
+        },
+        "./eslint": {
+            "types": "./lib/eslint/index.d.ts",
+            "import": "./lib/eslint/index.js"
+        },
+        "./eslint/js": {
+            "types": "./lib/eslint/js/index.d.ts",
+            "import": "./lib/eslint/js/index.js"
+        },
+        "./eslint/ts": {
+            "types": "./lib/eslint/ts/index.d.ts",
+            "import": "./lib/eslint/ts/index.js"
+        },
+        "./eslint/ts-type-checked": {
+            "types": "./lib/eslint/ts-type-checked/index.d.ts",
+            "import": "./lib/eslint/ts-type-checked/index.js"
+        },
+        "./eslint/expo": {
+            "types": "./lib/eslint/expo/index.d.ts",
+            "import": "./lib/eslint/expo/index.js"
+        },
+        "./eslint/expo/type-checked": {
+            "types": "./lib/eslint/expo/type-checked/index.d.ts",
+            "import": "./lib/eslint/expo/type-checked/index.js"
+        },
+        "./eslint/next": {
+            "types": "./lib/eslint/next/index.d.ts",
+            "import": "./lib/eslint/next/index.js"
+        },
+        "./eslint/next/type-checked": {
+            "types": "./lib/eslint/next/type-checked/index.d.ts",
+            "import": "./lib/eslint/next/type-checked/index.js"
+        },
+        "./eslint/browser/js": {
+            "types": "./lib/eslint/browser/js/index.d.ts",
+            "import": "./lib/eslint/browser/js/index.js"
+        },
+        "./eslint/browser/ts": {
+            "types": "./lib/eslint/browser/ts/index.d.ts",
+            "import": "./lib/eslint/browser/ts/index.js"
+        },
+        "./eslint/browser/ts-type-checked": {
+            "types": "./lib/eslint/browser/ts-type-checked/index.d.ts",
+            "import": "./lib/eslint/browser/ts-type-checked/index.js"
+        },
+        "./eslint/bun/js": {
+            "types": "./lib/eslint/bun/js/index.d.ts",
+            "import": "./lib/eslint/bun/js/index.js"
+        },
+        "./eslint/bun/ts": {
+            "types": "./lib/eslint/bun/ts/index.d.ts",
+            "import": "./lib/eslint/bun/ts/index.js"
+        },
+        "./eslint/bun/ts-type-checked": {
+            "types": "./lib/eslint/bun/ts-type-checked/index.d.ts",
+            "import": "./lib/eslint/bun/ts-type-checked/index.js"
+        },
+        "./eslint/node/js": {
+            "types": "./lib/eslint/node/js/index.d.ts",
+            "import": "./lib/eslint/node/js/index.js"
+        },
+        "./eslint/node/ts": {
+            "types": "./lib/eslint/node/ts/index.d.ts",
+            "import": "./lib/eslint/node/ts/index.js"
+        },
+        "./eslint/node/ts-type-checked": {
+            "types": "./lib/eslint/node/ts-type-checked/index.d.ts",
+            "import": "./lib/eslint/node/ts-type-checked/index.js"
+        },
+        "./eslint/jest": {
+            "types": "./lib/eslint/jest/index.d.ts",
+            "import": "./lib/eslint/jest/index.js"
+        },
+        "./eslint/vitest": {
+            "types": "./lib/eslint/vitest/index.d.ts",
+            "import": "./lib/eslint/vitest/index.js"
+        },
+        "./eslint/react/jsx": {
+            "types": "./lib/eslint/react/jsx/index.d.ts",
+            "import": "./lib/eslint/react/jsx/index.js"
+        },
+        "./eslint/react/tsx": {
+            "types": "./lib/eslint/react/tsx/index.d.ts",
+            "import": "./lib/eslint/react/tsx/index.js"
+        },
+        "./eslint/react/tsx-type-checked": {
+            "types": "./lib/eslint/react/tsx-type-checked/index.d.ts",
+            "import": "./lib/eslint/react/tsx-type-checked/index.js"
+        },
+        "./eslint/react-native/jsx": {
+            "types": "./lib/eslint/react-native/jsx/index.d.ts",
+            "import": "./lib/eslint/react-native/jsx/index.js"
+        },
+        "./eslint/react-native/tsx": {
+            "types": "./lib/eslint/react-native/tsx/index.d.ts",
+            "import": "./lib/eslint/react-native/tsx/index.js"
+        },
+        "./eslint/react-native/tsx-type-checked": {
+            "types": "./lib/eslint/react-native/tsx-type-checked/index.d.ts",
+            "import": "./lib/eslint/react-native/tsx-type-checked/index.js"
+        },
+        "./biome": "./biome.json",
+        "./biome/react-native": "./biome.react-native.json",
+        "./bunfig": "./lib/test/bunfig.toml",
+        "./bunfig.toml": "./lib/test/bunfig.toml",
+        "./commitlint": "./commitlint.config.js",
+        "./jest": "./jest.config.js",
+        "./jest/expo": "./jest.expo.config.js",
+        "./jest/react-native": "./jest.react-native.config.js",
+        "./vitest": "./vitest.config.js",
+        "./markdownlint": "./markdownlint.json",
+        "./stylelint": "./stylelint.config.js",
+        "./typedoc": "./typedoc.json",
+        "./tsconfig/base": "./lib/tsconfig/base.json",
+        "./tsconfig/expo": "./lib/tsconfig/expo.json",
+        "./tsconfig/next": "./lib/tsconfig/next.json",
+        "./tsconfig/node": "./lib/tsconfig/node.json",
+        "./tsconfig/react": "./lib/tsconfig/react.json",
+        "./tsconfig/react-native": "./lib/tsconfig/react-native.json",
+        "./prettier": {
+            "types": "./lib/prettier/index.d.ts",
+            "import": "./lib/prettier/index.js"
+        }
     },
-    "./eslint/js": {
-      "types": "./lib/eslint/js/index.d.ts",
-      "import": "./lib/eslint/js/index.js"
+    "files": [
+        "lib",
+        "biome.json",
+        "biome.react-native.json",
+        ".editorconfig",
+        "commitlint.config.js",
+        "jest.config.js",
+        "jest.expo.config.js",
+        "jest.react-native.config.js",
+        "vitest.config.js",
+        "markdownlint.json",
+        "stylelint.config.js",
+        "typedoc.json",
+        "README.md",
+        "CHANGELOG.md"
+    ],
+    "scripts": {
+        "clean": "node -e \"require('node:fs').rmSync('lib', { recursive: true, force: true })\"",
+        "prebuild": "npm run clean",
+        "build": "tsc && tsc-alias && node scripts/copy-static-assets.mjs",
+        "check": "npm run lint && npm run biome:check && npm run typecheck:ts6 && npm run build && npm run test && npm run test:exports && npm run test:cli",
+        "test": "vitest run --config vitest.repo.config.ts",
+        "test:coverage": "vitest run --config vitest.repo.config.ts --coverage",
+        "test:exports": "node scripts/test-exports.mjs",
+        "test:cli": "node scripts/test-cli.mjs",
+        "typecheck": "tsc --noEmit",
+        "typecheck:ts6": "tsc6 --noEmit",
+        "pack:check": "npm --cache /private/tmp/npm-cache-super-configs pack --dry-run",
+        "lint": "eslint .",
+        "lint:fix": "eslint . --fix",
+        "biome:check": "biome check .",
+        "format": "biome format --write .",
+        "format:check": "biome format .",
+        "release": "semantic-release",
+        "prepublishOnly": "npm run build"
     },
-    "./eslint/ts": {
-      "types": "./lib/eslint/ts/index.d.ts",
-      "import": "./lib/eslint/ts/index.js"
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/ElJijuna/super-configs.git"
     },
-    "./eslint/ts-type-checked": {
-      "types": "./lib/eslint/ts-type-checked/index.d.ts",
-      "import": "./lib/eslint/ts-type-checked/index.js"
+    "keywords": [
+        "config",
+        "bun",
+        "bun-config",
+        "commitlint",
+        "eslint",
+        "biome",
+        "prettier",
+        "editorconfig",
+        "jest",
+        "vitest",
+        "markdownlint",
+        "stylelint",
+        "typedoc",
+        "typescript",
+        "react",
+        "next",
+        "nextjs",
+        "react-native",
+        "expo",
+        "eslint-config",
+        "commitlint-config",
+        "prettier-config",
+        "editorconfig-template",
+        "biome-config",
+        "jest-config",
+        "vitest-config",
+        "markdownlint-config",
+        "stylelint-config",
+        "typedoc-config"
+    ],
+    "author": "pilmee <pilmee@gmail.com> (https://github.com/ElJijuna)",
+    "license": "MIT",
+    "bugs": {
+        "url": "https://github.com/ElJijuna/super-configs/issues"
     },
-    "./eslint/expo": {
-      "types": "./lib/eslint/expo/index.d.ts",
-      "import": "./lib/eslint/expo/index.js"
+    "homepage": "https://github.com/ElJijuna/super-configs#readme",
+    "publishConfig": {
+        "access": "public"
     },
-    "./eslint/expo/type-checked": {
-      "types": "./lib/eslint/expo/type-checked/index.d.ts",
-      "import": "./lib/eslint/expo/type-checked/index.js"
+    "engines": {
+        "node": "^20.19.0 || ^22.13.0 || >=24"
     },
-    "./eslint/next": {
-      "types": "./lib/eslint/next/index.d.ts",
-      "import": "./lib/eslint/next/index.js"
+    "peerDependencies": {
+        "@biomejs/biome": ">=2.4.13",
+        "@commitlint/cli": ">=19.0.0",
+        "@commitlint/config-conventional": ">=19.0.0",
+        "@react-native/jest-preset": ">=0.85.0",
+        "@react-native/typescript-config": ">=0.73.0",
+        "@types/node": ">=20.0.0",
+        "eslint": ">=10.0.0 <11.0.0",
+        "expo": ">=50.0.0",
+        "jest": ">=29.0.0",
+        "jest-expo": ">=50.0.0",
+        "markdownlint": ">=0.37.0",
+        "next": ">=16.0.0 <17.0.0",
+        "prettier": ">=3.0.0",
+        "stylelint": ">=16.0.0",
+        "stylelint-config-standard": ">=36.0.0",
+        "ts-jest": ">=29.0.0",
+        "typedoc": ">=0.28.0",
+        "typescript": ">=5.0.0 <6.1.0 || >=7.0.0 <8.0.0",
+        "vitest": ">=2.0.0"
     },
-    "./eslint/next/type-checked": {
-      "types": "./lib/eslint/next/type-checked/index.d.ts",
-      "import": "./lib/eslint/next/type-checked/index.js"
+    "peerDependenciesMeta": {
+        "@commitlint/cli": {
+            "optional": true
+        },
+        "@commitlint/config-conventional": {
+            "optional": true
+        },
+        "@biomejs/biome": {
+            "optional": true
+        },
+        "@react-native/jest-preset": {
+            "optional": true
+        },
+        "@react-native/typescript-config": {
+            "optional": true
+        },
+        "@types/node": {
+            "optional": true
+        },
+        "expo": {
+            "optional": true
+        },
+        "jest": {
+            "optional": true
+        },
+        "jest-expo": {
+            "optional": true
+        },
+        "vitest": {
+            "optional": true
+        },
+        "prettier": {
+            "optional": true
+        },
+        "markdownlint": {
+            "optional": true
+        },
+        "next": {
+            "optional": true
+        },
+        "stylelint": {
+            "optional": true
+        },
+        "stylelint-config-standard": {
+            "optional": true
+        },
+        "typedoc": {
+            "optional": true
+        },
+        "ts-jest": {
+            "optional": true
+        },
+        "typescript": {
+            "optional": true
+        }
     },
-    "./eslint/browser/js": {
-      "types": "./lib/eslint/browser/js/index.d.ts",
-      "import": "./lib/eslint/browser/js/index.js"
+    "dependencies": {
+        "@eslint/compat": "^2.1.0",
+        "@eslint/js": "^10.0.1",
+        "@stylistic/eslint-plugin": "^5.10.0",
+        "eslint-config-expo": "^57.0.1",
+        "eslint-config-next": "^16.3.1",
+        "eslint-plugin-jsx-a11y": "^6.10.2",
+        "eslint-plugin-react": "^7.37.5",
+        "eslint-plugin-react-hooks": "^7.1.1",
+        "globals": "^16.5.0",
+        "typescript-eslint": "^8.67.0"
     },
-    "./eslint/browser/ts": {
-      "types": "./lib/eslint/browser/ts/index.d.ts",
-      "import": "./lib/eslint/browser/ts/index.js"
+    "devDependencies": {
+        "@biomejs/biome": "^2.5.3",
+        "@semantic-release/changelog": "^6.0.3",
+        "@semantic-release/commit-analyzer": "^13.0.1",
+        "@semantic-release/git": "^10.0.1",
+        "@semantic-release/github": "^12.0.9",
+        "@semantic-release/npm": "^13.1.5",
+        "@semantic-release/release-notes-generator": "^14.1.1",
+        "@types/node": "^26.1.1",
+        "@typescript/native": "npm:typescript@^7.0.2",
+        "@vitest/coverage-v8": "^4.1.10",
+        "conventional-changelog-conventionalcommits": "^9.3.1",
+        "eslint": "^10.7.0",
+        "jiti": "^2.7.0",
+        "next": "^16.3.1",
+        "prettier": "^3.9.4",
+        "semantic-release": "^25.0.5",
+        "tsc-alias": "^1.9.1",
+        "typescript": "npm:@typescript/typescript6@^6.0.2",
+        "vitest": "^4.1.10"
     },
-    "./eslint/browser/ts-type-checked": {
-      "types": "./lib/eslint/browser/ts-type-checked/index.d.ts",
-      "import": "./lib/eslint/browser/ts-type-checked/index.js"
-    },
-    "./eslint/bun/js": {
-      "types": "./lib/eslint/bun/js/index.d.ts",
-      "import": "./lib/eslint/bun/js/index.js"
-    },
-    "./eslint/bun/ts": {
-      "types": "./lib/eslint/bun/ts/index.d.ts",
-      "import": "./lib/eslint/bun/ts/index.js"
-    },
-    "./eslint/bun/ts-type-checked": {
-      "types": "./lib/eslint/bun/ts-type-checked/index.d.ts",
-      "import": "./lib/eslint/bun/ts-type-checked/index.js"
-    },
-    "./eslint/node/js": {
-      "types": "./lib/eslint/node/js/index.d.ts",
-      "import": "./lib/eslint/node/js/index.js"
-    },
-    "./eslint/node/ts": {
-      "types": "./lib/eslint/node/ts/index.d.ts",
-      "import": "./lib/eslint/node/ts/index.js"
-    },
-    "./eslint/node/ts-type-checked": {
-      "types": "./lib/eslint/node/ts-type-checked/index.d.ts",
-      "import": "./lib/eslint/node/ts-type-checked/index.js"
-    },
-    "./eslint/jest": {
-      "types": "./lib/eslint/jest/index.d.ts",
-      "import": "./lib/eslint/jest/index.js"
-    },
-    "./eslint/vitest": {
-      "types": "./lib/eslint/vitest/index.d.ts",
-      "import": "./lib/eslint/vitest/index.js"
-    },
-    "./eslint/react/jsx": {
-      "types": "./lib/eslint/react/jsx/index.d.ts",
-      "import": "./lib/eslint/react/jsx/index.js"
-    },
-    "./eslint/react/tsx": {
-      "types": "./lib/eslint/react/tsx/index.d.ts",
-      "import": "./lib/eslint/react/tsx/index.js"
-    },
-    "./eslint/react/tsx-type-checked": {
-      "types": "./lib/eslint/react/tsx-type-checked/index.d.ts",
-      "import": "./lib/eslint/react/tsx-type-checked/index.js"
-    },
-    "./eslint/react-native/jsx": {
-      "types": "./lib/eslint/react-native/jsx/index.d.ts",
-      "import": "./lib/eslint/react-native/jsx/index.js"
-    },
-    "./eslint/react-native/tsx": {
-      "types": "./lib/eslint/react-native/tsx/index.d.ts",
-      "import": "./lib/eslint/react-native/tsx/index.js"
-    },
-    "./eslint/react-native/tsx-type-checked": {
-      "types": "./lib/eslint/react-native/tsx-type-checked/index.d.ts",
-      "import": "./lib/eslint/react-native/tsx-type-checked/index.js"
-    },
-    "./biome": "./biome.json",
-    "./biome/react-native": "./biome.react-native.json",
-    "./bunfig": "./lib/test/bunfig.toml",
-    "./bunfig.toml": "./lib/test/bunfig.toml",
-    "./commitlint": "./commitlint.config.js",
-    "./jest": "./jest.config.js",
-    "./jest/expo": "./jest.expo.config.js",
-    "./jest/react-native": "./jest.react-native.config.js",
-    "./vitest": "./vitest.config.js",
-    "./markdownlint": "./markdownlint.json",
-    "./stylelint": "./stylelint.config.js",
-    "./typedoc": "./typedoc.json",
-    "./tsconfig/base": "./lib/tsconfig/base.json",
-    "./tsconfig/expo": "./lib/tsconfig/expo.json",
-    "./tsconfig/next": "./lib/tsconfig/next.json",
-    "./tsconfig/node": "./lib/tsconfig/node.json",
-    "./tsconfig/react": "./lib/tsconfig/react.json",
-    "./tsconfig/react-native": "./lib/tsconfig/react-native.json",
-    "./prettier": {
-      "types": "./lib/prettier/index.d.ts",
-      "import": "./lib/prettier/index.js"
+    "overrides": {
+        "eslint-plugin-jsx-a11y": {
+            "eslint": "$eslint"
+        },
+        "eslint-plugin-react": {
+            "eslint": "$eslint"
+        },
+        "eslint-plugin-import": {
+            "eslint": "$eslint"
+        }
     }
-  },
-  "files": [
-    "lib",
-    "biome.json",
-    "biome.react-native.json",
-    ".editorconfig",
-    "commitlint.config.js",
-    "jest.config.js",
-    "jest.expo.config.js",
-    "jest.react-native.config.js",
-    "vitest.config.js",
-    "markdownlint.json",
-    "stylelint.config.js",
-    "typedoc.json",
-    "README.md",
-    "CHANGELOG.md"
-  ],
-  "scripts": {
-    "clean": "node -e \"require('node:fs').rmSync('lib', { recursive: true, force: true })\"",
-    "prebuild": "npm run clean",
-    "build": "tsc && tsc-alias && node scripts/copy-static-assets.mjs",
-    "check": "npm run lint && npm run biome:check && npm run typecheck:ts6 && npm run build && npm run test && npm run test:exports && npm run test:cli",
-    "test": "vitest run --config vitest.repo.config.ts",
-    "test:coverage": "vitest run --config vitest.repo.config.ts --coverage",
-    "test:exports": "node scripts/test-exports.mjs",
-    "test:cli": "node scripts/test-cli.mjs",
-    "typecheck": "tsc --noEmit",
-    "typecheck:ts6": "tsc6 --noEmit",
-    "pack:check": "npm --cache /private/tmp/npm-cache-super-configs pack --dry-run",
-    "lint": "eslint .",
-    "lint:fix": "eslint . --fix",
-    "biome:check": "biome check .",
-    "format": "biome format --write .",
-    "format:check": "biome format .",
-    "release": "semantic-release",
-    "prepublishOnly": "npm run build"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/ElJijuna/super-configs.git"
-  },
-  "keywords": [
-    "config",
-    "bun",
-    "bun-config",
-    "commitlint",
-    "eslint",
-    "biome",
-    "prettier",
-    "editorconfig",
-    "jest",
-    "vitest",
-    "markdownlint",
-    "stylelint",
-    "typedoc",
-    "typescript",
-    "react",
-    "next",
-    "nextjs",
-    "react-native",
-    "expo",
-    "eslint-config",
-    "commitlint-config",
-    "prettier-config",
-    "editorconfig-template",
-    "biome-config",
-    "jest-config",
-    "vitest-config",
-    "markdownlint-config",
-    "stylelint-config",
-    "typedoc-config"
-  ],
-  "author": "pilmee <pilmee@gmail.com> (https://github.com/ElJijuna)",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/ElJijuna/super-configs/issues"
-  },
-  "homepage": "https://github.com/ElJijuna/super-configs#readme",
-  "publishConfig": {
-    "access": "public"
-  },
-  "engines": {
-    "node": "^20.19.0 || ^22.13.0 || >=24"
-  },
-  "peerDependencies": {
-    "@biomejs/biome": ">=2.4.13",
-    "@commitlint/cli": ">=19.0.0",
-    "@commitlint/config-conventional": ">=19.0.0",
-    "@react-native/jest-preset": ">=0.85.0",
-    "@react-native/typescript-config": ">=0.73.0",
-    "@types/node": ">=20.0.0",
-    "eslint": ">=10.0.0 <11.0.0",
-    "expo": ">=50.0.0",
-    "jest": ">=29.0.0",
-    "jest-expo": ">=50.0.0",
-    "markdownlint": ">=0.37.0",
-    "next": ">=16.0.0 <17.0.0",
-    "prettier": ">=3.0.0",
-    "stylelint": ">=16.0.0",
-    "stylelint-config-standard": ">=36.0.0",
-    "ts-jest": ">=29.0.0",
-    "typedoc": ">=0.28.0",
-    "typescript": ">=5.0.0 <6.1.0 || >=7.0.0 <8.0.0",
-    "vitest": ">=2.0.0"
-  },
-  "peerDependenciesMeta": {
-    "@commitlint/cli": {
-      "optional": true
-    },
-    "@commitlint/config-conventional": {
-      "optional": true
-    },
-    "@biomejs/biome": {
-      "optional": true
-    },
-    "@react-native/jest-preset": {
-      "optional": true
-    },
-    "@react-native/typescript-config": {
-      "optional": true
-    },
-    "@types/node": {
-      "optional": true
-    },
-    "expo": {
-      "optional": true
-    },
-    "jest": {
-      "optional": true
-    },
-    "jest-expo": {
-      "optional": true
-    },
-    "vitest": {
-      "optional": true
-    },
-    "prettier": {
-      "optional": true
-    },
-    "markdownlint": {
-      "optional": true
-    },
-    "next": {
-      "optional": true
-    },
-    "stylelint": {
-      "optional": true
-    },
-    "stylelint-config-standard": {
-      "optional": true
-    },
-    "typedoc": {
-      "optional": true
-    },
-    "ts-jest": {
-      "optional": true
-    },
-    "typescript": {
-      "optional": true
-    }
-  },
-  "dependencies": {
-    "@eslint/compat": "^2.1.0",
-    "@eslint/js": "^10.0.1",
-    "@stylistic/eslint-plugin": "^5.10.0",
-    "eslint-config-expo": "^57.0.1",
-    "eslint-config-next": "^16.3.1",
-    "eslint-plugin-jsx-a11y": "^6.10.2",
-    "eslint-plugin-react": "^7.37.5",
-    "eslint-plugin-react-hooks": "^7.1.1",
-    "globals": "^16.5.0",
-    "typescript-eslint": "^8.67.0"
-  },
-  "devDependencies": {
-    "@biomejs/biome": "^2.5.3",
-    "@semantic-release/changelog": "^6.0.3",
-    "@semantic-release/commit-analyzer": "^13.0.1",
-    "@semantic-release/git": "^10.0.1",
-    "@semantic-release/github": "^12.0.9",
-    "@semantic-release/npm": "^13.1.5",
-    "@semantic-release/release-notes-generator": "^14.1.1",
-    "@types/node": "^26.1.1",
-    "@typescript/native": "npm:typescript@^7.0.2",
-    "@vitest/coverage-v8": "^4.1.10",
-    "conventional-changelog-conventionalcommits": "^9.3.1",
-    "eslint": "^10.7.0",
-    "jiti": "^2.7.0",
-    "next": "^16.3.1",
-    "prettier": "^3.9.4",
-    "semantic-release": "^25.0.5",
-    "tsc-alias": "^1.9.1",
-    "typescript": "npm:@typescript/typescript6@^6.0.2",
-    "vitest": "^4.1.10"
-  },
-  "overrides": {
-    "eslint-plugin-jsx-a11y": {
-      "eslint": "$eslint"
-    },
-    "eslint-plugin-react": {
-      "eslint": "$eslint"
-    },
-    "eslint-plugin-import": {
-      "eslint": "$eslint"
-    }
-  }
 }

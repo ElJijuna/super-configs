@@ -1112,7 +1112,7 @@ Formatting and import organization are handled by Biome, not ESLint.
 - Single quotes
 - Double quotes in JSX attributes
 - Print width: 100 characters
-- Tab width: 2 spaces
+- Tab width: 2 spaces for source files and 4 spaces for JSON
 - Trailing commas: all
 - Arrow parens: always
 - Import organization enabled

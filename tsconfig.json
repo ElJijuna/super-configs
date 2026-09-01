@@ -1,25 +1,25 @@
 {
-  "compilerOptions": {
-    "target": "es2021",
-    "module": "NodeNext",
-    "moduleResolution": "NodeNext",
-    "outDir": "lib",
-    "rootDir": "src",
-    "paths": {
-      "@/*": ["./src/*"]
+    "compilerOptions": {
+        "target": "es2021",
+        "module": "NodeNext",
+        "moduleResolution": "NodeNext",
+        "outDir": "lib",
+        "rootDir": "src",
+        "paths": {
+            "@/*": ["./src/*"]
+        },
+        "strict": true,
+        "stableTypeOrdering": true,
+        "jsx": "react-jsx",
+        "esModuleInterop": true,
+        "skipLibCheck": true,
+        "declaration": true,
+        "declarationMap": true,
+        "sourceMap": true,
+        "resolveJsonModule": true,
+        "types": ["node"],
+        "typeRoots": ["./node_modules/@types", "./src/types"]
     },
-    "strict": true,
-    "stableTypeOrdering": true,
-    "jsx": "react-jsx",
-    "esModuleInterop": true,
-    "skipLibCheck": true,
-    "declaration": true,
-    "declarationMap": true,
-    "sourceMap": true,
-    "resolveJsonModule": true,
-    "types": ["node"],
-    "typeRoots": ["./node_modules/@types", "./src/types"]
-  },
-  "include": ["src"],
-  "exclude": ["node_modules", "lib", "src/test"]
+    "include": ["src"],
+    "exclude": ["node_modules", "lib", "src/test"]
 }

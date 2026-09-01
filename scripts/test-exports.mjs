@@ -512,13 +512,23 @@ for (const path of [
   await readJson(path);
 }
 
+const biomeUrl = import.meta.resolve('super-configs/biome');
+const biomeConfig = JSON.parse(await readFile(new URL(biomeUrl), 'utf8'));
 const reactNativeBiomeUrl = import.meta.resolve('super-configs/biome/react-native');
 const reactNativeBiomeConfig = JSON.parse(await readFile(new URL(reactNativeBiomeUrl), 'utf8'));
 
 assert(
+  biomeConfig.json?.formatter?.indentStyle === 'space' &&
+    biomeConfig.json?.formatter?.indentWidth === 4,
+  'super-configs/biome must format JSON with four-space indentation',
+);
+
+assert(
   reactNativeBiomeConfig.formatter?.indentStyle === 'space' &&
     reactNativeBiomeConfig.formatter?.indentWidth === 2 &&
-    reactNativeBiomeConfig.javascript?.formatter?.quoteStyle === 'single',
+    reactNativeBiomeConfig.javascript?.formatter?.quoteStyle === 'single' &&
+    reactNativeBiomeConfig.json?.formatter?.indentStyle === 'space' &&
+    reactNativeBiomeConfig.json?.formatter?.indentWidth === 4,
   'super-configs/biome/react-native must include the base formatter settings',
 );
 
@@ -537,6 +547,7 @@ for (const [rule, level] of [
 const biomeEntrypoint = join(root, 'node_modules/@biomejs/biome/bin/biome');
 const biomeConsumerFixtureDirectory = await mkdtemp(join(tmpdir(), 'super-configs-biome-'));
 const biomeConsumerConfigPath = join(biomeConsumerFixtureDirectory, 'biome.json');
+const biomeConsumerJsonPath = join(biomeConsumerFixtureDirectory, 'input.json');
 const biomeConsumerSourcePath = join(biomeConsumerFixtureDirectory, 'input.js');
 const biomeFixturePath = join(root, '.react-native-biome-fixture.tsx');
 const biomeFixture = `import InternalView from 'react-native/Libraries/Components/View/View';
@@ -568,6 +579,7 @@ try {
     biomeConsumerSourcePath,
     'const greeting = "hello";\nfunction greet() {\nconsole.log(greeting);\n}\n',
   );
+  await writeFile(biomeConsumerJsonPath, '{\n"nested": {\n"value": "hello"\n}\n}\n');
   reactNativeFormat = spawnSync(
     process.execPath,
     [
@@ -576,11 +588,18 @@ try {
       '--config-path',
       biomeConsumerConfigPath,
       biomeConsumerSourcePath,
+      biomeConsumerJsonPath,
       '--write',
     ],
     { encoding: 'utf8' },
   );
   reactNativeFormattedSource = await readFile(biomeConsumerSourcePath, 'utf8');
+  const reactNativeFormattedJson = await readFile(biomeConsumerJsonPath, 'utf8');
+
+  assert(
+    reactNativeFormattedJson === '{\n    "nested": {\n        "value": "hello"\n    }\n}\n',
+    'super-configs/biome/react-native must format JSON with four-space indentation',
+  );
   await writeFile(biomeFixturePath, biomeFixture);
   reactNativeLint = spawnSync(
     process.execPath,
