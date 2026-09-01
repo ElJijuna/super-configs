@@ -1,3 +1,10 @@
+## [1.25.1](https://github.com/ElJijuna/super-configs/compare/v1.25.0...v1.25.1) (2026-09-01)
+
+### Bug Fixes
+
+* correct JSON indentation size in .editorconfig ([c3e1559](https://github.com/ElJijuna/super-configs/commit/c3e15592f2ba12a2312fe899483dac6892d44081))
+* update biome config to use four-space indentation for JSON ([fa587b2](https://github.com/ElJijuna/super-configs/commit/fa587b2fa7965d2638206cc51e052141ac0a30e9))
+
 ## [1.25.0](https://github.com/ElJijuna/super-configs/compare/v1.24.0...v1.25.0) (2026-08-31)
 
 ### Features
