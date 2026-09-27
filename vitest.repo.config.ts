@@ -11,8 +11,6 @@ export default mergeConfig(sharedConfig, {
   test: {
     include: ['tests/**/*.test.ts'],
     coverage: {
-      provider: 'v8',
-      include: ['src/**/*.ts'],
       thresholds: {
         branches: 96,
         functions: 96,

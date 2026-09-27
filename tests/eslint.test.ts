@@ -1,5 +1,6 @@
 import { ESLint } from 'eslint';
 import { describe, expect, it } from 'vitest';
+import { mergeConfig } from 'vitest/config';
 import { createEslintConfig } from '../src/eslint/index.js';
 import eslintNext from '../src/eslint/next/index.js';
 import eslintNextTypeChecked from '../src/eslint/next/type-checked/index.js';
@@ -270,10 +271,24 @@ describe('public configuration exports', () => {
         globals: true,
         environment: 'node',
         coverage: {
+          provider: 'v8',
+          include: ['src/**/*.{js,jsx,mjs,cjs,ts,tsx,mts,cts}'],
           reporter: ['text', 'json', 'html'],
         },
       },
     });
+  });
+
+  it('adds consumer coverage globs to the shared Vitest defaults', () => {
+    const config = mergeConfig(sharedVitestConfig, {
+      test: { coverage: { include: ['lib/**/*.js'], exclude: ['src/generated/**'] } },
+    });
+
+    expect(config.test?.coverage?.include).toEqual([
+      'src/**/*.{js,jsx,mjs,cjs,ts,tsx,mts,cts}',
+      'lib/**/*.js',
+    ]);
+    expect(config.test?.coverage?.exclude).toEqual(['src/generated/**']);
   });
 });
 

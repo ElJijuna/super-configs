@@ -888,6 +888,25 @@ export default mergeConfig(vitestConfig, {
 });
 ```
 
+Coverage uses the `v8` provider (install `@vitest/coverage-v8`) and reports every code file under
+`src`, including files no test imports: `src/**/*.{js,jsx,mjs,cjs,ts,tsx,mts,cts}`. Test files,
+`.d.ts` files, and non-code files such as JSON are left out.
+
+`mergeConfig` concatenates arrays, so a `coverage.include` in your config adds to the shared glob
+instead of replacing it. Use it to cover other directories, and use `coverage.exclude` to leave
+files out:
+
+```typescript
+export default mergeConfig(vitestConfig, {
+  test: {
+    coverage: {
+      include: ['scripts/**/*.ts'],
+      exclude: ['src/generated/**'],
+    },
+  },
+});
+```
+
 ### Bun test
 
 Bun does not support extending a package `bunfig.toml`. Copy the shared template into your project

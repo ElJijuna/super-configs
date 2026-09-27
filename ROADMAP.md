@@ -139,6 +139,13 @@ Last updated: 2026-08-18
   - `super-configs init --runtime browser|bun` generates the matching TSConfig instead of
     `react` or `node`
   - export tests compile both presets stacked with `strict` and check foreign globals fail
+- Vitest coverage defaults:
+  - `super-configs/vitest` sets `coverage.provider: 'v8'` and
+    `coverage.include: ['src/**/*.{js,jsx,mjs,cjs,ts,tsx,mts,cts}']`, so untested source files
+    are reported without pulling in JSON or other non-code files
+  - README documents that `mergeConfig` adds consumer globs to the default and that
+    `coverage.exclude` narrows it
+  - this repository's `vitest.repo.config.ts` relies on the shared defaults
 
 ## Pending
 
@@ -152,8 +159,6 @@ Last updated: 2026-08-18
 
 ### Testing
 
-- Vitest defaults: `coverage.provider: 'v8'` and `coverage.include: ['src/**']`, which every
-  consumer sets again
 - Vitest DOM variant for React (`super-configs/vitest/react`) with `jsdom` or `happy-dom`
 - Enforce the coverage thresholds in CI by running `test:coverage` from `npm run check`
 
