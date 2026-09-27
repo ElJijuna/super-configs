@@ -715,6 +715,7 @@ try {
 import jestConfig from 'super-configs/jest';
 import jestExpoConfig from 'super-configs/jest/expo';
 import jestReactNativeConfig from 'super-configs/jest/react-native';
+import semanticReleaseConfig from 'super-configs/semantic-release';
 import stylelintConfig from 'super-configs/stylelint';
 import vitestConfig from 'super-configs/vitest';
 import { mergeConfig } from 'vitest/config';
@@ -722,6 +723,7 @@ import { mergeConfig } from 'vitest/config';
 export const commitlint = { ...commitlintConfig, extends: [...commitlintConfig.extends] };
 export const jest = { ...jestConfig, testMatch: ['**/*.test.ts'] };
 export const presets: string[] = [jestExpoConfig.preset, jestReactNativeConfig.preset];
+export const release = { ...semanticReleaseConfig, branches: ['main', 'next'] };
 export const stylelint = { ...stylelintConfig, rules: { ...stylelintConfig.rules } };
 export const vitest = mergeConfig(vitestConfig, { test: { include: ['src/**/*.test.ts'] } });
 `,
@@ -745,6 +747,7 @@ for (const [specifier, keys] of [
   ['super-configs/jest', ['testEnvironment', 'transform', 'moduleFileExtensions', 'verbose']],
   ['super-configs/jest/expo', ['preset', 'verbose']],
   ['super-configs/jest/react-native', ['preset', 'verbose']],
+  ['super-configs/semantic-release', ['branches', 'plugins']],
   ['super-configs/stylelint', ['extends', 'rules']],
 ]) {
   const config = await importDefault(specifier);
@@ -761,16 +764,87 @@ for (const path of [
   'jest.config.d.ts',
   'jest.expo.config.d.ts',
   'jest.react-native.config.d.ts',
+  'semantic-release.config.d.ts',
   'vitest.config.d.ts',
   'stylelint.config.d.ts',
   'commitlint.config.js',
   'jest.config.js',
   'lib/cli/index.js',
   'lib/test/bunfig.toml',
+  'semantic-release.config.js',
   'vitest.config.js',
   'stylelint.config.js',
 ]) {
   await access(join(root, path));
+}
+
+const { default: getSemanticReleaseConfig } = await import(
+  '../node_modules/semantic-release/lib/get-config.js'
+);
+const semanticReleaseFixtureDirectory = await mkdtemp(join(tmpdir(), 'super-configs-release-'));
+const semanticReleaseContext = {
+  env: {},
+  logger: { error() {}, log() {}, success() {}, warn() {} },
+  stderr: process.stderr,
+  stdout: process.stdout,
+};
+
+let semanticReleaseConsumerConfig;
+let semanticReleaseRepositoryConfig;
+
+try {
+  await mkdir(join(semanticReleaseFixtureDirectory, 'node_modules'));
+  await symlink(root, join(semanticReleaseFixtureDirectory, 'node_modules/super-configs'), 'dir');
+  await writeFile(
+    join(semanticReleaseFixtureDirectory, 'package.json'),
+    JSON.stringify({
+      name: 'fixture',
+      version: '1.0.0',
+      repository: 'https://github.com/example/fixture.git',
+    }),
+  );
+  await writeFile(
+    join(semanticReleaseFixtureDirectory, '.releaserc.json'),
+    JSON.stringify({ extends: 'super-configs/semantic-release' }),
+  );
+  semanticReleaseConsumerConfig = await getSemanticReleaseConfig(
+    { ...semanticReleaseContext, cwd: semanticReleaseFixtureDirectory },
+    {},
+  );
+  semanticReleaseRepositoryConfig = await getSemanticReleaseConfig(
+    { ...semanticReleaseContext, cwd: root },
+    {},
+  );
+} finally {
+  await rm(semanticReleaseFixtureDirectory, { recursive: true, force: true });
+}
+
+for (const [source, { options, plugins }] of [
+  ['consumer extends', semanticReleaseConsumerConfig],
+  ['repository .releaserc.json', semanticReleaseRepositoryConfig],
+]) {
+  const pluginNames = options.plugins.map((plugin) => (Array.isArray(plugin) ? plugin[0] : plugin));
+
+  assert(
+    JSON.stringify(options.branches) === JSON.stringify(['main']),
+    `${source} must release from main`,
+  );
+  assert(
+    JSON.stringify(pluginNames) ===
+      JSON.stringify([
+        '@semantic-release/commit-analyzer',
+        '@semantic-release/release-notes-generator',
+        '@semantic-release/changelog',
+        '@semantic-release/npm',
+        '@semantic-release/git',
+        '@semantic-release/github',
+      ]),
+    `${source} must load the shared semantic-release plugins in order`,
+  );
+  assert(
+    typeof plugins.analyzeCommits === 'function' && typeof plugins.prepare === 'function',
+    `${source} must resolve every semantic-release plugin`,
+  );
 }
 
 const bunfig = await readText('lib/test/bunfig.toml');

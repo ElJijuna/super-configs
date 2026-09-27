@@ -137,7 +137,8 @@ The published presets support TypeScript 5, 6.0, and 7. The optional TypeScript 
 range explicitly: `>=5.0.0 <6.1.0 || >=7.0.0 <8.0.0`. Consumers using TypeScript 7 with
 API-dependent tools still need the side-by-side TypeScript 6 compatibility package shown above.
 
-Biome, Commitlint, Jest, Vitest, Markdownlint, Stylelint, TypeDoc, and Prettier are optional peers.
+Biome, Commitlint, semantic-release, Jest, Vitest, Markdownlint, Stylelint, TypeDoc, and Prettier
+are optional peers.
 Use Biome for new projects:
 
 ```bash
@@ -682,6 +683,47 @@ Add a commit message check script:
 }
 ```
 
+### semantic-release
+
+Install semantic-release and the plugins it does not bundle:
+
+```bash
+npm install \
+  semantic-release \
+  @semantic-release/changelog \
+  @semantic-release/git \
+  conventional-changelog-conventionalcommits \
+  --save-dev
+```
+
+Extend the shared config:
+
+```json
+{
+  "extends": "super-configs/semantic-release"
+}
+```
+
+It releases from `main` with Conventional Commits, and runs these plugins in order:
+
+1. `@semantic-release/commit-analyzer` and `@semantic-release/release-notes-generator` with the
+   `conventionalcommits` preset.
+2. `@semantic-release/changelog` writes `CHANGELOG.md`.
+3. `@semantic-release/npm` bumps `package.json` and publishes to npm.
+4. `@semantic-release/git` commits `package.json`, `package-lock.json`, and `CHANGELOG.md` as
+   `chore(release): <version> [skip ci]`.
+5. `@semantic-release/github` creates the GitHub release.
+
+Top-level options in your own config override the shared ones. `plugins` is replaced as a whole,
+so copy the full list when you need to change a single plugin:
+
+```json
+{
+  "extends": "super-configs/semantic-release",
+  "branches": ["main", { "name": "next", "prerelease": true }]
+}
+```
+
 ### Markdownlint
 
 Point Markdownlint-compatible tools at the shared JSON config:
@@ -1025,6 +1067,7 @@ This uses the dedicated Expo ESLint preset, the React Native Biome preset, plus 
 | `super-configs/biome/react-native` | Biome configuration with explicit React Native rules |
 | `super-configs/bunfig` | Bun test configuration template with coverage enabled |
 | `super-configs/commitlint` | Commitlint configuration for Conventional Commits |
+| `super-configs/semantic-release` | semantic-release configuration for npm and GitHub releases |
 | `node_modules/super-configs/.editorconfig` | EditorConfig template for common project files |
 | `super-configs/jest` | Jest configuration for TypeScript test projects |
 | `super-configs/jest/react-native` | Jest configuration based on `@react-native/jest-preset` |
