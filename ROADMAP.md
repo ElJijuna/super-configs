@@ -107,6 +107,9 @@ Last updated: 2026-08-18
 ## Next
 
 - Enforce the coverage thresholds in CI by running `test:coverage` from `npm run check`
+- Drop the ESLint 10 peer workarounds (`overrides` in `package.json`, README "ESLint 10 peer
+  warnings") once `eslint-plugin-react`, `eslint-plugin-jsx-a11y`, and `eslint-plugin-import`
+  declare ESLint 10 support and `eslint-plugin-expo` stops depending on `eslint@^9`
 
 ## Validation Baseline
 

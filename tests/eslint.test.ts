@@ -170,6 +170,22 @@ describe('public configuration exports', () => {
     );
   });
 
+  it.each([
+    'src/App.jsx',
+    'src/App.js',
+  ])('lints %s with the React JSX preset without extra file globs', async (filePath) => {
+    const eslint = new ESLint({
+      overrideConfigFile: true,
+      overrideConfig: [...eslintReactJsx, { settings: { react: { version: '19.0' } } }],
+    });
+    const [result] = await eslint.lintText(
+      'export const App = ({ count }) => (count == 1 ? <main /> : null);\n',
+      { filePath },
+    );
+
+    expect(result.messages).toEqual([expect.objectContaining({ ruleId: 'eqeqeq', severity: 2 })]);
+  });
+
   it('configures Expo globals, rules, and Node.js Metro files', async () => {
     const eslint = new ESLint({
       overrideConfigFile: true,

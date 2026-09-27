@@ -415,10 +415,9 @@ for (const [specifier, filePath] of [
   ['super-configs/eslint/ts-type-checked', 'fixture.ts'],
 ]) {
   const config = await importDefault(specifier);
-  const fileMatchOverride = filePath.endsWith('.jsx') ? [{ files: ['**/*.jsx'] }] : [];
   const eslint = new ESLint({
     overrideConfigFile: true,
-    overrideConfig: [...config, ...fileMatchOverride],
+    overrideConfig: config,
   });
   const calculatedConfig = await eslint.calculateConfigForFile(filePath);
 
@@ -480,7 +479,6 @@ for (const [specifier, filePath, code] of [
     specifier.includes('/react/') || specifier.includes('/expo') || specifier.includes('/next')
       ? [
           {
-            ...(filePath.endsWith('.jsx') ? { files: ['**/*.jsx'] } : {}),
             settings: { react: { version: '19.0' } },
             ...(specifier.includes('/next')
               ? { rules: { '@next/next/no-html-link-for-pages': 'off' } }

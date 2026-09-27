@@ -13,10 +13,12 @@ import {
 } from '@/eslint/prefer-destructuring.js';
 import { preferProcessEnvDestructuringRestriction } from '@/eslint/process-env.js';
 
+const javaScriptFiles = ['**/*.js', '**/*.jsx', '**/*.mjs', '**/*.cjs'];
 const eslintReactJsxConfig: Linter.Config[] = [
-  js.configs.recommended,
+  { ...js.configs.recommended, files: javaScriptFiles },
   {
     name: 'super-configs/react-jsx',
+    files: javaScriptFiles,
     languageOptions: {
       ecmaVersion: 2021,
       sourceType: 'module',

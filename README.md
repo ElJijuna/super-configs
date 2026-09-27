@@ -79,6 +79,48 @@ temporary compatibility layer and can be removed once the API-dependent tools su
 ESLint 10 requires Node.js 20.19+, 22.13+, or 24+; odd-numbered Node.js releases are not
 supported.
 
+#### ESLint 10 peer warnings
+
+The presets run on ESLint 10: legacy plugins are wrapped with `fixupPluginRules` from
+`@eslint/compat`. However, `eslint-plugin-react`, `eslint-plugin-jsx-a11y`, and
+`eslint-plugin-import` (the last one pulled in by `eslint-config-next` and `eslint-config-expo`)
+have not published an ESLint 10 peer range yet, so package managers print peer dependency warnings.
+`eslint-plugin-expo` also depends on `eslint@^9` directly, which installs a second, unused copy of
+ESLint.
+
+Point those packages at your ESLint version to get a clean install. With npm:
+
+```json
+{
+    "overrides": {
+        "eslint-plugin-expo": { "eslint": "$eslint" },
+        "eslint-plugin-import": { "eslint": "$eslint" },
+        "eslint-plugin-jsx-a11y": { "eslint": "$eslint" },
+        "eslint-plugin-react": { "eslint": "$eslint" }
+    }
+}
+```
+
+With pnpm:
+
+```json
+{
+    "pnpm": {
+        "overrides": { "eslint-plugin-expo>eslint": "$eslint" },
+        "peerDependencyRules": {
+            "allowedVersions": {
+                "eslint-plugin-import>eslint": "10",
+                "eslint-plugin-jsx-a11y>eslint": "10",
+                "eslint-plugin-react>eslint": "10"
+            }
+        }
+    }
+}
+```
+
+The `$eslint` reference requires `eslint` in your own `devDependencies`, as shown above. These
+entries can be removed once the plugins declare ESLint 10 support.
+
 The Node.js TypeScript preset also requires Node.js declarations:
 
 ```bash
