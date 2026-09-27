@@ -103,13 +103,78 @@ Last updated: 2026-08-18
   - `--vitest` and `--jest` map to `testFramework`
   - `--react --type-checked` selects the type-aware React TSX preset
   - README recipes use the same single-call shape
+- GitHub Packages mirror:
+  - the release workflow publishes every npm release to GitHub Packages as
+    `@eljijuna/super-configs` in a separate job, so a failure never affects npm
+  - README documents the `.npmrc` setup and the `super-configs@npm:@eljijuna/super-configs` alias
+- Vitest 5:
+  - `vitest` and `@vitest/coverage-v8` updated to `^5.0.2`
+- React JSX preset lints `.jsx` files:
+  - `super-configs/eslint/react/jsx` scopes its entries to `**/*.{js,jsx,mjs,cjs}`
+  - export tests no longer add a `**/*.jsx` override that hid the missing glob
+- ESLint 10 peer warnings documented:
+  - README lists the npm `overrides` and pnpm `peerDependencyRules` for
+    `eslint-plugin-react`, `eslint-plugin-jsx-a11y`, `eslint-plugin-import`, and
+    `eslint-plugin-expo`, verified to give a clean install with a single ESLint 10
+- Type declarations for root config exports:
+  - `super-configs/vitest`, `jest`, `jest/expo`, `jest/react-native`, `commitlint`,
+    `stylelint`, and `semantic-release` ship `.d.ts` files with a `types` export condition
+  - export tests type-check a consumer with `tsc` and compare declared keys with runtime keys
+- Shared semantic-release config:
+  - `super-configs/semantic-release` releases from `main` with Conventional Commits, changelog,
+    npm, git, and GitHub plugins
+  - this repository's `.releaserc.json` extends it
+  - export tests load it through semantic-release `get-config` from a consumer and this repository
 
-## Next
+## Pending
 
+### Release
+
+- Reusable release workflow (`workflow_call`) at `.github/workflows/release.yml`:
+  - runs checks, semantic-release to npm, then mirrors to GitHub Packages as `@eljijuna/<name>`
+  - consumers call it with `uses: ElJijuna/super-configs/.github/workflows/release.yml@v1` and
+    `secrets: inherit`
+  - inputs for the Node.js version, check command, and GitHub Packages scope
+
+### TypeScript
+
+- Strict library preset (`super-configs/tsconfig/strict` or `tsconfig/library`) with
+  `verbatimModuleSyntax`, `isolatedModules`, `noUncheckedIndexedAccess`, and
+  `noImplicitOverride`, which consumer projects currently repeat on top of `tsconfig/node`
+- Runtime presets matching the ESLint runtimes: `super-configs/tsconfig/bun` and
+  `super-configs/tsconfig/browser`
+
+### Testing
+
+- Vitest defaults: `coverage.provider: 'v8'` and `coverage.include: ['src/**']`, which every
+  consumer sets again
+- Vitest DOM variant for React (`super-configs/vitest/react`) with `jsdom` or `happy-dom`
 - Enforce the coverage thresholds in CI by running `test:coverage` from `npm run check`
+
+### New tools
+
+- Git hooks from the CLI (`super-configs init --hooks`): Husky or Lefthook with a Commitlint
+  `commit-msg` hook and lint-staged
+- Build preset for libraries with tsdown (tsup is in maintenance mode), covering the shared
+  `format: ['esm', 'cjs']`, `dts`, `sourcemap`, and `target: 'es2022'` options
+- Knip config for unused files, dependencies, and exports
+- Playwright config for E2E tests, aimed at the React and Next.js presets
+- Lower priority: Renovate shareable preset (`github>ElJijuna/super-configs`) and an Oxlint
+  evaluation as a faster ESLint alternative
+
+### ESLint 10
+
 - Drop the ESLint 10 peer workarounds (`overrides` in `package.json`, README "ESLint 10 peer
   warnings") once `eslint-plugin-react`, `eslint-plugin-jsx-a11y`, and `eslint-plugin-import`
   declare ESLint 10 support and `eslint-plugin-expo` stops depending on `eslint@^9`
+
+### Consumer repositories
+
+- `express-realtime`: delete `super-configs.d.ts` now that `super-configs/vitest` ships types
+- `code-languages`, `express-realtime`: replace `.releaserc.json` with
+  `{ "extends": "super-configs/semantic-release" }`
+- `code-languages`: use `super-configs/commitlint` instead of its local
+  `commitlint.config.cjs`, and extend a `super-configs/tsconfig` preset
 
 ## Validation Baseline
 
