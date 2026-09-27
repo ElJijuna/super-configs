@@ -1,0 +1,11 @@
+{
+    "$schema": "https://json.schemastore.org/tsconfig",
+    "display": "super-configs strict",
+    "compilerOptions": {
+        "strict": true,
+        "isolatedModules": true,
+        "verbatimModuleSyntax": true,
+        "noUncheckedIndexedAccess": true,
+        "noImplicitOverride": true
+    }
+}

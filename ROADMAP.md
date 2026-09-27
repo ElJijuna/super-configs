@@ -125,6 +125,12 @@ Last updated: 2026-08-18
     npm, git, and GitHub plugins
   - this repository's `.releaserc.json` extends it
   - export tests load it through semantic-release `get-config` from a consumer and this repository
+- Strict TypeScript add-on:
+  - `super-configs/tsconfig/strict` enables `verbatimModuleSyntax`, `isolatedModules`,
+    `noUncheckedIndexedAccess`, and `noImplicitOverride`
+  - stacks on any runtime preset with `"extends": ["super-configs/tsconfig/node",
+    "super-configs/tsconfig/strict"]`
+  - export tests compile a stacked consumer and check each option reports its error
 
 ## Pending
 
@@ -138,9 +144,6 @@ Last updated: 2026-08-18
 
 ### TypeScript
 
-- Strict library preset (`super-configs/tsconfig/strict` or `tsconfig/library`) with
-  `verbatimModuleSyntax`, `isolatedModules`, `noUncheckedIndexedAccess`, and
-  `noImplicitOverride`, which consumer projects currently repeat on top of `tsconfig/node`
 - Runtime presets matching the ESLint runtimes: `super-configs/tsconfig/bun` and
   `super-configs/tsconfig/browser`
 
@@ -175,6 +178,8 @@ Last updated: 2026-08-18
   `{ "extends": "super-configs/semantic-release" }`
 - `code-languages`: use `super-configs/commitlint` instead of its local
   `commitlint.config.cjs`, and extend a `super-configs/tsconfig` preset
+- `express-realtime`, `express-frontend-metrics-collector`, `code-languages`: stack
+  `super-configs/tsconfig/strict` and drop the repeated strictness options
 
 ## Validation Baseline
 

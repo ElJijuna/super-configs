@@ -504,6 +504,7 @@ for (const path of [
   'lib/tsconfig/node.json',
   'lib/tsconfig/react.json',
   'lib/tsconfig/react-native.json',
+  'lib/tsconfig/strict.json',
   'markdownlint.json',
   'typedoc.json',
 ]) {
@@ -642,6 +643,7 @@ for (const specifier of [
   'super-configs/tsconfig/node',
   'super-configs/tsconfig/react',
   'super-configs/tsconfig/react-native',
+  'super-configs/tsconfig/strict',
 ]) {
   const url = import.meta.resolve(specifier);
   const config = JSON.parse(await readFile(new URL(url), 'utf8'));
@@ -674,6 +676,96 @@ assert(
   nextTsconfig.compilerOptions.plugins?.some((plugin) => plugin.name === 'next'),
   'Next.js TSConfig must enable the Next.js TypeScript plugin',
 );
+
+const strictTsconfigFixtureDirectory = await mkdtemp(join(tmpdir(), 'super-configs-strict-'));
+
+let strictTsconfigCheck;
+
+try {
+  await mkdir(join(strictTsconfigFixtureDirectory, 'node_modules/@types'), { recursive: true });
+  await symlink(root, join(strictTsconfigFixtureDirectory, 'node_modules/super-configs'), 'dir');
+  await symlink(
+    join(root, 'node_modules/@types/node'),
+    join(strictTsconfigFixtureDirectory, 'node_modules/@types/node'),
+    'dir',
+  );
+  await writeFile(
+    join(strictTsconfigFixtureDirectory, 'package.json'),
+    JSON.stringify({ type: 'module' }),
+  );
+  await writeFile(
+    join(strictTsconfigFixtureDirectory, 'tsconfig.json'),
+    JSON.stringify({
+      extends: ['super-configs/tsconfig/node', 'super-configs/tsconfig/strict'],
+      compilerOptions: { noEmit: true },
+      include: ['*.ts'],
+    }),
+  );
+  await writeFile(
+    join(strictTsconfigFixtureDirectory, 'shape.ts'),
+    'export interface Shape {\n  sides: number;\n}\n',
+  );
+  await writeFile(
+    join(strictTsconfigFixtureDirectory, 'valid.ts'),
+    `import type { Shape } from './shape.js';
+
+export type { Shape as ReexportedShape } from './shape.js';
+export const first = (items: string[]): string | undefined => items[0];
+export const sides = (shape: Shape): number => shape.sides;
+
+class Base {
+  run(): void {}
+}
+
+export class Child extends Base {
+  override run(): void {}
+}
+`,
+  );
+  await writeFile(
+    join(strictTsconfigFixtureDirectory, 'invalid.ts'),
+    `import { Shape } from './shape.js';
+
+export { Shape as ReexportedShape } from './shape.js';
+export const first = (items: string[]): string => items[0];
+export const sides = (shape: Shape): number => shape.sides;
+
+class Base {
+  run(): void {}
+}
+
+export class Child extends Base {
+  run(): void {}
+}
+`,
+  );
+  strictTsconfigCheck = spawnSync(
+    process.execPath,
+    [join(root, 'node_modules/typescript/bin/tsc6'), '-p', strictTsconfigFixtureDirectory],
+    { encoding: 'utf8' },
+  );
+} finally {
+  await rm(strictTsconfigFixtureDirectory, { recursive: true, force: true });
+}
+
+const strictTsconfigOutput = `${strictTsconfigCheck.stdout}${strictTsconfigCheck.stderr}`;
+
+assert(
+  !/(^|\n)valid\.ts\(/.test(strictTsconfigOutput),
+  `super-configs/tsconfig/strict must accept valid code:\n${strictTsconfigOutput}`,
+);
+
+for (const [option, code] of [
+  ['verbatimModuleSyntax', 'TS1484'],
+  ['isolatedModules', 'TS1205'],
+  ['noUncheckedIndexedAccess', 'TS2322'],
+  ['noImplicitOverride', 'TS4114'],
+]) {
+  assert(
+    strictTsconfigOutput.includes(`error ${code}`),
+    `super-configs/tsconfig/strict must enable ${option} (${code}):\n${strictTsconfigOutput}`,
+  );
+}
 
 for (const specifier of ['super-configs/bunfig', 'super-configs/bunfig.toml']) {
   const url = import.meta.resolve(specifier);
@@ -871,6 +963,7 @@ for (const documentedValue of [
   'super-configs/tsconfig/expo',
   'super-configs/tsconfig/next',
   'super-configs/tsconfig/react-native',
+  'super-configs/tsconfig/strict',
 ]) {
   assert(readme.includes(documentedValue), `README must document ${documentedValue}`);
 }

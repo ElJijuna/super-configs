@@ -290,6 +290,35 @@ Include Expo's generated declarations in the project config:
 }
 ```
 
+#### Strict add-on
+
+`super-configs/tsconfig/strict` adds stricter checks on top of any runtime preset. It only sets
+compiler checks, so stack it after the preset that sets `module`, `target`, and runtime types:
+
+```json
+{
+  "extends": ["super-configs/tsconfig/node", "super-configs/tsconfig/strict"],
+  "compilerOptions": {
+    "rootDir": "src",
+    "outDir": "dist"
+  },
+  "include": ["src/**/*.ts"]
+}
+```
+
+| Option | Effect |
+| --- | --- |
+| `verbatimModuleSyntax` | Type-only imports and re-exports must use `import type` and `export type` |
+| `isolatedModules` | Every file can be transpiled on its own by esbuild, SWC, Babel, or tsdown |
+| `noUncheckedIndexedAccess` | Index and array access include `undefined` in the result type |
+| `noImplicitOverride` | Methods that override a base class member need the `override` keyword |
+
+With `super-configs/tsconfig/node`, `verbatimModuleSyntax` requires an ES module package
+(`"type": "module"` in `package.json`); in a CommonJS package every top-level `export` fails
+with TS1287. Bundler-based presets such as `react`, `next`, and `expo` are not affected. The
+`@typescript-eslint/consistent-type-imports` rule in the ESLint presets already writes the
+separate `import type` statements this option requires.
+
 ### Recommended Project Setup
 
 Install the shared config and the peer tools used by your project:
@@ -1082,6 +1111,7 @@ This uses the dedicated Expo ESLint preset, the React Native Biome preset, plus 
 | `super-configs/tsconfig/react-native` | Strict TypeScript configuration for React Native |
 | `super-configs/tsconfig/expo` | Strict TypeScript configuration for Expo |
 | `super-configs/tsconfig/next` | Strict TypeScript configuration with the Next.js plugin and bundler resolution |
+| `super-configs/tsconfig/strict` | Stricter compiler checks to stack on top of any runtime preset |
 | `super-configs/prettier` | Prettier configuration |
 
 ## Included Rules

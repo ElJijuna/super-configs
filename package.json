@@ -154,6 +154,7 @@
         "./tsconfig/node": "./lib/tsconfig/node.json",
         "./tsconfig/react": "./lib/tsconfig/react.json",
         "./tsconfig/react-native": "./lib/tsconfig/react-native.json",
+        "./tsconfig/strict": "./lib/tsconfig/strict.json",
         "./prettier": {
             "types": "./lib/prettier/index.d.ts",
             "import": "./lib/prettier/index.js"
