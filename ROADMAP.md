@@ -131,6 +131,14 @@ Last updated: 2026-08-18
   - stacks on any runtime preset with `"extends": ["super-configs/tsconfig/node",
     "super-configs/tsconfig/strict"]`
   - export tests compile a stacked consumer and check each option reports its error
+- Runtime TypeScript presets matching the ESLint runtimes:
+  - `super-configs/tsconfig/browser`: DOM libraries, bundler resolution, and `"types": []` so
+    Node.js globals do not leak into browser code
+  - `super-configs/tsconfig/bun`: Bun's recommended options (`"module": "Preserve"`, bundler
+    resolution, `.ts` import extensions, `noEmit`) with `@types/bun` as an optional peer
+  - `super-configs init --runtime browser|bun` generates the matching TSConfig instead of
+    `react` or `node`
+  - export tests compile both presets stacked with `strict` and check foreign globals fail
 
 ## Pending
 
@@ -141,11 +149,6 @@ Last updated: 2026-08-18
   - consumers call it with `uses: ElJijuna/super-configs/.github/workflows/release.yml@v1` and
     `secrets: inherit`
   - inputs for the Node.js version, check command, and GitHub Packages scope
-
-### TypeScript
-
-- Runtime presets matching the ESLint runtimes: `super-configs/tsconfig/bun` and
-  `super-configs/tsconfig/browser`
 
 ### Testing
 

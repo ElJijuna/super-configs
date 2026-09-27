@@ -291,7 +291,15 @@ export const createTsconfig = (options: InitOptions): string => {
 `;
   }
 
-  const preset = options.react || options.runtime === 'browser' ? 'react' : 'node';
+  const preset = options.react ? 'react' : options.runtime;
+
+  if (preset === 'bun') {
+    return `{
+  "extends": "super-configs/tsconfig/bun",
+  "include": ["src/**/*.ts"]
+}
+`;
+  }
 
   return `{
   "extends": "super-configs/tsconfig/${preset}",

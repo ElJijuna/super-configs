@@ -216,7 +216,9 @@ export default createEslintConfig({
     [{ ...defaultOptions, react: true }, 'react', 'src/**/*.tsx'],
     [{ ...defaultOptions, reactNative: true }, 'react-native', undefined],
     [{ ...defaultOptions, expo: true }, 'expo', '.expo/types/**/*.ts'],
-    [{ ...defaultOptions, runtime: 'browser' }, 'react', 'src/**/*.tsx'],
+    [{ ...defaultOptions, runtime: 'browser', react: true }, 'react', 'src/**/*.tsx'],
+    [{ ...defaultOptions, runtime: 'browser' }, 'browser', undefined],
+    [{ ...defaultOptions, runtime: 'bun' }, 'bun', undefined],
     [defaultOptions, 'node', undefined],
   ] as const)('creates the expected TSConfig template', (options, preset, extraInclude) => {
     const config = createTsconfig(options);

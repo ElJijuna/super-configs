@@ -53,6 +53,12 @@ assert(
 );
 assert(bunCliEslint.includes("runtime: 'bun'"), 'CLI --runtime bun must configure Bun runtime');
 assert(
+  (await readFile(join(bunCliTarget, 'tsconfig.json'), 'utf8')).includes(
+    '"extends": "super-configs/tsconfig/bun"',
+  ),
+  'CLI --runtime bun must generate the Bun TSConfig',
+);
+assert(
   bunCliEslint.includes("import { createEslintConfig } from 'super-configs/eslint';") &&
     !bunCliEslint.includes('super-configs/eslint/'),
   'CLI must generate a single factory import',

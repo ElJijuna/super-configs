@@ -244,6 +244,43 @@ Extend the shared preset that matches your project. Define project-specific path
 }
 ```
 
+#### Browser
+
+For browser code without React, built by a bundler such as Vite or esbuild. The preset adds the
+`DOM` and `DOM.Iterable` libraries, uses bundler module resolution, and sets `"types": []` so
+Node.js globals such as `process` do not leak in from a hoisted `@types/node`:
+
+```json
+{
+  "extends": "super-configs/tsconfig/browser",
+  "compilerOptions": {
+    "rootDir": "src",
+    "outDir": "dist"
+  },
+  "include": ["src/**/*.ts"]
+}
+```
+
+#### Bun
+
+Install the Bun declarations:
+
+```bash
+npm install @types/bun --save-dev
+```
+
+The preset follows the [Bun TypeScript guide](https://bun.sh/docs/typescript): `ESNext` target
+and libraries, `"module": "Preserve"`, bundler resolution, and `.ts` import extensions. Bun runs
+TypeScript directly, so the preset sets `noEmit`. It needs TypeScript 5.4 or newer for
+`"module": "Preserve"`.
+
+```json
+{
+  "extends": "super-configs/tsconfig/bun",
+  "include": ["src/**/*.ts"]
+}
+```
+
 #### Next.js
 
 The Next.js preset enables the Next TypeScript plugin and the compiler options required by the
@@ -292,8 +329,9 @@ Include Expo's generated declarations in the project config:
 
 #### Strict add-on
 
-`super-configs/tsconfig/strict` adds stricter checks on top of any runtime preset. It only sets
-compiler checks, so stack it after the preset that sets `module`, `target`, and runtime types:
+`super-configs/tsconfig/strict` adds stricter checks on top of any runtime preset, including
+`browser` and `bun`. It only sets compiler checks, so stack it after the preset that sets
+`module`, `target`, and runtime types:
 
 ```json
 {
@@ -380,6 +418,8 @@ super-configs init --expo --language ts --type-checked --jest --scripts
 `--react-native`, or `--expo`; invalid combinations fail before any file is written. `--next`
 selects the Next.js ESLint and TSConfig presets. `--expo` selects the dedicated Expo ESLint preset,
 the React Native Biome preset, the Expo TSConfig, and, with `--jest`, the Expo Jest preset.
+Without a framework flag, `--runtime` picks the matching TSConfig preset: `node`, `browser`, or
+`bun`.
 
 ### ESLint
 
@@ -1108,6 +1148,8 @@ This uses the dedicated Expo ESLint preset, the React Native Biome preset, plus 
 | `super-configs/tsconfig/base` | Base strict TypeScript configuration |
 | `super-configs/tsconfig/node` | TypeScript configuration for Node.js |
 | `super-configs/tsconfig/react` | TypeScript configuration for React web projects |
+| `super-configs/tsconfig/browser` | TypeScript configuration for bundled browser code without React |
+| `super-configs/tsconfig/bun` | TypeScript configuration for Bun with `@types/bun` |
 | `super-configs/tsconfig/react-native` | Strict TypeScript configuration for React Native |
 | `super-configs/tsconfig/expo` | Strict TypeScript configuration for Expo |
 | `super-configs/tsconfig/next` | Strict TypeScript configuration with the Next.js plugin and bundler resolution |

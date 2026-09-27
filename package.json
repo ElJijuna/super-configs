@@ -149,6 +149,8 @@
         },
         "./typedoc": "./typedoc.json",
         "./tsconfig/base": "./lib/tsconfig/base.json",
+        "./tsconfig/browser": "./lib/tsconfig/browser.json",
+        "./tsconfig/bun": "./lib/tsconfig/bun.json",
         "./tsconfig/expo": "./lib/tsconfig/expo.json",
         "./tsconfig/next": "./lib/tsconfig/next.json",
         "./tsconfig/node": "./lib/tsconfig/node.json",
@@ -259,6 +261,7 @@
         "@react-native/typescript-config": ">=0.73.0",
         "@semantic-release/changelog": ">=6.0.0",
         "@semantic-release/git": ">=10.0.0",
+        "@types/bun": ">=1.0.0",
         "@types/node": ">=20.0.0",
         "conventional-changelog-conventionalcommits": ">=8.0.0",
         "eslint": ">=10.0.0 <11.0.0",
@@ -342,6 +345,9 @@
         },
         "semantic-release": {
             "optional": true
+        },
+        "@types/bun": {
+            "optional": true
         }
     },
     "dependencies": {
@@ -364,6 +370,7 @@
         "@semantic-release/github": "^12.0.9",
         "@semantic-release/npm": "^13.1.5",
         "@semantic-release/release-notes-generator": "^14.1.1",
+        "@types/bun": "^1.4.2",
         "@types/node": "^26.1.1",
         "@typescript/native": "npm:typescript@^7.0.2",
         "@vitest/coverage-v8": "^5.0.2",

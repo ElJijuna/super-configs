@@ -499,6 +499,8 @@ for (const path of [
   'biome.json',
   'biome.react-native.json',
   'lib/tsconfig/base.json',
+  'lib/tsconfig/browser.json',
+  'lib/tsconfig/bun.json',
   'lib/tsconfig/expo.json',
   'lib/tsconfig/next.json',
   'lib/tsconfig/node.json',
@@ -638,6 +640,8 @@ for (const rule of [
 
 for (const specifier of [
   'super-configs/tsconfig/base',
+  'super-configs/tsconfig/browser',
+  'super-configs/tsconfig/bun',
   'super-configs/tsconfig/expo',
   'super-configs/tsconfig/next',
   'super-configs/tsconfig/node',
@@ -764,6 +768,83 @@ for (const [option, code] of [
   assert(
     strictTsconfigOutput.includes(`error ${code}`),
     `super-configs/tsconfig/strict must enable ${option} (${code}):\n${strictTsconfigOutput}`,
+  );
+}
+
+for (const [runtime, source, leakedGlobalError] of [
+  [
+    'browser',
+    `import { double } from './math';
+
+export const render = (): void => {
+  document.body.textContent = String(double(2));
+  window.addEventListener('resize', () => undefined);
+};
+export const leaked = process.env.NODE_ENV;
+`,
+    'TS2591',
+  ],
+  [
+    'bun',
+    `import { double } from './math.ts';
+
+export const server = Bun.serve({
+  port: 3000,
+  fetch: () => new Response(String(double(2))),
+});
+export const file = Bun.file('package.json');
+export const leaked = document.title;
+`,
+    'TS2584',
+  ],
+]) {
+  const runtimeFixtureDirectory = await mkdtemp(join(tmpdir(), `super-configs-${runtime}-`));
+
+  let runtimeCheck;
+
+  try {
+    await mkdir(join(runtimeFixtureDirectory, 'node_modules/@types'), { recursive: true });
+    await symlink(root, join(runtimeFixtureDirectory, 'node_modules/super-configs'), 'dir');
+
+    for (const typesPackage of ['@types/node', '@types/bun', 'bun-types']) {
+      await symlink(
+        join(root, 'node_modules', typesPackage),
+        join(runtimeFixtureDirectory, 'node_modules', typesPackage),
+        'dir',
+      );
+    }
+
+    await writeFile(
+      join(runtimeFixtureDirectory, 'package.json'),
+      JSON.stringify({ type: 'module' }),
+    );
+    await writeFile(
+      join(runtimeFixtureDirectory, 'tsconfig.json'),
+      JSON.stringify({
+        extends: [`super-configs/tsconfig/${runtime}`, 'super-configs/tsconfig/strict'],
+        include: ['*.ts'],
+      }),
+    );
+    await writeFile(
+      join(runtimeFixtureDirectory, 'math.ts'),
+      'export const double = (value: number): number => value * 2;\n',
+    );
+    await writeFile(join(runtimeFixtureDirectory, 'index.ts'), source);
+    runtimeCheck = spawnSync(
+      process.execPath,
+      [join(root, 'node_modules/typescript/bin/tsc6'), '-p', runtimeFixtureDirectory],
+      { encoding: 'utf8' },
+    );
+  } finally {
+    await rm(runtimeFixtureDirectory, { recursive: true, force: true });
+  }
+
+  const runtimeOutput = `${runtimeCheck.stdout}${runtimeCheck.stderr}`;
+  const runtimeErrors = runtimeOutput.match(/error TS\d+/g) ?? [];
+
+  assert(
+    JSON.stringify(runtimeErrors) === JSON.stringify([`error ${leakedGlobalError}`]),
+    `super-configs/tsconfig/${runtime} must type its runtime APIs and reject foreign globals:\n${runtimeOutput}`,
   );
 }
 
@@ -960,6 +1041,8 @@ for (const documentedValue of [
   'super-configs/eslint/react/tsx-type-checked',
   'super-configs/jest/expo',
   'super-configs/jest/react-native',
+  'super-configs/tsconfig/browser',
+  'super-configs/tsconfig/bun',
   'super-configs/tsconfig/expo',
   'super-configs/tsconfig/next',
   'super-configs/tsconfig/react-native',
