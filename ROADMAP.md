@@ -146,6 +146,11 @@ Last updated: 2026-08-18
   - README documents that `mergeConfig` adds consumer globs to the default and that
     `coverage.exclude` narrows it
   - this repository's `vitest.repo.config.ts` relies on the shared defaults
+- Vitest React preset:
+  - `super-configs/vitest/react` extends the shared Vitest config with a `jsdom` environment
+  - `jsdom` and `happy-dom` are optional peers; README shows the one-line happy-dom override
+  - export tests render a component with React Testing Library under both environments and
+    check that cleanup between tests works
 
 ## Pending
 
@@ -159,7 +164,6 @@ Last updated: 2026-08-18
 
 ### Testing
 
-- Vitest DOM variant for React (`super-configs/vitest/react`) with `jsdom` or `happy-dom`
 - Enforce the coverage thresholds in CI by running `test:coverage` from `npm run check`
 
 ### New tools

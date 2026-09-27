@@ -891,6 +891,7 @@ import jestReactNativeConfig from 'super-configs/jest/react-native';
 import semanticReleaseConfig from 'super-configs/semantic-release';
 import stylelintConfig from 'super-configs/stylelint';
 import vitestConfig from 'super-configs/vitest';
+import vitestReactConfig from 'super-configs/vitest/react';
 import { mergeConfig } from 'vitest/config';
 
 export const commitlint = { ...commitlintConfig, extends: [...commitlintConfig.extends] };
@@ -899,6 +900,7 @@ export const presets: string[] = [jestExpoConfig.preset, jestReactNativeConfig.p
 export const release = { ...semanticReleaseConfig, branches: ['main', 'next'] };
 export const stylelint = { ...stylelintConfig, rules: { ...stylelintConfig.rules } };
 export const vitest = mergeConfig(vitestConfig, { test: { include: ['src/**/*.test.ts'] } });
+export const vitestReact = mergeConfig(vitestReactConfig, { test: { environment: 'happy-dom' } });
 `,
   );
   typesConsumerCheck = spawnSync(
@@ -939,6 +941,7 @@ for (const path of [
   'jest.react-native.config.d.ts',
   'semantic-release.config.d.ts',
   'vitest.config.d.ts',
+  'vitest.react.config.d.ts',
   'stylelint.config.d.ts',
   'commitlint.config.js',
   'jest.config.js',
@@ -946,6 +949,7 @@ for (const path of [
   'lib/test/bunfig.toml',
   'semantic-release.config.js',
   'vitest.config.js',
+  'vitest.react.config.js',
   'stylelint.config.js',
 ]) {
   await access(join(root, path));
@@ -1020,6 +1024,109 @@ for (const [source, { options, plugins }] of [
   );
 }
 
+const vitestReactFixtureDirectory = await mkdtemp(join(tmpdir(), 'super-configs-vitest-react-'));
+const vitestReactRuns = [];
+
+try {
+  await mkdir(join(vitestReactFixtureDirectory, 'src'));
+  await mkdir(join(vitestReactFixtureDirectory, 'node_modules/@testing-library'), {
+    recursive: true,
+  });
+  await symlink(root, join(vitestReactFixtureDirectory, 'node_modules/super-configs'), 'dir');
+
+  for (const dependency of [
+    'vitest',
+    'react',
+    'react-dom',
+    'jsdom',
+    'happy-dom',
+    '@testing-library/react',
+    '@testing-library/dom',
+  ]) {
+    await symlink(
+      join(root, 'node_modules', dependency),
+      join(vitestReactFixtureDirectory, 'node_modules', dependency),
+      'dir',
+    );
+  }
+
+  await writeFile(
+    join(vitestReactFixtureDirectory, 'package.json'),
+    JSON.stringify({ type: 'module' }),
+  );
+  await writeFile(
+    join(vitestReactFixtureDirectory, 'src/Counter.tsx'),
+    `import { useState } from 'react';
+
+export const Counter = () => {
+  const [count, setCount] = useState(0);
+
+  return (
+    <button type="button" onClick={() => setCount(count + 1)}>
+      Count: {count}
+    </button>
+  );
+};
+`,
+  );
+  await writeFile(
+    join(vitestReactFixtureDirectory, 'src/Counter.test.tsx'),
+    `import { fireEvent, render, screen } from '@testing-library/react';
+import { Counter } from './Counter';
+
+it('renders and updates in the DOM', () => {
+  render(<Counter />);
+  fireEvent.click(screen.getByRole('button'));
+  expect(screen.getByRole('button').textContent).toBe('Count: 1');
+  expect(window.navigator.userAgent).toContain(process.env.EXPECTED_DOM);
+});
+
+it('cleans up the document between tests', () => {
+  expect(document.body.innerHTML).toBe('');
+});
+`,
+  );
+  await writeFile(
+    join(vitestReactFixtureDirectory, 'vitest.jsdom.config.js'),
+    "export { default } from 'super-configs/vitest/react';\n",
+  );
+  await writeFile(
+    join(vitestReactFixtureDirectory, 'vitest.happy-dom.config.js'),
+    `import vitestReactConfig from 'super-configs/vitest/react';
+import { mergeConfig } from 'vitest/config';
+
+export default mergeConfig(vitestReactConfig, { test: { environment: 'happy-dom' } });
+`,
+  );
+
+  for (const [configFile, expectedDom] of [
+    ['vitest.jsdom.config.js', 'jsdom'],
+    ['vitest.happy-dom.config.js', 'HappyDOM'],
+  ]) {
+    vitestReactRuns.push([
+      configFile,
+      spawnSync(
+        process.execPath,
+        [join(root, 'node_modules/vitest/vitest.mjs'), 'run', '--config', configFile],
+        {
+          cwd: vitestReactFixtureDirectory,
+          encoding: 'utf8',
+          env: { ...process.env, EXPECTED_DOM: expectedDom, NO_COLOR: '1' },
+        },
+      ),
+    ]);
+  }
+} finally {
+  await rm(vitestReactFixtureDirectory, { recursive: true, force: true });
+}
+
+for (const [configFile, run] of vitestReactRuns) {
+  assert(
+    run.status === 0 && run.stdout.includes('Tests  2 passed (2)'),
+    `super-configs/vitest/react must run React Testing Library tests with ${configFile}:\n${run.stdout}${run.stderr}`,
+  );
+}
+
 const bunfig = await readText('lib/test/bunfig.toml');
 
 assert(bunfig.includes('coverageDir = "coverage"'), 'bunfig must use the coverage directory');
@@ -1047,6 +1154,7 @@ for (const documentedValue of [
   'super-configs/tsconfig/next',
   'super-configs/tsconfig/react-native',
   'super-configs/tsconfig/strict',
+  'super-configs/vitest/react',
 ]) {
   assert(readme.includes(documentedValue), `README must document ${documentedValue}`);
 }

@@ -907,6 +907,54 @@ export default mergeConfig(vitestConfig, {
 });
 ```
 
+#### React
+
+`super-configs/vitest/react` is the same config with a `jsdom` environment, so components can
+render into a DOM. Install jsdom and React Testing Library:
+
+```bash
+npm install jsdom @testing-library/react @testing-library/dom --save-dev
+```
+
+```typescript
+// vitest.config.ts
+import vitestReactConfig from 'super-configs/vitest/react';
+
+export default vitestReactConfig;
+```
+
+```tsx
+// src/Counter.test.tsx
+import { fireEvent, render, screen } from '@testing-library/react';
+import { Counter } from './Counter';
+
+it('increments', () => {
+  render(<Counter />);
+  fireEvent.click(screen.getByRole('button'));
+  expect(screen.getByRole('button').textContent).toBe('Count: 1');
+});
+```
+
+`.tsx` files use the automatic JSX runtime with no extra setup. Because the shared config enables
+`globals`, React Testing Library unmounts rendered components after each test on its own.
+
+To use [happy-dom](https://github.com/capricorn86/happy-dom) instead, install `happy-dom` and
+override the environment. `environment` is a single value, so `mergeConfig` replaces it:
+
+```typescript
+import { mergeConfig } from 'vitest/config';
+import vitestReactConfig from 'super-configs/vitest/react';
+
+export default mergeConfig(vitestReactConfig, {
+  test: {
+    environment: 'happy-dom',
+  },
+});
+```
+
+For matchers such as `toBeInTheDocument()`, install `@testing-library/jest-dom` and add
+`setupFiles: ['@testing-library/jest-dom/vitest']` to the `test` options.
+
 ### Bun test
 
 Bun does not support extending a package `bunfig.toml`. Copy the shared template into your project
@@ -1161,6 +1209,7 @@ This uses the dedicated Expo ESLint preset, the React Native Biome preset, plus 
 | `super-configs/jest/react-native` | Jest configuration based on `@react-native/jest-preset` |
 | `super-configs/jest/expo` | Jest configuration based on `jest-expo` |
 | `super-configs/vitest` | Vitest configuration for TypeScript test projects |
+| `super-configs/vitest/react` | Vitest configuration with a jsdom environment for React components |
 | `super-configs/markdownlint` | Markdownlint configuration for Markdown docs |
 | `super-configs/stylelint` | Stylelint configuration for CSS projects |
 | `super-configs/typedoc` | TypeDoc configuration for TypeScript API docs |
