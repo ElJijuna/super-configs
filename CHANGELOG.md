@@ -1,3 +1,18 @@
+## [1.26.0](https://github.com/ElJijuna/super-configs/compare/v1.25.1...v1.26.0) (2026-09-27)
+
+### Features
+
+* add semantic-release configuration and update README for usage ([2668baf](https://github.com/ElJijuna/super-configs/commit/2668bafff679a132eebc1dfbb701a8f2d486bba4))
+* add strict TypeScript configuration and update documentation ([9783b66](https://github.com/ElJijuna/super-configs/commit/9783b661209bfb53dc601dc42bd212fd1e147639))
+* add support for React testing with Vitest ([30ab062](https://github.com/ElJijuna/super-configs/commit/30ab06281d3fcca9546fda15b6dbdedf3b5ae1de))
+* add TypeScript configurations for browser and Bun runtimes, update CLI and tests ([f5ca34c](https://github.com/ElJijuna/super-configs/commit/f5ca34c0bf5490d5ae3bcc65f70a4d635bcbf441))
+* enhance Vitest coverage configuration and update README and ROADMAP ([4d7cbb3](https://github.com/ElJijuna/super-configs/commit/4d7cbb350d436eed8f44239f10fa08330431e915))
+
+### Bug Fixes
+
+* lint .jsx files with the react/jsx preset ([21e8df8](https://github.com/ElJijuna/super-configs/commit/21e8df8c4a05fe46c5f2c6b6e8f20be200226d5c))
+* ship type declarations for vitest, jest, commitlint and stylelint configs ([c8ec671](https://github.com/ElJijuna/super-configs/commit/c8ec67137ca25d7735450f0a3f82b353c124af41))
+
 ## [1.25.1](https://github.com/ElJijuna/super-configs/compare/v1.25.0...v1.25.1) (2026-09-01)
 
 ### Bug Fixes
