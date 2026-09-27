@@ -40,6 +40,23 @@ yarn add super-configs -D
 bun add super-configs -D
 ```
 
+### GitHub Packages
+
+Every release is also published to GitHub Packages as `@eljijuna/super-configs`. GitHub
+Packages requires authentication even for public packages, so add a personal access token
+(classic) with the `read:packages` scope to your `.npmrc`:
+
+```ini
+@eljijuna:registry=https://npm.pkg.github.com
+//npm.pkg.github.com/:_authToken=${GITHUB_TOKEN}
+```
+
+Install it under an alias so imports such as `super-configs/eslint` keep working unchanged:
+
+```bash
+npm install super-configs@npm:@eljijuna/super-configs --save-dev
+```
+
 ### Peer Dependencies
 
 TypeScript 7 is the recommended compiler. TypeScript 7.0 does not yet expose a programmatic API,
