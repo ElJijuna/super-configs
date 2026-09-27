@@ -684,8 +684,85 @@ for (const specifier of ['super-configs/bunfig', 'super-configs/bunfig.toml']) {
   assert(bunfig.includes('coverageReporter = ["text", "lcov"]'), `${specifier} must emit LCOV`);
 }
 
+const typesConsumerFixtureDirectory = await mkdtemp(join(tmpdir(), 'super-configs-types-'));
+
+let typesConsumerCheck;
+
+try {
+  await mkdir(join(typesConsumerFixtureDirectory, 'node_modules'));
+  await symlink(root, join(typesConsumerFixtureDirectory, 'node_modules/super-configs'), 'dir');
+  await symlink(
+    join(root, 'node_modules/vitest'),
+    join(typesConsumerFixtureDirectory, 'node_modules/vitest'),
+    'dir',
+  );
+  await writeFile(
+    join(typesConsumerFixtureDirectory, 'tsconfig.json'),
+    JSON.stringify({
+      compilerOptions: {
+        module: 'NodeNext',
+        moduleResolution: 'NodeNext',
+        noEmit: true,
+        strict: true,
+        types: [],
+      },
+      files: ['index.ts'],
+    }),
+  );
+  await writeFile(
+    join(typesConsumerFixtureDirectory, 'index.ts'),
+    `import commitlintConfig from 'super-configs/commitlint';
+import jestConfig from 'super-configs/jest';
+import jestExpoConfig from 'super-configs/jest/expo';
+import jestReactNativeConfig from 'super-configs/jest/react-native';
+import stylelintConfig from 'super-configs/stylelint';
+import vitestConfig from 'super-configs/vitest';
+import { mergeConfig } from 'vitest/config';
+
+export const commitlint = { ...commitlintConfig, extends: [...commitlintConfig.extends] };
+export const jest = { ...jestConfig, testMatch: ['**/*.test.ts'] };
+export const presets: string[] = [jestExpoConfig.preset, jestReactNativeConfig.preset];
+export const stylelint = { ...stylelintConfig, rules: { ...stylelintConfig.rules } };
+export const vitest = mergeConfig(vitestConfig, { test: { include: ['src/**/*.test.ts'] } });
+`,
+  );
+  typesConsumerCheck = spawnSync(
+    process.execPath,
+    [join(root, 'node_modules/typescript/bin/tsc6'), '-p', typesConsumerFixtureDirectory],
+    { encoding: 'utf8' },
+  );
+} finally {
+  await rm(typesConsumerFixtureDirectory, { recursive: true, force: true });
+}
+
+assert(
+  typesConsumerCheck.status === 0,
+  `root config exports must ship type declarations:\n${typesConsumerCheck.stdout}${typesConsumerCheck.stderr}`,
+);
+
+for (const [specifier, keys] of [
+  ['super-configs/commitlint', ['extends']],
+  ['super-configs/jest', ['testEnvironment', 'transform', 'moduleFileExtensions', 'verbose']],
+  ['super-configs/jest/expo', ['preset', 'verbose']],
+  ['super-configs/jest/react-native', ['preset', 'verbose']],
+  ['super-configs/stylelint', ['extends', 'rules']],
+]) {
+  const config = await importDefault(specifier);
+
+  assert(
+    JSON.stringify(Object.keys(config).sort()) === JSON.stringify([...keys].sort()),
+    `${specifier} type declaration must list the same keys as the runtime config`,
+  );
+}
+
 for (const path of [
   '.editorconfig',
+  'commitlint.config.d.ts',
+  'jest.config.d.ts',
+  'jest.expo.config.d.ts',
+  'jest.react-native.config.d.ts',
+  'vitest.config.d.ts',
+  'stylelint.config.d.ts',
   'commitlint.config.js',
   'jest.config.js',
   'lib/cli/index.js',

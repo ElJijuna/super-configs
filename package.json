@@ -118,13 +118,31 @@
         "./biome/react-native": "./biome.react-native.json",
         "./bunfig": "./lib/test/bunfig.toml",
         "./bunfig.toml": "./lib/test/bunfig.toml",
-        "./commitlint": "./commitlint.config.js",
-        "./jest": "./jest.config.js",
-        "./jest/expo": "./jest.expo.config.js",
-        "./jest/react-native": "./jest.react-native.config.js",
-        "./vitest": "./vitest.config.js",
+        "./commitlint": {
+            "types": "./commitlint.config.d.ts",
+            "default": "./commitlint.config.js"
+        },
+        "./jest": {
+            "types": "./jest.config.d.ts",
+            "default": "./jest.config.js"
+        },
+        "./jest/expo": {
+            "types": "./jest.expo.config.d.ts",
+            "default": "./jest.expo.config.js"
+        },
+        "./jest/react-native": {
+            "types": "./jest.react-native.config.d.ts",
+            "default": "./jest.react-native.config.js"
+        },
+        "./vitest": {
+            "types": "./vitest.config.d.ts",
+            "default": "./vitest.config.js"
+        },
         "./markdownlint": "./markdownlint.json",
-        "./stylelint": "./stylelint.config.js",
+        "./stylelint": {
+            "types": "./stylelint.config.d.ts",
+            "default": "./stylelint.config.js"
+        },
         "./typedoc": "./typedoc.json",
         "./tsconfig/base": "./lib/tsconfig/base.json",
         "./tsconfig/expo": "./lib/tsconfig/expo.json",
@@ -143,12 +161,18 @@
         "biome.react-native.json",
         ".editorconfig",
         "commitlint.config.js",
+        "commitlint.config.d.ts",
         "jest.config.js",
+        "jest.config.d.ts",
         "jest.expo.config.js",
+        "jest.expo.config.d.ts",
         "jest.react-native.config.js",
+        "jest.react-native.config.d.ts",
         "vitest.config.js",
+        "vitest.config.d.ts",
         "markdownlint.json",
         "stylelint.config.js",
+        "stylelint.config.d.ts",
         "typedoc.json",
         "README.md",
         "CHANGELOG.md"
