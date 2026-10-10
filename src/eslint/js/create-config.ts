@@ -35,7 +35,7 @@ export const createEslintJsConfig = (
         { blankLine: 'always', prev: 'block-like', next: '*' },
         { blankLine: 'always', prev: '*', next: 'block-like' },
         { blankLine: 'always', prev: 'const', next: '*' },
-        { blankLine: 'never', prev: 'const', next: 'const' },
+        { blankLine: 'any', prev: 'const', next: 'const' },
         { blankLine: 'always', prev: 'let', next: '*' },
         { blankLine: 'never', prev: 'let', next: 'let' },
         { blankLine: 'always', prev: '*', next: 'return' },
