@@ -1,3 +1,9 @@
+## [1.26.1](https://github.com/ElJijuna/super-configs/compare/v1.26.0...v1.26.1) (2026-10-10)
+
+### Bug Fixes
+
+* update blank line configuration for 'const' in ESLint config ([4c5e916](https://github.com/ElJijuna/super-configs/commit/4c5e916e7edb074c091570fdc4cca5d7d4bb9ef9))
+
 ## [1.26.0](https://github.com/ElJijuna/super-configs/compare/v1.25.1...v1.26.0) (2026-09-27)
 
 ### Features
